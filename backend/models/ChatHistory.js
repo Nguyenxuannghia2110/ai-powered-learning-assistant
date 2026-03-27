@@ -14,7 +14,7 @@ const chatHistorySchema = new mongoose.Schema(
       required: true,
     },
     // ======================================
-    // 💬 Lịch sử hội thoại AI
+    // 💬 Lịch sử hội thoại AI dsaf
     // ======================================
     messages: [
       {

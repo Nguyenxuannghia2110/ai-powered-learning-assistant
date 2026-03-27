@@ -30,7 +30,7 @@ const documentSchema = new mongoose.Schema(
     },
 
     // ================================
-    // 📝 Nội dung extract từ PDF/DOC
+    // 📝 Nội dung extract từ PDF/DOC dsaf
     // ================================
     extractedText: {
       type: String,
