@@ -1,0 +1,113 @@
+@import url('https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap');
+@import "tailwindcss";
+@theme {
+-- font-display: "Urbanist", sans-serif;
+-- breakpoint-3xl: 1920px;
+-- color-primary: #FF9324 ;
+}
+@layer base {
+html {
+font-family: var( -- font-display);
+}
+
+body {
+background-color: #fcfbfc;
+}
+}
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+.rotate-y-180 {
+  transform: rotateY(180deg);
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+.animate-spin-slow {
+  animation: spin 4s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ================= FLIPCARD UTILITIES ================= */
+@layer utilities {
+  .preserve-3d {
+    transform-style: preserve-3d;
+  }
+
+  .backface-hidden {
+    backface-visibility: hidden;
+  }
+
+  .rotate-y-180 {
+    transform: rotateY(180deg);
+  }
+}
+/* GLOBAL SMOOTH SCROLL */
+html {
+  scroll-behavior: smooth;
+}
+
+/* AI DASHBOARD SCROLLBAR */
+
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+
+/* Chrome / Edge / Safari */
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 2px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 10px;
+  transition: all 0.25s ease;
+}
+
+/* Hiện scrollbar khi hover */
+
+.custom-scrollbar:hover::-webkit-scrollbar-thumb {
+  background: linear-gradient(
+    180deg,
+    #34d399,
+    #059669
+  );
+}
+
+/* Firefox */
+
+.custom-scrollbar:hover {
+  scrollbar-color: #10b981 transparent;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.2s ease;
+}
