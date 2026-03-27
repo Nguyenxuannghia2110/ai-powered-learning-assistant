@@ -5,6 +5,8 @@ import {
   reviewFlashcard,
   toggleStarFlashcard,
   deleteFlashcardSet,
+  createFlashcardFromSheet,
+  createManualFlashcard,
 } from "../controllers/flashcardController.js";
 import protect from "../middleware/auth.js";
 
@@ -20,6 +22,13 @@ router.get("/:documentId", getFlashcards);
 
 // 📌 Review flashcard (đánh dấu đã học / cập nhật trạng thái)
 router.post("/:cardId/review", reviewFlashcard);
+
+//Tạo flashcard thủ công 
+router.post("/manual", createManualFlashcard);
+
+//Tạo flashcard từ file excel 
+router.post("/sheet", createFlashcardFromSheet);
+
 
 // 📌 Toggle star (đánh dấu sao)
 router.put("/:cardId/star", toggleStarFlashcard);

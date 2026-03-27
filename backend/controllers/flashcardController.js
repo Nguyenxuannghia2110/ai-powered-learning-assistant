@@ -5,10 +5,21 @@ import { calculateMasteryProgressFL } from "../utils/calculateMasteryProgressFL.
 // @access  Private
 export const getFlashcards = async (req, res, next) => {
   try {
-    const flashcards = await Flashcard.find({
+    const { type, documentId } = req.query;
+
+    const query = {
       userId: req.user._id,
-      documentId: req.params.documentId,
-    })
+    };
+
+    if (type) {
+      query.sourceType = type;
+    }
+
+    if (documentId) {
+      query.documentId = documentId;
+    }
+
+    const flashcards = await Flashcard.find(query)
       .populate("documentId", "title fileName")
       .sort({ createdAt: -1 });
 
@@ -31,12 +42,87 @@ export const getAllFlashcardSet = async (req, res, next) => {
       userId: req.user._id,
     })
       .populate("documentId", "title fileName")
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1 })
+      .lean();
 
     res.status(200).json({
       success: true,
       count: flashcards.length,
       data: flashcards,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+//POST /api/flashcards/sheet
+export const createFlashcardFromSheet = async (req, res, next) => {
+  try {
+    const { title, rows } = req.body;
+
+    // rows: [{ question, answer }]
+    if (!rows || rows.length === 0) {
+      return res.status(400).json({
+        success: false,
+        error: "Sheet data is required",
+      });
+    }
+
+    const flashcardSet = await Flashcard.create({
+      userId: req.user._id,
+      title,
+      sourceType: "sheet",
+      count: rows.length,
+      masteryProgress: 0,
+      cards: rows.map((row) => ({
+        question: row.question,
+        answer: row.answer,
+        difficulty: "medium",
+        reviewCount: 0,
+        isStarred: false,
+      })),
+    });
+
+    res.status(201).json({
+      success: true,
+      data: flashcardSet,
+      message: "Flashcard created from sheet",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+//POST /api/flashcards/manual
+export const createManualFlashcard = async (req, res, next) => {
+  try {
+    const { title, cards } = req.body;
+
+    if (!cards || cards.length === 0) {
+      return res.status(400).json({
+        success: false,
+        error: "Cards are required",
+      });
+    }
+
+    const flashcardSet = await Flashcard.create({
+      userId: req.user._id,
+      title,
+      sourceType: "manual",
+      count: cards.length,
+      masteryProgress: 0,
+      cards: cards.map((c) => ({
+        question: c.question,
+        answer: c.answer,
+        difficulty: c.difficulty || "medium",
+        reviewCount: 0,
+        isStarred: false,
+      })),
+    });
+
+    res.status(201).json({
+      success: true,
+      data: flashcardSet,
+      message: "Manual flashcard created",
     });
   } catch (error) {
     next(error);
@@ -81,9 +167,6 @@ export const reviewFlashcard = async (req, res, next) => {
 
     card.lastReviewed = new Date();
     card.reviewCount += 1;
-
-    flashcardSet.totalReviews += 1;
-    flashcardSet.lastStudiedAt = new Date();
 
     /* =========================
        RECALCULATE MASTERY

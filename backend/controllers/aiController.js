@@ -25,6 +25,7 @@ export const generateFlashcards = async (req, res, next) => {
       userId: req.user._id,
       documentId,
       count: countNumber,
+      sourceType: "document",
     });
 
     if (existingSet) {
@@ -96,6 +97,7 @@ export const generateFlashcards = async (req, res, next) => {
     const flashcardSet = await Flashcard.create({
       userId: req.user._id,
       documentId,
+      sourceType: "document",
       count: countNumber,
       masteryProgress: 0,
       cards: cards.map((card) => ({

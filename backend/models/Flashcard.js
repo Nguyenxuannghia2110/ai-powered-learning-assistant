@@ -11,7 +11,7 @@ const flashcardSchema = new mongoose.Schema(
     documentId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Document",
-      required: true,
+      required: null,
     },
 
     // hasdf
@@ -25,6 +25,11 @@ const flashcardSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    sourceType: {
+  type: String,
+  enum: ["document", "manual", "sheet"],
+  default: "document",
+},
 
     // ====================================
     // ⚡ FLASHCARD LIST
@@ -68,7 +73,15 @@ const flashcardSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-flashcardSchema.index({ userId: 1, documentId: 1, count: 1 }, { unique: true });
+flashcardSchema.index(
+  { userId: 1, documentId: 1},
+  {
+    unique: true,
+    partialFilterExpression: {
+      documentId: { $type: "objectId" },
+    },
+  }
+);
 
 const Flashcard = mongoose.model("Flashcard", flashcardSchema);
 export default Flashcard;
