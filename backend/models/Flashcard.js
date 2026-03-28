@@ -26,10 +26,17 @@ const flashcardSchema = new mongoose.Schema(
       default: 0,
     },
     sourceType: {
-  type: String,
-  enum: ["document", "manual", "sheet"],
-  default: "document",
-},
+      type: String,
+      enum: ["document", "manual", "sheet"],
+      default: "document",
+    },
+    title: {
+      type: String,
+      required: function () {
+        return this.sourceType === "manual" || this.sourceType === "sheet";
+      },
+      trim: true,
+    },
 
     // ====================================
     // ⚡ FLASHCARD LIST
@@ -74,13 +81,13 @@ const flashcardSchema = new mongoose.Schema(
 );
 
 flashcardSchema.index(
-  { userId: 1, documentId: 1},
+  { userId: 1, documentId: 1 },
   {
     unique: true,
     partialFilterExpression: {
       documentId: { $type: "objectId" },
     },
-  }
+  },
 );
 
 const Flashcard = mongoose.model("Flashcard", flashcardSchema);

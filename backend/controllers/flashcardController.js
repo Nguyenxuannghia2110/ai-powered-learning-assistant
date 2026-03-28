@@ -5,23 +5,22 @@ import { calculateMasteryProgressFL } from "../utils/calculateMasteryProgressFL.
 // @access  Private
 export const getFlashcards = async (req, res, next) => {
   try {
-    const { type, documentId } = req.query;
+    const { documentId } = req.params; // ✅ đổi từ query → params
 
-    const query = {
+    if (!documentId) {
+      return res.status(400).json({
+        success: false,
+        message: "documentId is required",
+      });
+    }
+
+    const flashcards = await Flashcard.find({
       userId: req.user._id,
-    };
-
-    if (type) {
-      query.sourceType = type;
-    }
-
-    if (documentId) {
-      query.documentId = documentId;
-    }
-
-    const flashcards = await Flashcard.find(query)
+      documentId,
+    })
       .populate("documentId", "title fileName")
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1 })
+      .lean();
 
     res.status(200).json({
       success: true,
@@ -40,6 +39,7 @@ export const getAllFlashcardSet = async (req, res, next) => {
   try {
     const flashcards = await Flashcard.find({
       userId: req.user._id,
+      sourceType: { $in: ["manual", "sheet"] },
     })
       .populate("documentId", "title fileName")
       .sort({ createdAt: -1 })
@@ -55,12 +55,10 @@ export const getAllFlashcardSet = async (req, res, next) => {
   }
 };
 
-//POST /api/flashcards/sheet
 export const createFlashcardFromSheet = async (req, res, next) => {
   try {
-    const { title, rows } = req.body;
+    let { title, rows } = req.body;
 
-    // rows: [{ question, answer }]
     if (!rows || rows.length === 0) {
       return res.status(400).json({
         success: false,
@@ -68,15 +66,32 @@ export const createFlashcardFromSheet = async (req, res, next) => {
       });
     }
 
+    // 🔥 Clean rows
+    const cleanRows = rows.filter(
+      (r) => r.question?.trim() && r.answer?.trim(),
+    );
+
+    if (cleanRows.length === 0) {
+      return res.status(400).json({
+        success: false,
+        error: "No valid rows",
+      });
+    }
+
+    // 🔥 Auto title nếu không có
+    if (!title || !title.trim()) {
+      title = cleanRows[0].question.slice(0, 30) || "Untitled Sheet";
+    }
+
     const flashcardSet = await Flashcard.create({
       userId: req.user._id,
-      title,
+      title: title.trim(),
       sourceType: "sheet",
-      count: rows.length,
+      count: cleanRows.length,
       masteryProgress: 0,
-      cards: rows.map((row) => ({
-        question: row.question,
-        answer: row.answer,
+      cards: cleanRows.map((row) => ({
+        question: row.question.trim(),
+        answer: row.answer.trim(),
         difficulty: "medium",
         reviewCount: 0,
         isStarred: false,
@@ -95,7 +110,7 @@ export const createFlashcardFromSheet = async (req, res, next) => {
 //POST /api/flashcards/manual
 export const createManualFlashcard = async (req, res, next) => {
   try {
-    const { title, cards } = req.body;
+    let { title, cards } = req.body;
 
     if (!cards || cards.length === 0) {
       return res.status(400).json({
@@ -104,15 +119,32 @@ export const createManualFlashcard = async (req, res, next) => {
       });
     }
 
+    // 🔥 Clean cards
+    const cleanCards = cards.filter(
+      (c) => c.question?.trim() && c.answer?.trim(),
+    );
+
+    if (cleanCards.length === 0) {
+      return res.status(400).json({
+        success: false,
+        error: "No valid cards",
+      });
+    }
+
+    // 🔥 Auto title nếu không có
+    if (!title || !title.trim()) {
+      title = cleanCards[0].question.slice(0, 30) || "Untitled Flashcards";
+    }
+
     const flashcardSet = await Flashcard.create({
       userId: req.user._id,
-      title,
+      title: title.trim(),
       sourceType: "manual",
-      count: cards.length,
+      count: cleanCards.length,
       masteryProgress: 0,
-      cards: cards.map((c) => ({
-        question: c.question,
-        answer: c.answer,
+      cards: cleanCards.map((c) => ({
+        question: c.question.trim(),
+        answer: c.answer.trim(),
         difficulty: c.difficulty || "medium",
         reviewCount: 0,
         isStarred: false,
