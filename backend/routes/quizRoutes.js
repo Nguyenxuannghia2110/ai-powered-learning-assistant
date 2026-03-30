@@ -8,7 +8,11 @@ import {
   deleteQuiz,
   restartQuiz,
   startQuiz,
+  createManualQuiz,
+  uploadFromSheetQuiz,
+  downloadSheetTemplate,
 } from "../controllers/quizController.js";
+import { uploadSheet } from "../config/multerSheet.js";
 
 const router = express.Router();
 
@@ -18,7 +22,11 @@ router.use(protect);
  * 📘 QUIZ ROUTES
  * ===============================
  */
-
+router.post(
+  "/upload-sheet",
+  uploadSheet.single("file"), // 👈 field name phải là "file"
+  uploadFromSheetQuiz,
+);
 /**
  * @route   GET /api/quizzes
  * @desc    Get all quizzes of current user
@@ -26,6 +34,7 @@ router.use(protect);
  */
 router.get("/document/:documentId", getQuizzes);
 
+router.get("/download-template", downloadSheetTemplate);
 /**
  * @route   GET /api/quizzes/:quizId
  * @desc    Get quiz by ID (questions, options)
@@ -54,6 +63,10 @@ router.get("/:id/results", getQuizResults);
  * @access  Private
  */
 router.delete("/:id", deleteQuiz);
+
+router.post("/manual", createManualQuiz);
+
+
 router.post("/:id/start", startQuiz);
 router.post("/:id/restart", restartQuiz);
 

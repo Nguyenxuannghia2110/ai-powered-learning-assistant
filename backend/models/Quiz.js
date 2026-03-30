@@ -8,12 +8,18 @@ const quizSchema = new mongoose.Schema(
       required: true,
     },
 
-    documentId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Document",
+    sourceType: {
+      type: String,
+      enum: ["document", "manual", "sheet"],
       required: true,
     },
 
+    // 🔥 FIX: không bắt buộc nữa
+    documentId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Document",
+      default: null,
+    },
     title: {
       type: String,
       required: true,

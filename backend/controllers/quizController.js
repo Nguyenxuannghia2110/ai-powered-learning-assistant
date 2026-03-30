@@ -1,4 +1,6 @@
 import Quiz from "../models/Quiz.js";
+import ExcelJS from "exceljs";
+import fs from "fs";
 
 /**
  * =====================================================
@@ -8,10 +10,22 @@ import Quiz from "../models/Quiz.js";
  */
 export const getQuizzes = async (req, res, next) => {
   try {
-    const quizzes = await Quiz.find({
+    const { sourceType, documentId } = req.query;
+
+    let filter = {
       userId: req.user._id,
-      documentId: req.params.documentId,
-    })
+    };
+
+    if (sourceType) {
+      filter.sourceType = sourceType;
+    }
+
+    // 👉 chỉ filter document khi là doc
+    if (sourceType === "doc" && documentId) {
+      filter.documentId = documentId;
+    }
+
+    const quizzes = await Quiz.find(filter)
       .populate("documentId", "title fileName")
       .sort({ createdAt: -1 });
 
@@ -36,7 +50,7 @@ export const getQuizById = async (req, res, next) => {
     const quiz = await Quiz.findOne({
       _id: req.params.id,
       userId: req.user._id,
-    });
+    }).populate("documentId", "title");
 
     if (!quiz) {
       return res.status(404).json({
@@ -54,6 +68,250 @@ export const getQuizById = async (req, res, next) => {
   }
 };
 
+export const createManualQuiz = async (req, res, next) => {
+  try {
+    const { title, questions } = req.body;
+
+    if (!title || !questions || questions.length === 0) {
+      return res.status(400).json({
+        success: false,
+        error: "Title and questions are required",
+      });
+    }
+
+    // validate từng question
+    const validQuestions = questions.map((q, index) => {
+      if (!q.question || !q.options || q.options.length !== 4) {
+        throw new Error(`Invalid question at index ${index}`);
+      }
+
+      return {
+        question: q.question,
+        options: q.options,
+        correctAnswer: Number(q.correctAnswer) || 0,
+        explanation: q.explanation || "",
+        difficulty: q.difficulty || "easy",
+      };
+    });
+
+    const quiz = await Quiz.create({
+      userId: req.user._id,
+      sourceType: "manual", // 🔥 QUAN TRỌNG
+      title,
+      questions: validQuestions,
+      totalQuestions: validQuestions.length,
+    });
+
+    res.status(201).json({
+      success: true,
+      data: quiz,
+      message: "Manual quiz created successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+//
+export const createSheetQuiz = async (req, res, next) => {
+  try {
+    const { title, questions } = req.body;
+
+    if (!questions || questions.length === 0) {
+      return res.status(400).json({
+        success: false,
+        error: "No valid questions provided",
+      });
+    }
+
+    const quiz = await Quiz.create({
+      userId: req.user._id,
+      sourceType: "sheet",
+      title: title || "Sheet Quiz",
+      questions,
+      totalQuestions: questions.length,
+    });
+
+    res.status(201).json({
+      success: true,
+      data: quiz,
+      message: "Quiz created from sheet successfully",
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const downloadSheetTemplate = async (req, res, next) => {
+  try {
+    const workbook = new ExcelJS.Workbook();
+    const sheet = workbook.addWorksheet("Quiz Template");
+
+    sheet.columns = [
+      { header: "question", key: "question", width: 30 },
+      { header: "option1", key: "option1", width: 20 },
+      { header: "option2", key: "option2", width: 20 },
+      { header: "option3", key: "option3", width: 20 },
+      { header: "option4", key: "option4", width: 20 },
+      { header: "correctAnswer", key: "correctAnswer", width: 15 },
+      { header: "explanation", key: "explanation", width: 30 },
+      { header: "difficulty", key: "difficulty", width: 15 },
+    ];
+
+    // 🔥 Style header
+    sheet.getRow(1).eachCell((cell) => {
+      cell.font = { bold: true };
+      cell.alignment = { vertical: "middle", horizontal: "center" };
+    });
+
+    // 🔥 Sample data
+    sheet.addRow({
+      question: "Apple nghĩa là gì?",
+      option1: "Táo",
+      option2: "Cam",
+      option3: "Chuối",
+      option4: "Nho",
+      correctAnswer: 0,
+      explanation: "Apple = Táo",
+      difficulty: "easy",
+    });
+
+    // 🔥 Dropdown validation
+    for (let i = 2; i <= 200; i++) {
+      // correctAnswer
+      sheet.getCell(`F${i}`).dataValidation = {
+        type: "list",
+        allowBlank: false,
+        formulae: ['"0,1,2,3"'],
+      };
+
+      // difficulty
+      sheet.getCell(`G${i}`).dataValidation = {
+        type: "list",
+        allowBlank: false,
+        formulae: ['"easy,medium,hard"'],
+      };
+    }
+
+    res.setHeader(
+      "Content-Type",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    );
+    res.setHeader(
+      "Content-Disposition",
+      'attachment; filename="quiz_template.xlsx"',
+    );
+
+    await workbook.xlsx.write(res);
+    res.end();
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const uploadFromSheetQuiz = async (req, res, next) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        error: "File is required",
+      });
+    }
+
+    const filePath = req.file.path; // ✅ FIX: dùng path
+
+    const workbook = new ExcelJS.Workbook();
+    await workbook.xlsx.readFile(filePath);
+
+    const sheet = workbook.worksheets[0];
+
+    if (!sheet) {
+      return res.status(400).json({
+        success: false,
+        error: "Sheet not found",
+      });
+    }
+
+    const errors = [];
+    const validQuestions = [];
+
+    sheet.eachRow((row, rowNumber) => {
+      if (rowNumber === 1) return; // skip header
+
+      const question = row.getCell(1).value?.toString().trim();
+
+      const optionsRaw = [
+        row.getCell(2).value,
+        row.getCell(3).value,
+        row.getCell(4).value,
+        row.getCell(5).value,
+      ];
+
+      const correctAnswer = Number(row.getCell(6).value);
+
+      const explanation = row.getCell(8).value?.toString() || "";
+      const difficultyRaw = row.getCell(7).value;
+
+      const difficulty = difficultyRaw
+        ? difficultyRaw.toString().toLowerCase()
+        : "easy";
+
+      let rowErrors = [];
+
+      // ✅ validate question
+      if (!question) {
+        rowErrors.push("Missing question");
+      }
+
+      // ✅ validate options
+      const options = optionsRaw.map((opt) =>
+        opt ? opt.toString().trim() : "",
+      );
+
+      if (options.some((opt) => !opt)) {
+        rowErrors.push("Missing options");
+      }
+
+      // ✅ validate correctAnswer
+      if (![0, 1, 2, 3].includes(correctAnswer)) {
+        rowErrors.push("correctAnswer must be 0-3");
+      }
+
+      // ✅ validate difficulty
+      if (!["easy", "medium", "hard"].includes(difficulty)) {
+        rowErrors.push("Invalid difficulty");
+      }
+
+      // ✅ push result
+      if (rowErrors.length > 0) {
+        errors.push({
+          row: rowNumber,
+          errors: rowErrors,
+        });
+      } else {
+        validQuestions.push({
+          question,
+          options,
+          correctAnswer,
+          explanation,
+          difficulty,
+        });
+      }
+    });
+
+    // (optional) xoá file sau khi đọc để tránh full disk
+    fs.unlinkSync(filePath);
+
+    return res.status(200).json({
+      success: true,
+      validCount: validQuestions.length,
+      errorCount: errors.length,
+      preview: validQuestions,
+      errors,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
 /**
  * =====================================================
  * POST /api/quizzes/:quizId/submit
