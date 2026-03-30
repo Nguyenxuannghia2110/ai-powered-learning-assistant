@@ -5,35 +5,34 @@ import {
   reviewFlashcard,
   toggleStarFlashcard,
   deleteFlashcardSet,
-  createFlashcardFromSheet,
+  previewFlashcardFromSheet,
+  confirmFlashcardFromSheet,
   createManualFlashcard,
+  downloadFlashcardTemplate,
 } from "../controllers/flashcardController.js";
+
 import protect from "../middleware/auth.js";
+import { uploadSheet } from "../config/multerSheet.js";
 
 const router = express.Router();
 
 router.use(protect);
 
-// 📌 Lấy tất cả flashcards
-router.get("/", getAllFlashcardSet);
-
-// 📌 Lấy 1 flashcard theo ID
-router.get("/:documentId", getFlashcards);
-
-// 📌 Review flashcard (đánh dấu đã học / cập nhật trạng thái)
-router.post("/:cardId/review", reviewFlashcard);
-
-//Tạo flashcard thủ công 
+// ✅ STATIC FIRST
+router.get("/template", downloadFlashcardTemplate);
+router.post("/preview", uploadSheet.single("file"), previewFlashcardFromSheet);
+router.post("/confirm", confirmFlashcardFromSheet);
 router.post("/manual", createManualFlashcard);
 
-//Tạo flashcard từ file excel 
-router.post("/sheet", createFlashcardFromSheet);
-
-
-// 📌 Toggle star (đánh dấu sao)
+// ✅ ACTION
+router.post("/:cardId/review", reviewFlashcard);
 router.put("/:cardId/star", toggleStarFlashcard);
-
-// 📌 Xóa flashcard
 router.delete("/:id", deleteFlashcardSet);
+
+// ✅ GET ALL (phải trước dynamic)
+router.get("/", getAllFlashcardSet);
+
+// ❗ ALWAYS LAST (cuối cùng luôn)
+router.get("/:documentId", getFlashcards);
 
 export default router;

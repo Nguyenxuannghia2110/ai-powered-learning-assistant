@@ -1,12 +1,13 @@
 import Flashcard from "../models/Flashcard.js";
 import { calculateMasteryProgressFL } from "../utils/calculateMasteryProgressFL.js";
+import ExcelJS from "exceljs";
+import fs from "fs";
 // @desc    Get flashcards by document
 // @route   GET /api/flashcards/:documentId
 // @access  Private
 export const getFlashcards = async (req, res, next) => {
   try {
-    const { documentId } = req.params; // ✅ đổi từ query → params
-
+    const { documentId } = req.params;
     if (!documentId) {
       return res.status(400).json({
         success: false,
@@ -55,44 +56,43 @@ export const getAllFlashcardSet = async (req, res, next) => {
   }
 };
 
-export const createFlashcardFromSheet = async (req, res, next) => {
+export const confirmFlashcardFromSheet = async (req, res, next) => {
   try {
-    let { title, rows } = req.body;
+    let { title, cards } = req.body;
 
-    if (!rows || rows.length === 0) {
+    if (!cards || cards.length === 0) {
       return res.status(400).json({
         success: false,
-        error: "Sheet data is required",
+        error: "No cards provided",
       });
     }
 
-    // 🔥 Clean rows
-    const cleanRows = rows.filter(
-      (r) => r.question?.trim() && r.answer?.trim(),
+    const validCards = cards.filter(
+      (c) => c.valid && c.question?.trim() && c.answer?.trim(),
     );
 
-    if (cleanRows.length === 0) {
+    if (validCards.length === 0) {
       return res.status(400).json({
         success: false,
-        error: "No valid rows",
+        error: "No valid cards",
       });
     }
 
-    // 🔥 Auto title nếu không có
     if (!title || !title.trim()) {
-      title = cleanRows[0].question.slice(0, 30) || "Untitled Sheet";
+      title =
+        validCards[0].question.slice(0, 30) || "Untitled Flashcards";
     }
 
     const flashcardSet = await Flashcard.create({
       userId: req.user._id,
       title: title.trim(),
       sourceType: "sheet",
-      count: cleanRows.length,
+      count: validCards.length,
       masteryProgress: 0,
-      cards: cleanRows.map((row) => ({
-        question: row.question.trim(),
-        answer: row.answer.trim(),
-        difficulty: "medium",
+      cards: validCards.map((c) => ({
+        question: c.question.trim(),
+        answer: c.answer.trim(),
+        difficulty: c.difficulty || "medium",
         reviewCount: 0,
         isStarred: false,
       })),
@@ -101,10 +101,153 @@ export const createFlashcardFromSheet = async (req, res, next) => {
     res.status(201).json({
       success: true,
       data: flashcardSet,
-      message: "Flashcard created from sheet",
+      message: "Flashcards created successfully",
     });
   } catch (error) {
     next(error);
+  }
+};
+
+export const previewFlashcardFromSheet = async (req, res, next) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        error: "File is required",
+      });
+    }
+
+    const filePath = req.file.path;
+
+    const workbook = new ExcelJS.Workbook();
+    await workbook.xlsx.readFile(filePath);
+
+    const sheet = workbook.worksheets[0];
+
+    if (!sheet) {
+      return res.status(400).json({
+        success: false,
+        error: "Sheet not found",
+      });
+    }
+
+    const errors = [];
+    const previewData = [];
+
+    sheet.eachRow((row, rowNumber) => {
+      if (rowNumber === 1) return;
+
+      const question = row.getCell(1).value?.toString().trim();
+      const answer = row.getCell(2).value?.toString().trim();
+
+      const difficultyRaw = row.getCell(3).value;
+
+      const difficulty = difficultyRaw
+        ? difficultyRaw.toString().toLowerCase()
+        : "medium";
+
+      let rowErrors = [];
+
+      // ✅ validate
+      if (!question) rowErrors.push("Missing question");
+      if (!answer) rowErrors.push("Missing answer");
+
+      if (!["easy", "medium", "hard"].includes(difficulty)) {
+        rowErrors.push("Invalid difficulty");
+      }
+
+      const isValid = rowErrors.length === 0;
+
+      if (!isValid) {
+        errors.push({
+          row: rowNumber,
+          errors: rowErrors,
+        });
+      }
+
+      previewData.push({
+        question: question || "",
+        answer: answer || "",
+        difficulty,
+        valid: isValid,
+      });
+    });
+
+    // 🔥 cleanup file
+    fs.unlinkSync(filePath);
+
+    return res.status(200).json({
+      success: true,
+      total: previewData.length,
+      validCount: previewData.filter((c) => c.valid).length,
+      errorCount: errors.length,
+      preview: previewData,
+      errors,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const downloadFlashcardTemplate = async (req, res, next) => {
+  try {
+    const workbook = new ExcelJS.Workbook();
+
+    // 📄 Sheet chính
+    const sheet = workbook.addWorksheet("Flashcard Template");
+
+    sheet.columns = [
+      { header: "question", key: "question", width: 40 },
+      { header: "answer", key: "answer", width: 40 },
+      { header: "difficulty", key: "difficulty", width: 15 },
+    ];
+
+    // 🔥 Style header
+    sheet.getRow(1).eachCell((cell) => {
+      cell.font = { bold: true };
+      cell.alignment = { vertical: "middle", horizontal: "center" };
+    });
+
+    // 🔥 Sample data
+    sheet.addRow({
+      question: "What is AI?",
+      answer: "Artificial Intelligence",
+      difficulty: "easy",
+    });
+
+    // 🔥 Dropdown validation
+    for (let i = 2; i <= 200; i++) {
+      sheet.getCell(`C${i}`).dataValidation = {
+        type: "list",
+        allowBlank: true,
+        formulae: ['"easy,medium,hard"'],
+      };
+    }
+
+    // 📄 Instruction sheet (PRO UX)
+    const instructionSheet = workbook.addWorksheet("Instructions");
+
+    instructionSheet.addRow(["FLASHCARD TEMPLATE GUIDE"]);
+    instructionSheet.addRow([]);
+    instructionSheet.addRow(["- Fill 'question' and 'answer'"]);
+    instructionSheet.addRow(["- Do not leave empty rows"]);
+    instructionSheet.addRow(["- difficulty: easy | medium | hard"]);
+    instructionSheet.addRow(["- Max 200 rows recommended"]);
+
+    res.setHeader(
+      "Content-Type",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    );
+
+    res.setHeader(
+      "Content-Disposition",
+      'attachment; filename="flashcard_template.xlsx"',
+    );
+
+    await workbook.xlsx.write(res);
+    res.end();
+  } catch (err) {
+    next(err);
   }
 };
 //POST /api/flashcards/manual
