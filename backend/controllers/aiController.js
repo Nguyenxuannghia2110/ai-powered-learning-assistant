@@ -8,6 +8,7 @@ import { HttpStatusCode } from "axios";
 import { hashText } from "../utils/hash.js";
 import AiResponseCache from "../models/AiResponseCache.js";
 
+
 export const generateFlashcards = async (req, res, next) => {
   try {
     const { documentId, count = 10 } = req.body;
@@ -75,7 +76,7 @@ export const generateFlashcards = async (req, res, next) => {
         return res.status(200).json({
           success: true,
           data: null,
-          message: "No flashcards generated",
+          message: "No flashcards generated",k
         });
       }
 

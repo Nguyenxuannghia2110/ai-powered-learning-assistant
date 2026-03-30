@@ -31,20 +31,20 @@ export const uploadDocument = async (req, res, next) => {
       return res.status(400).json({
         success: false,
         error: "Please provide a document title",
-        statusCode: 400,  
+        statusCode: 400,
       });
     }
 
     // Construct URL cho file
     const baseUrl = `http://localhost:${process.env.PORT || 8000}`;
-const fileUrl = encodeURI(
-  `${baseUrl}/uploads/documents/${req.file.filename}`
-);
+    const fileUrl = encodeURI(
+      `${baseUrl}/uploads/documents/${req.file.filename}`,
+    );
     // Tạo document record trong DB
     const document = await Document.create({
       userId: req.user._id,
       title,
-      fileName: req.file.originalname,  
+      fileName: req.file.originalname,
       filePath: fileUrl, // Lưu URL thay vì đường dẫn local
       fileSize: req.file.size,
       status: "processing",
@@ -69,7 +69,7 @@ const fileUrl = encodeURI(
   }
 };
 
- const processPDF = async (documentId, filePath) => {
+const processPDF = async (documentId, filePath) => {
   try {
     console.log(`Start processing document ${documentId} at ${filePath}`);
 
@@ -89,7 +89,10 @@ const fileUrl = encodeURI(
 
     console.log(`Document ${documentId} processed successfully`);
   } catch (error) {
-    console.error(`Error processing document ${documentId} at ${filePath}:`, error.message);
+    console.error(
+      `Error processing document ${documentId} at ${filePath}:`,
+      error.message,
+    );
 
     // Nếu lỗi → set status = failed
     await Document.findByIdAndUpdate(documentId, { status: "failed" });
@@ -211,7 +214,6 @@ export const getDocument = async (req, res, next) => {
   }
 };
 
-
 // @desc    Delete document
 // @route   DELETE /api/documents/:id
 // @access  Private
@@ -248,6 +250,3 @@ export const deleteDocument = async (req, res, next) => {
     next(error);
   }
 };
-
-
-
