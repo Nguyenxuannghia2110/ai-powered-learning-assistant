@@ -8,7 +8,6 @@ import { HttpStatusCode } from "axios";
 import { hashText } from "../utils/hash.js";
 import AiResponseCache from "../models/AiResponseCache.js";
 
-
 export const generateFlashcards = async (req, res, next) => {
   try {
     const { documentId, count = 10 } = req.body;
@@ -76,7 +75,7 @@ export const generateFlashcards = async (req, res, next) => {
         return res.status(200).json({
           success: true,
           data: null,
-          message: "No flashcards generated",k
+          message: "No flashcards generated",
         });
       }
 
@@ -262,13 +261,12 @@ export const generateQuiz = async (req, res, next) => {
     const quiz = await Quiz.create({
       userId: req.user._id,
       documentId: document._id,
-      sourceType: "doc",
+      sourceType: "document",
       title: title || `${document.title} - Quiz`,
       questions: normalizedQuestions,
       totalQuestions: normalizedQuestions.length,
       score: null,
     });
-
     /* =====================================================
        8️⃣ RESPONSE
     ===================================================== */

@@ -1,6 +1,7 @@
 import express from "express";
 import protect from "../middleware/auth.js";
 import {
+  getAllQuizzes,
   getQuizzes,
   getQuizById,
   submitQuiz,
@@ -27,6 +28,8 @@ router.post(
   uploadSheet.single("file"), // 👈 field name phải là "file"
   uploadFromSheetQuiz,
 );
+
+router.get("/", getAllQuizzes);
 /**
  * @route   GET /api/quizzes
  * @desc    Get all quizzes of current user

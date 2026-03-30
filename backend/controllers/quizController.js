@@ -8,7 +8,7 @@ import fs from "fs";
  * Get all quizzes of current user
  * =====================================================
  */
-export const getQuizzes = async (req, res, next) => {
+export const getAllQuizzes = async (req, res, next) => {
   try {
     const { sourceType, documentId } = req.query;
 
@@ -21,7 +21,7 @@ export const getQuizzes = async (req, res, next) => {
     }
 
     // 👉 chỉ filter document khi là doc
-    if (sourceType === "doc" && documentId) {
+    if (sourceType === "document" && documentId) {
       filter.documentId = documentId;
     }
 
@@ -39,6 +39,33 @@ export const getQuizzes = async (req, res, next) => {
   }
 };
 
+export const getQuizzes = async (req, res, next) => {
+  try {
+    const { documentId } = req.params;
+
+    let filter = {
+      userId: req.user._id,
+      sourceType: "document", // ✅ chỉ lấy từ doc
+    };
+
+    // 👉 nếu có truyền documentId thì filter thêm
+    if (documentId) {
+      filter.documentId = documentId;
+    }
+
+    const quizzes = await Quiz.find(filter)
+      .populate("documentId", "title fileName")
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({
+      success: true,
+      count: quizzes.length,
+      data: quizzes,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 /**
  * =====================================================
  * GET /api/quizzes/:quizId
@@ -109,35 +136,6 @@ export const createManualQuiz = async (req, res, next) => {
     });
   } catch (error) {
     next(error);
-  }
-};
-//
-export const createSheetQuiz = async (req, res, next) => {
-  try {
-    const { title, questions } = req.body;
-
-    if (!questions || questions.length === 0) {
-      return res.status(400).json({
-        success: false,
-        error: "No valid questions provided",
-      });
-    }
-
-    const quiz = await Quiz.create({
-      userId: req.user._id,
-      sourceType: "sheet",
-      title: title || "Sheet Quiz",
-      questions,
-      totalQuestions: questions.length,
-    });
-
-    res.status(201).json({
-      success: true,
-      data: quiz,
-      message: "Quiz created from sheet successfully",
-    });
-  } catch (err) {
-    next(err);
   }
 };
 
