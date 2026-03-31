@@ -36,7 +36,7 @@ export const getFlashcards = async (req, res, next) => {
 // @desc    Get all flashcard sets by user
 // @route   GET /api/flashcards
 // @access  Private
-export const getAllFlashcardSet = async (req, res, next) => {
+export const getFlashcardSet = async (req, res, next) => {
   try {
     const flashcards = await Flashcard.find({
       userId: req.user._id,
@@ -79,8 +79,7 @@ export const confirmFlashcardFromSheet = async (req, res, next) => {
     }
 
     if (!title || !title.trim()) {
-      title =
-        validCards[0].question.slice(0, 30) || "Untitled Flashcards";
+      title = validCards[0].question.slice(0, 30) || "Untitled Flashcards";
     }
 
     const flashcardSet = await Flashcard.create({

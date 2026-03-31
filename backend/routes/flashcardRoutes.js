@@ -1,7 +1,7 @@
 import express from "express";
 import {
   getFlashcards,
-  getAllFlashcardSet,
+  getFlashcardSet,
   reviewFlashcard,
   toggleStarFlashcard,
   deleteFlashcardSet,
@@ -30,7 +30,7 @@ router.put("/:cardId/star", toggleStarFlashcard);
 router.delete("/:id", deleteFlashcardSet);
 
 // ✅ GET ALL (phải trước dynamic)
-router.get("/", getAllFlashcardSet);
+router.get("/", getFlashcardSet);
 
 // ❗ ALWAYS LAST (cuối cùng luôn)
 router.get("/:documentId", getFlashcards);
