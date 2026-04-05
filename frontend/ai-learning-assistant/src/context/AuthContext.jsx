@@ -6,45 +6,37 @@ import {
   useCallback,
 } from "react";
 import authService from "../services/authService";
+import axiosInstance from "../utils/axiosInstance";
+
 export const AuthContext = createContext(null);
+
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
+  /* ================= LOGOUT ================= */
   const logout = useCallback(() => {
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("user");
+    delete axiosInstance.defaults.headers.common["Authorization"];
 
     setUser(null);
     setIsAuthenticated(false);
   }, []);
 
+  /* ================= CHECK AUTH ================= */
   const checkAuthStatus = useCallback(async () => {
     setLoading(true);
+
     try {
-      const token = localStorage.getItem("accessToken");
-      const userStr = localStorage.getItem("user");
+      // 🔥 gọi refresh để lấy accessToken
+      const { user, accessToken } = await authService.refreshToken();
 
-      if (!token) {
-        setUser(null);
-        setIsAuthenticated(false);
-        return;
-      }
+      // lưu token vào axios (memory)
+      axiosInstance.defaults.headers.common[
+        "Authorization"
+      ] = `Bearer ${accessToken}`;
 
-      if (userStr && userStr !== "undefined") {
-        try {
-          setUser(JSON.parse(userStr));
-          setIsAuthenticated(true);
-        } catch {
-          localStorage.removeItem("user");
-        }
-      }
-
-      const res = await authService.getProfile();
-
-      setUser(res.data);
-      localStorage.setItem("user", JSON.stringify(res.data));
+      setUser(user);
       setIsAuthenticated(true);
     } catch (err) {
       console.error("Auth check failed:", err);
@@ -54,25 +46,27 @@ export const AuthProvider = ({ children }) => {
     }
   }, [logout]);
 
+  /* ================= INIT ================= */
   useEffect(() => {
     checkAuthStatus();
   }, [checkAuthStatus]);
 
+  /* ================= LOGIN ================= */
   const login = (userData, accessToken) => {
-    localStorage.setItem("accessToken", accessToken);
-    localStorage.setItem("user", JSON.stringify(userData));
+    axiosInstance.defaults.headers.common[
+      "Authorization"
+    ] = `Bearer ${accessToken}`;
 
     setUser(userData);
     setIsAuthenticated(true);
-    setLoading(false);
   };
 
+  /* ================= UPDATE USER ================= */
   const updateUser = (updateData) => {
-    setUser((prev) => {
-      const newUser = { ...prev, ...updateData };
-      localStorage.setItem("user", JSON.stringify(newUser));
-      return newUser;
-    });
+    setUser((prev) => ({
+      ...prev,
+      ...updateData,
+    }));
   };
 
   return (
@@ -91,12 +85,5 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
-export const useAuth = () => {
-  const context = useContext(AuthContext);
 
-  if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
-
-  return context;
-};
+export const useAuth = () => useContext(AuthContext);

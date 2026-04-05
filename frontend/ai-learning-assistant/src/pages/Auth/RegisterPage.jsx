@@ -20,7 +20,11 @@ const RegisterPage = () => {
     setLoading(true);
 
     try {
-      await authService.register(username, email, password);
+      await authService.register({
+        username,
+        email,
+        password,
+      });
 
       toast.success("Register successful! Please login.");
       navigate("/login");
@@ -43,9 +47,7 @@ const RegisterPage = () => {
               <BrainCircuit className="w-7 h-7 text-emerald-600" />
             </div>
           </div>
-          <h1 className="text-2xl font-bold text-slate-800">
-            Create account
-          </h1>
+          <h1 className="text-2xl font-bold text-slate-800">Create account</h1>
           <p className="text-slate-500 mt-1">
             Join and start your learning journey
           </p>

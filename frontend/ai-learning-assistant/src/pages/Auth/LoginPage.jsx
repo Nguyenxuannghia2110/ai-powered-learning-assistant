@@ -21,8 +21,15 @@ const LoginPage = () => {
     setLoading(true);
 
     try {
-      const { user, accessToken } = await authService.login(email, password);
+      // 1. login → chỉ để set cookie
+      await authService.login(email, password);
 
+      // 2. gọi refresh để lấy accessToken
+      const res = await authService.refreshToken();
+
+      const { user, accessToken } = res;
+
+      // 3. set auth
       login(user, accessToken);
 
       toast.success("Logged in successfully!");

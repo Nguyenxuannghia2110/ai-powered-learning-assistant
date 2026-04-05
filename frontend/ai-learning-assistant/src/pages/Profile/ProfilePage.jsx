@@ -50,22 +50,23 @@ const ProfilePage = () => {
     const fetchProfile = async () => {
       try {
         setIsLoading(true);
-        const response = await authService.getProfile();
 
-        if (response?.success) {
-          const userData = response.data;
-          setProfile({
-            fullName: userData.fullName || userData.username || "",
-            email: userData.email || "",
-            neuralBio: userData.bio || userData.neuralBio || "Senior Neural Architect specializing in large-scale cognitive mapping and interface design. Based in the Obsidian Hub.",
+        const userData = await authService.getProfile(); // ✅ đã là data
+
+        setProfile({
+          fullName: userData.fullName || userData.username || "",
+          email: userData.email || "",
+          neuralBio:
+            userData.bio ||
+            userData.neuralBio ||
+            "Senior Neural Architect specializing in large-scale cognitive mapping...",
+        });
+
+        if (userData.settings) {
+          setToggles({
+            notifications: userData.settings.notifications ?? true,
+            highContrast: userData.settings.highContrast ?? false,
           });
-
-          if (userData.settings) {
-            setToggles({
-              notifications: userData.settings.notifications ?? true,
-              highContrast: userData.settings.highContrast ?? false,
-            });
-          }
         }
       } catch (error) {
         toast.error(error.message || "Failed to load profile.");
@@ -89,7 +90,7 @@ const ProfilePage = () => {
   const handleSave = async (silent = false) => {
     try {
       if (!silent) setIsSaving(true);
-      
+
       const payload = {
         username: profile.fullName,
         bio: profile.neuralBio,
@@ -97,11 +98,8 @@ const ProfilePage = () => {
       };
 
       const response = await authService.updateProfile(payload);
-      
 
-      if (response?.success) {
-        if (!silent) toast.success("Profile updated", { icon: "⚡" });
-      }
+      if (!silent) toast.success("Profile updated ⚡");
     } catch (error) {
       toast.error(error.message || "Failed to update profile.");
     } finally {
@@ -124,7 +122,11 @@ const ProfilePage = () => {
 
       toast.success("Security protocols updated ⚡");
       setOpenPasswordModal(false);
-      setPasswordData({ currentPassword: "", newPassword: "", confirmPassword: "" });
+      setPasswordData({
+        currentPassword: "",
+        newPassword: "",
+        confirmPassword: "",
+      });
     } catch (err) {
       toast.error("Security update failed");
     } finally {
@@ -145,7 +147,9 @@ const ProfilePage = () => {
       <div className="min-h-screen bg-[#050807] flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
           <Loader2 className="w-10 h-10 text-[#00FF9D] animate-spin" />
-          <p className="text-[#00FF9D] text-[10px] tracking-[0.4em] uppercase">Accessing Primary Core...</p>
+          <p className="text-[#00FF9D] text-[10px] tracking-[0.4em] uppercase">
+            Accessing Primary Core...
+          </p>
         </div>
       </div>
     );
@@ -153,7 +157,6 @@ const ProfilePage = () => {
 
   return (
     <div className="min-h-screen bg-[#050807] text-[#e4e4e7] selection:bg-[#00FF9D]/30">
-
       <div className="relative max-w-2xl mx-auto px-6 pb-24 pt-8">
         {/* Profile Header */}
         <div className="flex flex-col items-center mb-12">
@@ -161,9 +164,9 @@ const ProfilePage = () => {
             <div className="w-28 h-28 rounded-full border-[3px] border-[#00FF9D] p-1 bg-black overflow-hidden relative">
               <div className="w-full h-full rounded-full bg-[#0a0f0d] flex items-center justify-center overflow-hidden">
                 {/* Fallback to icon if no avatar, but user likely wants a face */}
-                <img 
-                  src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=400&h=400&fit=crop" 
-                  alt="Avatar" 
+                <img
+                  src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=400&h=400&fit=crop"
+                  alt="Avatar"
                   className="w-full h-full object-cover grayscale-[0.3]"
                 />
               </div>
@@ -211,7 +214,7 @@ const ProfilePage = () => {
                     onChange={handleChange}
                     className="w-full bg-transparent py-1.5 text-white/90 focus:outline-none tracking-wide text-sm font-medium pr-10"
                   />
-                  <button 
+                  <button
                     onClick={() => handleSave()}
                     className="absolute right-0 text-white/20 hover:text-[#00FF9D] transition-colors"
                     title="Save Name"
@@ -227,9 +230,9 @@ const ProfilePage = () => {
                   Email Address
                 </label>
                 <div className="border-b border-white/10 pb-2.5">
-                   <span className="text-white/60 text-sm font-medium tracking-wide">
-                     {profile.email}
-                   </span>
+                  <span className="text-white/60 text-sm font-medium tracking-wide">
+                    {profile.email}
+                  </span>
                 </div>
               </div>
 
@@ -239,12 +242,12 @@ const ProfilePage = () => {
                   Access Credentials
                 </label>
                 <div className="border-b border-white/10 pb-2.5">
-                   <div className="flex items-center justify-between">
-                     <span className="text-white/40 text-sm font-medium tracking-[0.4em] translate-y-0.5">
-                       ••••••••••••
-                     </span>
-                     <Shield className="w-4 h-4 text-white/10" />
-                   </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-white/40 text-sm font-medium tracking-[0.4em] translate-y-0.5">
+                      ••••••••••••
+                    </span>
+                    <Shield className="w-4 h-4 text-white/10" />
+                  </div>
                 </div>
               </div>
             </div>
@@ -261,7 +264,7 @@ const ProfilePage = () => {
                 className="w-full bg-transparent py-1.5 text-white/80 focus:outline-none tracking-wide text-sm font-medium pr-10 leading-relaxed min-h-[60px] resize-none"
               />
             </div>
-            
+
             <div className="h-px bg-white/5 mt-10" />
           </section>
 
@@ -279,8 +282,12 @@ const ProfilePage = () => {
                     <Bell className="w-5 h-5 text-zinc-400 group-hover:text-[#00FF9D] transition-colors" />
                   </div>
                   <div>
-                    <h4 className="text-[13px] font-bold text-zinc-200">Neural Notifications</h4>
-                    <p className="text-[10px] text-zinc-500 font-medium">Real-time alerts for system events</p>
+                    <h4 className="text-[13px] font-bold text-zinc-200">
+                      Neural Notifications
+                    </h4>
+                    <p className="text-[10px] text-zinc-500 font-medium">
+                      Real-time alerts for system events
+                    </p>
                   </div>
                 </div>
                 <button
@@ -300,12 +307,16 @@ const ProfilePage = () => {
               {/* High Contrast */}
               <div className="flex items-center justify-between group">
                 <div className="flex items-center gap-5">
-                   <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center">
+                  <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center">
                     <Monitor className="w-5 h-5 text-zinc-400 group-hover:text-[#00FF9D] transition-colors" />
                   </div>
                   <div>
-                    <h4 className="text-[13px] font-bold text-zinc-200">High-Contrast Interface</h4>
-                    <p className="text-[10px] text-zinc-500 font-medium">Optimize visual clarity for readability</p>
+                    <h4 className="text-[13px] font-bold text-zinc-200">
+                      High-Contrast Interface
+                    </h4>
+                    <p className="text-[10px] text-zinc-500 font-medium">
+                      Optimize visual clarity for readability
+                    </p>
                   </div>
                 </div>
                 <button
@@ -323,17 +334,21 @@ const ProfilePage = () => {
               </div>
 
               {/* Security & Access (Password Modal trigger) */}
-              <button 
+              <button
                 onClick={() => setOpenPasswordModal(true)}
                 className="w-full flex items-center justify-between group"
               >
                 <div className="flex items-center gap-5">
-                   <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center group-hover:bg-[#00FF9D]/10 transition-colors">
+                  <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center group-hover:bg-[#00FF9D]/10 transition-colors">
                     <Zap className="w-5 h-5 text-zinc-400 group-hover:text-[#00FF9D] transition-colors" />
                   </div>
                   <div className="text-left">
-                    <h4 className="text-[13px] font-bold text-zinc-200">Security & Access</h4>
-                    <p className="text-[10px] text-zinc-500 font-medium">Manage multi-factor authentication and passwords</p>
+                    <h4 className="text-[13px] font-bold text-zinc-200">
+                      Security & Access
+                    </h4>
+                    <p className="text-[10px] text-zinc-500 font-medium">
+                      Manage multi-factor authentication and passwords
+                    </p>
                   </div>
                 </div>
                 <ChevronRight className="w-5 h-5 text-zinc-600 group-hover:text-white transition-all transform group-hover:translate-x-1" />
@@ -358,7 +373,11 @@ const ProfilePage = () => {
               {isSaving ? "SYNCHRONIZING..." : "Save Changes"}
             </motion.button>
             <p className="mt-6 text-center text-white/10 text-[9px] uppercase tracking-[0.3em] font-medium">
-              Last Synchronized: {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+              Last Synchronized:{" "}
+              {new Date().toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
             </p>
           </div>
         </motion.div>
@@ -388,13 +407,13 @@ const ProfilePage = () => {
             exit={{ opacity: 0 }}
           >
             <motion.div
-               initial={{ scale: 0.9, opacity: 0, y: 20 }}
-               animate={{ scale: 1, opacity: 1, y: 0 }}
-               exit={{ scale: 0.9, opacity: 0, y: 20 }}
-               className="w-full max-w-md bg-[#0b0f0e] border border-white/10 rounded-[40px] p-10 shadow-2xl overflow-hidden relative"
+              initial={{ scale: 0.9, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 20 }}
+              className="w-full max-w-md bg-[#0b0f0e] border border-white/10 rounded-[40px] p-10 shadow-2xl overflow-hidden relative"
             >
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#00FF9D] to-transparent opacity-50" />
-              
+
               <h3 className="text-sm font-black tracking-[0.3em] text-[#00FF9D] mb-8 uppercase text-center">
                 Security Protocol
               </h3>
@@ -403,10 +422,12 @@ const ProfilePage = () => {
                 {[
                   { id: "currentPassword", placeholder: "CURRENT_KEY" },
                   { id: "newPassword", placeholder: "NEW_ENCRYPTION_KEY" },
-                  { id: "confirmPassword", placeholder: "VERIFY_KEY" }
+                  { id: "confirmPassword", placeholder: "VERIFY_KEY" },
                 ].map((field) => (
                   <div key={field.id} className="space-y-2">
-                    <label className="text-[9px] text-white/30 uppercase font-bold tracking-widest">{field.placeholder}</label>
+                    <label className="text-[9px] text-white/30 uppercase font-bold tracking-widest">
+                      {field.placeholder}
+                    </label>
                     <input
                       type="password"
                       value={passwordData[field.id]}

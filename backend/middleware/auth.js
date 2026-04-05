@@ -39,9 +39,16 @@ const protect = async (req, res, next) => {
   } catch (err) {
     console.error("JWT error:", err.message);
 
+    if (err.name === "TokenExpiredError") {
+      return res.status(401).json({
+        success: false,
+        message: "jwt expired",
+      });
+    }
+
     return res.status(401).json({
       success: false,
-      error: "Not authorized, token invalid or expired",
+      message: "invalid token",
     });
   }
 };

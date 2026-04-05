@@ -1,24 +1,9 @@
 import axios from "axios";
 
-/* ================= CREATE INSTANCE ================= */
 const axiosInstance = axios.create({
   baseURL: "http://localhost:8000/",
-  withCredentials: true,
+  withCredentials: true, // 🔥 bắt buộc cho cookie
 });
-
-/* ================= REQUEST ================= */
-axiosInstance.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem("accessToken");
-
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-
-    return config;
-  },
-  (error) => Promise.reject(error),
-);
 
 /* ================= REFRESH LOGIC ================= */
 let isRefreshing = false;
@@ -35,21 +20,19 @@ const processQueue = (error, token = null) => {
 
 /* ================= RESPONSE ================= */
 axiosInstance.interceptors.response.use(
-  (response) => response,
+  (res) => res,
   async (error) => {
     const originalRequest = error.config;
 
-    // ❌ Network error
     if (!error.response) {
-      console.error("❌ Network error");
       return Promise.reject({
         message: "Không thể kết nối server",
       });
     }
 
-    const { status, data } = error.response;
+    const { status } = error.response;
 
-    /* ================= 401: TOKEN EXPIRED ================= */
+    /* ===== TOKEN EXPIRED ===== */
     if (status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
@@ -68,15 +51,15 @@ axiosInstance.interceptors.response.use(
         const res = await axios.post(
           "http://localhost:8000/api/auth/refresh-token",
           {},
-          { withCredentials: true },
+          { withCredentials: true }
         );
 
         const newAccessToken = res.data.data.accessToken;
 
-        localStorage.setItem("accessToken", newAccessToken);
-
-        axiosInstance.defaults.headers.common["Authorization"] =
-          `Bearer ${newAccessToken}`;
+        // 🔥 lưu vào memory (axios)
+        axiosInstance.defaults.headers.common[
+          "Authorization"
+        ] = `Bearer ${newAccessToken}`;
 
         processQueue(null, newAccessToken);
 
@@ -86,7 +69,6 @@ axiosInstance.interceptors.response.use(
       } catch (err) {
         processQueue(err, null);
 
-        localStorage.clear();
         window.location.href = "/login";
 
         return Promise.reject(err);
@@ -95,35 +77,8 @@ axiosInstance.interceptors.response.use(
       }
     }
 
-    /* ================= OTHER ERRORS ================= */
-    switch (status) {
-      case 400:
-        return Promise.reject({
-          message: data?.message || "Dữ liệu không hợp lệ",
-        });
-
-      case 403:
-        return Promise.reject({
-          message: "Bạn không có quyền truy cập",
-        });
-
-      case 404:
-        return Promise.reject({
-          message: "API không tồn tại",
-        });
-
-      case 500:
-        return Promise.reject({
-          message: "Lỗi server, thử lại sau",
-        });
-
-      default:
-        return Promise.reject({
-          message: data?.message || "Có lỗi xảy ra",
-        });
-    }
-  },
+    return Promise.reject(error);
+  }
 );
 
-/* ================= EXPORT ================= */
 export default axiosInstance;

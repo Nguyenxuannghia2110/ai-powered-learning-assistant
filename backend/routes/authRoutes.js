@@ -55,11 +55,6 @@ const changePasswordValidation = [
     .withMessage("New password must be at least 6 characters"),
 ];
 
-// Refresh token validation
-const refreshTokenValidation = [
-  body("refreshToken").notEmpty().withMessage("Refresh token is required"),
-];
-
 // ================= PUBLIC =================
 
 router.post("/register", registerValidation, register);
@@ -80,8 +75,7 @@ router.put(
 );
 
 // 🔁 refresh token
-router.post("/refresh-token", refreshTokenValidation, refreshAccessToken);
-
+router.post("/refresh-token", refreshAccessToken);
 // 🚪 logout
 router.post("/logout", protect, logout);
 
