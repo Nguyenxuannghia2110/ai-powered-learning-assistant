@@ -10,8 +10,9 @@ import {
   restartQuiz,
   startQuiz,
   createManualQuiz,
-  uploadFromSheetQuiz,
+  previewQuizFromSheet,
   downloadSheetTemplate,
+  confirmQuizFromSheet,
 } from "../controllers/quizController.js";
 import { uploadSheet } from "../config/multerSheet.js";
 
@@ -23,11 +24,6 @@ router.use(protect);
  * 📘 QUIZ ROUTES
  * ===============================
  */
-router.post(
-  "/upload-sheet",
-  uploadSheet.single("file"), // 👈 field name phải là "file"
-  uploadFromSheetQuiz,
-);
 
 router.get("/", getAllQuizzes);
 /**
@@ -38,6 +34,14 @@ router.get("/", getAllQuizzes);
 router.get("/document/:documentId", getQuizzes);
 
 router.get("/download-template", downloadSheetTemplate);
+
+router.post(
+  "/preview",
+  uploadSheet.single("file"), 
+  previewQuizFromSheet
+);
+
+router.post("/confirm", confirmQuizFromSheet);
 /**
  * @route   GET /api/quizzes/:quizId
  * @desc    Get quiz by ID (questions, options)
@@ -68,7 +72,6 @@ router.get("/:id/results", getQuizResults);
 router.delete("/:id", deleteQuiz);
 
 router.post("/manual", createManualQuiz);
-
 
 router.post("/:id/start", startQuiz);
 router.post("/:id/restart", restartQuiz);

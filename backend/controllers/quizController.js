@@ -175,15 +175,15 @@ export const downloadSheetTemplate = async (req, res, next) => {
 
     // 🔥 Dropdown validation
     for (let i = 2; i <= 200; i++) {
-      // correctAnswer
+      // correctAnswer → cột F (6) ✅
       sheet.getCell(`F${i}`).dataValidation = {
         type: "list",
         allowBlank: false,
         formulae: ['"0,1,2,3"'],
       };
 
-      // difficulty
-      sheet.getCell(`G${i}`).dataValidation = {
+      // difficulty → cột H (8) ✅
+      sheet.getCell(`H${i}`).dataValidation = {
         type: "list",
         allowBlank: false,
         formulae: ['"easy,medium,hard"'],
@@ -206,7 +206,7 @@ export const downloadSheetTemplate = async (req, res, next) => {
   }
 };
 
-export const uploadFromSheetQuiz = async (req, res, next) => {
+export const previewQuizFromSheet = async (req, res, next) => {
   try {
     if (!req.file) {
       return res.status(400).json({
@@ -215,7 +215,7 @@ export const uploadFromSheetQuiz = async (req, res, next) => {
       });
     }
 
-    const filePath = req.file.path; // ✅ FIX: dùng path
+    const filePath = req.file.path;
 
     const workbook = new ExcelJS.Workbook();
     await workbook.xlsx.readFile(filePath);
@@ -230,10 +230,10 @@ export const uploadFromSheetQuiz = async (req, res, next) => {
     }
 
     const errors = [];
-    const validQuestions = [];
+    const previewData = [];
 
     sheet.eachRow((row, rowNumber) => {
-      if (rowNumber === 1) return; // skip header
+      if (rowNumber === 1) return;
 
       const question = row.getCell(1).value?.toString().trim();
 
@@ -246,8 +246,8 @@ export const uploadFromSheetQuiz = async (req, res, next) => {
 
       const correctAnswer = Number(row.getCell(6).value);
 
-      const explanation = row.getCell(8).value?.toString() || "";
-      const difficultyRaw = row.getCell(7).value;
+      const explanation = row.getCell(7).value?.toString() || "";
+      const difficultyRaw = row.getCell(8).value;
 
       const difficulty = difficultyRaw
         ? difficultyRaw.toString().toLowerCase()
@@ -255,12 +255,9 @@ export const uploadFromSheetQuiz = async (req, res, next) => {
 
       let rowErrors = [];
 
-      // ✅ validate question
-      if (!question) {
-        rowErrors.push("Missing question");
-      }
+      // validate
+      if (!question) rowErrors.push("Missing question");
 
-      // ✅ validate options
       const options = optionsRaw.map((opt) =>
         opt ? opt.toString().trim() : "",
       );
@@ -269,45 +266,100 @@ export const uploadFromSheetQuiz = async (req, res, next) => {
         rowErrors.push("Missing options");
       }
 
-      // ✅ validate correctAnswer
       if (![0, 1, 2, 3].includes(correctAnswer)) {
         rowErrors.push("correctAnswer must be 0-3");
       }
 
-      // ✅ validate difficulty
       if (!["easy", "medium", "hard"].includes(difficulty)) {
         rowErrors.push("Invalid difficulty");
       }
 
-      // ✅ push result
-      if (rowErrors.length > 0) {
+      const isValid = rowErrors.length === 0;
+
+      if (!isValid) {
         errors.push({
           row: rowNumber,
           errors: rowErrors,
         });
-      } else {
-        validQuestions.push({
-          question,
-          options,
-          correctAnswer,
-          explanation,
-          difficulty,
-        });
       }
+
+      previewData.push({
+        question: question || "",
+        options,
+        correctAnswer,
+        explanation,
+        difficulty,
+        valid: isValid, // 🔥 QUAN TRỌNG
+      });
     });
 
-    // (optional) xoá file sau khi đọc để tránh full disk
     fs.unlinkSync(filePath);
 
     return res.status(200).json({
       success: true,
-      validCount: validQuestions.length,
+      total: previewData.length,
+      validCount: previewData.filter((q) => q.valid).length,
       errorCount: errors.length,
-      preview: validQuestions,
+      preview: previewData,
       errors,
     });
   } catch (err) {
     next(err);
+  }
+};
+
+export const confirmQuizFromSheet = async (req, res, next) => {
+  try {
+    let { title, questions } = req.body;
+
+    if (!questions || questions.length === 0) {
+      return res.status(400).json({
+        success: false,
+        error: "No questions provided",
+      });
+    }
+
+    const validQuestions = questions.filter(
+      (q) =>
+        q.valid &&
+        q.question?.trim() &&
+        q.options?.length === 4 &&
+        [0, 1, 2, 3].includes(q.correctAnswer),
+    );
+
+    if (validQuestions.length === 0) {
+      return res.status(400).json({
+        success: false,
+        error: "No valid questions",
+      });
+    }
+
+    // auto title
+    if (!title || !title.trim()) {
+      title = validQuestions[0].question.slice(0, 30) || "Untitled Quiz";
+    }
+
+    const quiz = await Quiz.create({
+      userId: req.user._id,
+      sourceType: "sheet",
+      title: title.trim(),
+      questions: validQuestions.map((q) => ({
+        question: q.question.trim(),
+        options: q.options,
+        correctAnswer: q.correctAnswer,
+        explanation: q.explanation || "",
+        difficulty: q.difficulty || "easy",
+      })),
+      totalQuestions: validQuestions.length,
+    });
+
+    res.status(201).json({
+      success: true,
+      data: quiz,
+      message: "Quiz created from sheet successfully",
+    });
+  } catch (error) {
+    next(error);
   }
 };
 /**

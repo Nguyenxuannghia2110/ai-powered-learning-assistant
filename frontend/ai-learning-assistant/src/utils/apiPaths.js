@@ -11,7 +11,6 @@ export const API_PATHS = {
     UPDATE_PROFILE: "/api/auth/profile",
     CHANGE_PASSWORD: "/api/auth/change-password",
     REFRESH_TOKEN: "/api/auth/refresh-token",
-    
   },
 
   // ================= DOCUMENTS =================
@@ -40,6 +39,11 @@ export const API_PATHS = {
     REVIEW_FLASHCARD: (cardId) => `/api/flashcards/${cardId}/review`,
     TOGGLE_STAR: (cardId) => `/api/flashcards/${cardId}/star`,
     DELETE_FLASHCARD_SET: (id) => `/api/flashcards/${id}`,
+    // STATIC
+    DOWNLOAD_FLASHCARD_TEMPLATE: "/api/flashcards/download-template",
+    PREVIEW_FLASHCARD_FROM_SHEET: "/api/flashcards/preview",
+    CONFIRM_FLASHCARD_FROM_SHEET: "/api/flashcards/confirm",
+    CREATE_MANUAL_FLASHCARD: "/api/flashcards/manual",
   },
 
   // ================= QUIZZES =================
@@ -51,7 +55,6 @@ export const API_PATHS = {
     DELETE_QUIZ: (id) => `/api/quizzes/${id}`,
     RESTART_QUIZ: (id) => `/api/quizzes/${id}/restart`,
     START_QUIZ: (id) => `/api/quizzes/${id}/start`,
-
   },
 
   // ================= PROGRESS / DASHBOARD =================
