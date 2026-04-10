@@ -11,9 +11,9 @@ import NotFoundPage from "./pages/NotFoundPage";
 import DashboardPage from "./pages/Dashboard/DashboardPage";
 import DocumentListPage from "./pages/Documents/DocumentListPage";
 import DocumentDetailPage from "./pages/Documents/DocumentDetailPage";
-
 import QuizTakePage from "./pages/Quizzes/QuizTakePage";
 import QuizResultPage from "./pages/Quizzes/QuizResultPage";
+import QuizzesPage from "./pages/QuizManual/QuizzesPage";
 import ProfilePage from "./pages/Profile/ProfilePage";
 import FlashcardsPage from "./pages/Flashcards/FlashcardsPage";
 import { useAuth } from "./context/AuthContext";
@@ -74,6 +74,7 @@ const App = () => {
                 path="/quizzes/:quizId/results"
                 element={<QuizResultPage />}
               />
+               <Route path="/quizzes" element={<QuizzesPage />} />
               <Route path="/flashcards" element={<FlashcardsPage />} />
               <Route path="/profile" element={<ProfilePage />} />
             </Route>

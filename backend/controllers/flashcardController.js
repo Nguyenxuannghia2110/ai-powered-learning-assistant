@@ -246,6 +246,7 @@ export const downloadFlashcardTemplate = async (req, res, next) => {
     await workbook.xlsx.write(res);
     res.end();
   } catch (err) {
+    console.error("🔥 TEMPLATE ERROR:", err);
     next(err);
   }
 };

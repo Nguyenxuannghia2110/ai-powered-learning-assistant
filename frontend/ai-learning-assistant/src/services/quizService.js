@@ -122,6 +122,62 @@ export const startQuiz = async (quizId) => {
     );
   }
 };
+
+export const getAllQuizzes = async () => {
+  try {
+    const response = await axiosInstance.get(API_PATHS.QUIZZES.GET_ALL_QUIZZES);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || { message: "Failed to fetch quizzes" };
+  }
+};
+
+export const createManualQuiz = async (data) => {
+  try {
+    const response = await axiosInstance.post(API_PATHS.QUIZZES.CREATE_MANUAL_QUIZ, data);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || { message: "createManualQuiz failed" };
+  }
+};
+
+export const previewQuizFromSheet = async (file) => {
+  try {
+    const formData = new FormData();
+    formData.append("file", file);
+    const res = await axiosInstance.post(API_PATHS.QUIZZES.PREVIEW_QUIZ_FROM_SHEET, formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    return res.data;
+  } catch (error) {
+    throw error.response?.data || { message: "previewQuizFromSheet failed" };
+  }
+};
+
+export const confirmQuizFromSheet = async (data) => {
+  try {
+    const res = await axiosInstance.post(API_PATHS.QUIZZES.CONFIRM_QUIZ_FROM_SHEET, data);
+    return res.data;
+  } catch (error) {
+    throw error.response?.data || { message: "confirmQuizFromSheet failed" };
+  }
+};
+
+export const downloadQuizTemplate = async () => {
+  try {
+    const res = await axiosInstance.get(API_PATHS.QUIZZES.DOWNLOAD_QUIZ_TEMPLATE, {
+      responseType: "blob",
+    });
+    const url = window.URL.createObjectURL(new Blob([res.data]));
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", "quiz_template.xlsx");
+    document.body.appendChild(link);
+    link.click();
+  } catch (error) {
+    throw error.response?.data || { message: "downloadQuizTemplate failed" };
+  }
+};
 const quizService = {
   getQuizzesByDocument,
   getQuizById,
@@ -130,6 +186,11 @@ const quizService = {
   deleteQuiz,
   restartQuiz,
   startQuiz,
+  getAllQuizzes,
+  createManualQuiz,
+  previewQuizFromSheet,
+  confirmQuizFromSheet,
+  downloadQuizTemplate,
 };
 
 export default quizService;

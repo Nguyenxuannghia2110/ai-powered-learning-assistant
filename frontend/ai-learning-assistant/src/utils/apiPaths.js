@@ -40,7 +40,7 @@ export const API_PATHS = {
     TOGGLE_STAR: (cardId) => `/api/flashcards/${cardId}/star`,
     DELETE_FLASHCARD_SET: (id) => `/api/flashcards/${id}`,
     // STATIC
-    DOWNLOAD_FLASHCARD_TEMPLATE: "/api/flashcards/download-template",
+    DOWNLOAD_FLASHCARD_TEMPLATE: "/api/flashcards/template",
     PREVIEW_FLASHCARD_FROM_SHEET: "/api/flashcards/preview",
     CONFIRM_FLASHCARD_FROM_SHEET: "/api/flashcards/confirm",
     CREATE_MANUAL_FLASHCARD: "/api/flashcards/manual",
@@ -48,14 +48,28 @@ export const API_PATHS = {
 
   // ================= QUIZZES =================
   QUIZZES: {
-    GET_QUIZZES_FOR_DOC: (documentId) => `/api/quizzes/${documentId}`,
-    GET_QUIZ_BY_ID: (id) => `/api/quizzes/quiz/${id}`,
-    SUBMIT_QUIZ: (id) => `/api/quizzes/${id}/submit`,
-    GET_QUIZ_RESULTS: (id) => `/api/quizzes/${id}/results`,
-    DELETE_QUIZ: (id) => `/api/quizzes/${id}`,
-    RESTART_QUIZ: (id) => `/api/quizzes/${id}/restart`,
-    START_QUIZ: (id) => `/api/quizzes/${id}/start`,
-  },
+  // 📥 GET
+  GET_ALL_QUIZZES: "/api/quizzes",
+  GET_QUIZZES_FOR_DOC: (documentId) => `/api/quizzes/document/${documentId}`,
+  GET_QUIZ_BY_ID: (id) => `/api/quizzes/${id}`,
+
+  // 🚀 ACTIONS
+  START_QUIZ: (id) => `/api/quizzes/${id}/start`,
+  SUBMIT_QUIZ: (id) => `/api/quizzes/${id}/submit`,
+  GET_QUIZ_RESULTS: (id) => `/api/quizzes/${id}/results`,
+  RESTART_QUIZ: (id) => `/api/quizzes/${id}/restart`,
+
+  // 🗑️ DELETE
+  DELETE_QUIZ: (id) => `/api/quizzes/${id}`,
+
+  // ✍️ CREATE
+  CREATE_MANUAL_QUIZ: "/api/quizzes/manual",
+
+  // 📊 SHEET FLOW (rất quan trọng – tránh conflict)
+  PREVIEW_QUIZ_FROM_SHEET: "/api/quizzes/preview",
+  CONFIRM_QUIZ_FROM_SHEET: "/api/quizzes/confirm",
+  DOWNLOAD_QUIZ_TEMPLATE: "/api/quizzes/download-template",
+},
 
   // ================= PROGRESS / DASHBOARD =================
   PROGRESS: {

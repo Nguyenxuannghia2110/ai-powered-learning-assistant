@@ -302,6 +302,13 @@ export const refreshAccessToken = async (req, res) => {
       success: true,
       data: {
         accessToken: newAccessToken,
+        user: {
+          id: user._id,
+          username: user.username,
+          email: user.email,
+          profileImage: user.profileImage,
+          createdAt: user.createdAt,
+        },
       },
     });
   } catch (err) {

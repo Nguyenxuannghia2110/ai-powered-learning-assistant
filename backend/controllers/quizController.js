@@ -244,7 +244,14 @@ export const previewQuizFromSheet = async (req, res, next) => {
         row.getCell(5).value,
       ];
 
-      const correctAnswer = Number(row.getCell(6).value);
+      // 🔥 FIX CHÍNH Ở ĐÂY
+      const correctAnswerRaw = row.getCell(6).value;
+      const correctAnswerStr =
+        correctAnswerRaw !== null && correctAnswerRaw !== undefined
+          ? correctAnswerRaw.toString().trim()
+          : "";
+
+      const correctAnswer = Number(correctAnswerStr);
 
       const explanation = row.getCell(7).value?.toString() || "";
       const difficultyRaw = row.getCell(8).value;
@@ -266,7 +273,15 @@ export const previewQuizFromSheet = async (req, res, next) => {
         rowErrors.push("Missing options");
       }
 
-      if (![0, 1, 2, 3].includes(correctAnswer)) {
+      // 🔥 VALIDATE CHUẨN
+      if (!correctAnswerStr) {
+        rowErrors.push("correctAnswer is required");
+      }
+
+      if (
+        !Number.isInteger(correctAnswer) ||
+        ![0, 1, 2, 3].includes(correctAnswer)
+      ) {
         rowErrors.push("correctAnswer must be 0-3");
       }
 
@@ -282,14 +297,13 @@ export const previewQuizFromSheet = async (req, res, next) => {
           errors: rowErrors,
         });
       }
-
       previewData.push({
         question: question || "",
         options,
         correctAnswer,
         explanation,
         difficulty,
-        valid: isValid, // 🔥 QUAN TRỌNG
+        valid: isValid,
       });
     });
 
@@ -319,13 +333,24 @@ export const confirmQuizFromSheet = async (req, res, next) => {
       });
     }
 
-    const validQuestions = questions.filter(
-      (q) =>
-        q.valid &&
+    const validQuestions = questions.filter((q) => {
+      const correctAnswerStr =
+        q.correctAnswer !== null && q.correctAnswer !== undefined
+          ? q.correctAnswer.toString().trim()
+          : "";
+
+      const correctAnswer = Number(correctAnswerStr);
+
+      return (
+        q.valid && // vẫn giữ logic cũ
         q.question?.trim() &&
         q.options?.length === 4 &&
-        [0, 1, 2, 3].includes(q.correctAnswer),
-    );
+        q.options.every((opt) => opt && opt.toString().trim()) &&
+        correctAnswerStr && // 🔥 bắt buộc phải có
+        Number.isInteger(correctAnswer) &&
+        [0, 1, 2, 3].includes(correctAnswer)
+      );
+    });
 
     if (validQuestions.length === 0) {
       return res.status(400).json({
@@ -334,9 +359,9 @@ export const confirmQuizFromSheet = async (req, res, next) => {
       });
     }
 
-    // auto title
     if (!title || !title.trim()) {
-      title = validQuestions[0].question.slice(0, 30) || "Untitled Quiz";
+      title =
+        validQuestions[0].question.slice(0, 30) || "Untitled Quiz";
     }
 
     const quiz = await Quiz.create({
@@ -345,8 +370,8 @@ export const confirmQuizFromSheet = async (req, res, next) => {
       title: title.trim(),
       questions: validQuestions.map((q) => ({
         question: q.question.trim(),
-        options: q.options,
-        correctAnswer: q.correctAnswer,
+        options: q.options.map((opt) => opt.toString().trim()),
+        correctAnswer: Number(q.correctAnswer), 
         explanation: q.explanation || "",
         difficulty: q.difficulty || "easy",
       })),
