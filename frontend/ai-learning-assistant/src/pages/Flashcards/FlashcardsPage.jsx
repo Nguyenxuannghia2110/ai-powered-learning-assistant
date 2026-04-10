@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import FlashcardListPage from './FlashcardListPage';
 import FlashcardDesignPage from './FlashcardDesignPage';
-import FlashcardManager from '../../components/flashcards/FlashcardManager'; // For studying or we can build a new Study Page wrapper
 import { ArrowLeft } from 'lucide-react';
 import Flashcard from '../../components/flashcards/Flashcard';
 import flashcardService from '../../services/flashcardService';
@@ -44,6 +43,15 @@ export default function FlashcardsPage() {
       console.error("Toggle star failed", err);
     }
   };
+
+  useEffect(() => {
+    if (!activeSet?.cards?.length) return;
+
+  const currentCard = activeSet.cards[currentIndex];
+  if (currentCard?._id) {
+    handleReview(currentCard._id);
+  }
+}, [currentIndex]);
 
   return (
     <div className="w-full h-full bg-[#080f0c] min-h-screen text-slate-100 font-sans">

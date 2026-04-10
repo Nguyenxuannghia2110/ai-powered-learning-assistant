@@ -357,6 +357,7 @@ export const reviewFlashcard = async (req, res, next) => {
       success: true,
       message: "Flashcard reviewed successfully",
       masteryProgress: flashcardSet.masteryProgress,
+      data: flashcardSet,
     });
   } catch (error) {
     next(error);
