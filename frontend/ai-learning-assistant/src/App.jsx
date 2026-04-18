@@ -38,7 +38,7 @@ const App = () => {
 
   return (
     <>
-      {/* <Toaster 
+      <Toaster 
         position="top-right" 
         toastOptions={{
           style: {
@@ -51,7 +51,7 @@ const App = () => {
             textTransform: 'uppercase',
           },
         }} 
-      /> */}
+      />
       <Router>
         <Routes>
           {/* Root redirect */}

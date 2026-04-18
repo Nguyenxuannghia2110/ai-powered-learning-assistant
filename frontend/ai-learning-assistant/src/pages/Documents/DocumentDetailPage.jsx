@@ -9,8 +9,10 @@ import AiActions from "../../components/ai/AiActions";
 import FlashcardManager from "../../components/flashcards/FlashcardManager";
 import QuizManager from "../../components/quizzes/QuizManager";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
-import { MessageSquare } from "lucide-react";
+import { ArrowLeft, MessageSquare, Zap, Target, BookOpen, MoreHorizontal } from "lucide-react";
+import AiResultModal from "../../components/common/AiResultModal";
+import HighlightActionModal from "../../components/documents/HighlightActionModal";
+import toast from "react-hot-toast";
 
 const DOCUMENT_TABS = [
   { key: "content", label: "Content" },
@@ -28,6 +30,22 @@ export default function DocumentDetailPage() {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const [showChatPanel, setShowChatPanel] = useState(false);
+  const [showExtractedText, setShowExtractedText] = useState(false);
+
+  // States for text highlighting
+  const [highlightRect, setHighlightRect] = useState(null);
+  const [highlightedText, setHighlightedText] = useState("");
+
+  // States for Explain Modal
+  const [explainOpen, setExplainOpen] = useState(false);
+  const [explainLoading, setExplainLoading] = useState(false);
+  const [explainTitle, setExplainTitle] = useState("");
+  const [explainResult, setExplainResult] = useState("");
+  const [explainCached, setExplainCached] = useState(false);
+
+  // States for Action Modal (Flashcard / Quiz)
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalActionType, setModalActionType] = useState("flashcard");
 
   useEffect(() => {
     if (activeTab !== "content") {
@@ -59,73 +77,136 @@ export default function DocumentDetailPage() {
   if (!document) {
     return <div className="p-6">Document not found</div>;
   }
-  //////////////////////
-  const ContentTab = ({ document }) => {
-    const [showText, setShowText] = useState(false);
+  
 
-    if (!document?.filePath) {
-      return (
-        <div className="flex items-center justify-center h-[400px] text-gray-400">
-          No document file
-        </div>
-      );
+  /* =======================
+     TEXT HIGHLIGHT LOGIC
+     ======================= */
+  const handleMouseUp = () => {
+    const selection = window.getSelection();
+    if (!selection) return;
+
+    const text = selection.toString().trim();
+    if (text.length === 0) {
+      setHighlightRect(null);
+      return;
     }
 
-    const hasExtractedText =
-      document.extractedText && document.extractedText.trim().length > 50;
+    if (activeTab === "content" && text.length > 5) {
+      const range = selection.getRangeAt(0);
+      const rect = range.getBoundingClientRect();
+      const scrollY = window.scrollY;
 
-    return (
-      <div className="p-4 space-y-4">
-        {/* PDF VIEWER */}
-        <div className="w-full h-[70vh] rounded-xl overflow-hidden border border-emerald-900">
-          <iframe
-            src={document.filePath}
-            title={document.title}
-            className="w-full h-full bg-black"
-          />
-        </div>
-        <div className="flex items-center justify-between">
-          {/* TOGGLE BUTTON */}
-          {hasExtractedText && (
-            <button
-              onClick={() => setShowText((v) => !v)}
-              className="text-sm font-semibold text-emerald-400 hover:text-emerald-300"
-            >
-              {showText ? "Hide extracted text" : "Show extracted text"}
-            </button>
-          )}
-          {/* CHAT BUTTON */}
-          <button
-            onClick={() => setShowChatPanel((v) => !v)}
-            className="
-      flex items-center gap-2
-        px-4 py-2
-        rounded-lg
-        bg-emerald-500/10
-        text-emerald-400
-        hover:bg-emerald-500/20
-        transition
-    "
-          >
-            Chat
-            <MessageSquare size={20} />
-          </button>
-        </div>
-        {/* EXTRACTED TEXT */}
-        {hasExtractedText && showText && (
-          <div className="bg-[#0e2a22] border border-emerald-900 rounded-xl p-4 max-h-[300px] overflow-auto">
-            <h3 className="font-semibold mb-2 text-sm text-emerald-200">
-              Extracted Text (for AI processing)
-            </h3>
-
-            <pre className="text-xs text-emerald-100 whitespace-pre-wrap leading-relaxed">
-              {document.extractedText}
-            </pre>
-          </div>
-        )}
-      </div>
-    );
+      setHighlightedText(text);
+      setHighlightRect({
+        top: rect.top + scrollY - 50,
+        left: rect.left + rect.width / 2,
+      });
+    }
   };
+
+  const clearHighlight = () => {
+    setHighlightRect(null);
+    setHighlightedText("");
+    window.getSelection()?.removeAllRanges();
+  };
+
+  const handleExplain = async () => {
+    setHighlightRect(null);
+    setExplainTitle(`Explain: ${highlightedText.substring(0, 30)}...`);
+    setExplainOpen(true);
+    setExplainLoading(true);
+    setExplainResult("");
+    
+    try {
+      const res = await axiosInstance.post("/api/ai/explain-concept", {
+        documentId: document?._id,
+        concept: highlightedText,
+      });
+      setExplainResult(res.data?.data?.explanation || "");
+      setExplainCached(res.data?.cached === true);
+    } catch {
+      setExplainResult("Failed to explain concept.");
+    } finally {
+      setExplainLoading(false);
+    }
+  };
+
+  const handleQuickAdd = async (type) => {
+  setHighlightRect(null);
+
+  const toastId = toast.loading(`Generating ${type}...`);
+
+  try {
+    const getSetPath =
+      type === "flashcard"
+        ? API_PATHS.FLASHCARDS.GET_FLASHCARDS_FOR_DOC(document._id)
+        : API_PATHS.QUIZZES.GET_QUIZZES_FOR_DOC(document._id);
+
+    const setsRes = await axiosInstance.get(getSetPath);
+    const sets = setsRes.data?.data || [];
+
+    const currentSet =
+      sets.find((s) => s.sourceType === "document") || sets[0];
+
+    if (!currentSet) {
+      toast.dismiss(toastId);
+      setModalActionType(type);
+      setModalOpen(true);
+      return;
+    }
+
+    const generatePath =
+      type === "flashcard"
+        ? "/api/ai/generate-flashcards-from-text"
+        : "/api/ai/generate-quiz-from-text";
+
+    const payload =
+      type === "flashcard"
+        ? { text: highlightedText, count: 1, documentId: document._id }
+        : { text: highlightedText, numQuestions: 1, documentId: document._id };
+
+    const genRes = await axiosInstance.post(generatePath, payload);
+
+    const generatedItems = genRes.data.data;
+
+    if (!generatedItems || generatedItems.length === 0) {
+      toast.error(`Failed to generate ${type}`, { id: toastId });
+      return;
+    }
+
+    const appendPath =
+      type === "flashcard"
+        ? `/api/flashcards/${currentSet._id}/add-cards`
+        : `/api/quizzes/${currentSet._id}/add-questions`;
+
+    const appendPayload =
+      type === "flashcard"
+        ? { cards: generatedItems }
+        : { questions: generatedItems };
+
+    await axiosInstance.post(appendPath, appendPayload);
+
+    toast.success(
+      `${generatedItems.length} ${type}(s) added to "${currentSet.title}"`,
+      { id: toastId }
+    );
+
+    clearHighlight();
+  } catch (err) {
+    console.error("Quick add error:", err);
+    toast.error("Failed to quick add", { id: toastId });
+  }
+};
+
+  const openActionModal = (type) => {
+    clearHighlight();
+    setModalActionType(type);
+    setModalOpen(true);
+  };
+
+  //////////////////////
+  //////////////////////
   return (
     <div className="p-6 space-y-6">
       {/* HEADER */}
@@ -182,7 +263,55 @@ export default function DocumentDetailPage() {
   overflow-hidden
 "
         >
-          {activeTab === "content" && <ContentTab document={document} />}
+          {activeTab === "content" && (
+            <div className="p-4 space-y-4">
+              {!document?.filePath ? (
+                <div className="flex items-center justify-center h-[400px] text-gray-400">
+                  No document file
+                </div>
+              ) : (
+                <>
+                  <div className="w-full h-[70vh] rounded-xl overflow-hidden border border-emerald-900 bg-black">
+                    <iframe
+                      src={document.filePath}
+                      title={document.title}
+                      className="w-full h-full bg-white rounded-lg"
+                    />
+                  </div>
+                  <div className="flex items-center justify-between">
+                    {document.extractedText && document.extractedText.trim().length > 50 ? (
+                      <button
+                        onClick={() => setShowExtractedText((v) => !v)}
+                        className="text-sm font-semibold text-emerald-400 hover:text-emerald-300 transition"
+                      >
+                        {showExtractedText ? "Hide extracted text" : "Show extracted text"}
+                      </button>
+                    ) : <div />}
+                    <button
+                      onClick={() => setShowChatPanel((v) => !v)}
+                      className="flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 transition"
+                    >
+                      Chat
+                      <MessageSquare size={20} />
+                    </button>
+                  </div>
+                  {document.extractedText && document.extractedText.trim().length > 50 && showExtractedText && (
+                    <div 
+                      className="bg-[#0a1f18] border border-emerald-800/50 rounded-xl p-6 max-h-[500px] overflow-auto relative cursor-text shadow-inner"
+                      onMouseUp={handleMouseUp}
+                    >
+                      <h3 className="font-semibold mb-4 text-sm text-emerald-300 uppercase tracking-wider border-b border-emerald-800/50 pb-2">
+                        Document Text
+                      </h3>
+                      <div className="text-[15px] text-gray-100 whitespace-pre-wrap leading-[1.8] font-sans text-justify">
+                        {document.extractedText}
+                      </div>
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+          )}
 
           {activeTab === "chat" && document?._id && (
             <ChatInterface document={document._id} />
@@ -212,9 +341,95 @@ h-[80vh]
           </div>
         )}
       </div>
+
+      {/* FLOATING HIGHLIGHT MENU */}
+      {highlightRect && (
+        <div
+          className="absolute z-50 flex items-center bg-zinc-900 text-white shadow-xl rounded-lg overflow-hidden border border-zinc-700 animate-in fade-in zoom-in duration-200"
+          style={{
+            top: highlightRect.top,
+            left: highlightRect.left,
+            transform: "translate(-50%, -100%)",
+          }}
+        >
+          <button
+            onClick={handleExplain}
+            className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium hover:bg-zinc-800 transition text-amber-200 border-r border-zinc-700"
+            title="Giải thích khái niệm"
+          >
+            <BookOpen size={16} className="text-amber-400" />
+            Explain
+          </button>
+          
+          <button
+            onClick={() => handleQuickAdd("flashcard")}
+            className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium hover:bg-zinc-800 transition text-emerald-200 border-r border-zinc-700"
+            title="Thêm nhanh Flashcard"
+          >
+            <Zap size={16} className="text-emerald-400" />
+            Flashcard
+          </button>
+          
+          <button
+            onClick={() => handleQuickAdd("quiz")}
+            className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium hover:bg-zinc-800 transition text-blue-200 border-r border-zinc-700"
+            title="Thêm nhanh Quiz"
+          >
+            <Target size={16} className="text-blue-400" />
+            Quiz
+          </button>
+
+          <div className="relative group">
+            <button
+              className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium hover:bg-zinc-800 transition text-gray-200"
+              title="Tuỳ chọn lưu..."
+            >
+              <MoreHorizontal size={16} />
+            </button>
+            <div className="absolute right-0 top-full mt-1 hidden group-hover:block w-48 bg-zinc-900 rounded-lg shadow-xl border border-zinc-700 py-1">
+               <button
+                 onClick={() => openActionModal("flashcard")}
+                 className="w-full text-left px-4 py-2 text-sm text-emerald-200 hover:bg-zinc-800"
+               >
+                 Tạo Flashcard (Tùy chọn)
+               </button>
+               <button
+                 onClick={() => openActionModal("quiz")}
+                 className="w-full text-left px-4 py-2 text-sm text-blue-200 hover:bg-zinc-800"
+               >
+                 Tạo Quiz (Tùy chọn)
+               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* EXPLAIN MODAL */}
+      <AiResultModal
+        open={explainOpen}
+        title={explainTitle}
+        loading={explainLoading}
+        content={explainResult}
+        cached={explainCached}
+        onClose={() => setExplainOpen(false)}
+      />
+
+      {/* ACTION MODAL FOR FLASHCARD / QUIZ */}
+      <HighlightActionModal
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        actionType={modalActionType}
+        text={highlightedText}
+        documentId={document?._id}
+        documentTitle={document?.title}
+        onSuccess={(type) => {
+           toast.success(`${type} generated and saved correctly!`);
+           clearHighlight();
+        }}
+      />
     </div>
   );
-}
+
 
 /* =======================
    TAB SECTIONS
@@ -227,3 +442,4 @@ function Placeholder({ label }) {
     </div>
   );
 }
+;}

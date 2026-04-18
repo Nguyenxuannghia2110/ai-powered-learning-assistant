@@ -13,6 +13,7 @@ import {
   previewQuizFromSheet,
   downloadSheetTemplate,
   confirmQuizFromSheet,
+  addQuestionsToQuiz,
 } from "../controllers/quizController.js";
 import { uploadSheet } from "../config/multerSheet.js";
 
@@ -75,5 +76,6 @@ router.post("/manual", createManualQuiz);
 
 router.post("/:id/start", startQuiz);
 router.post("/:id/restart", restartQuiz);
+router.post("/:id/add-questions", addQuestionsToQuiz);
 
 export default router;

@@ -441,3 +441,65 @@ export const deleteFlashcardSet = async (req, res, next) => {
     next(error);
   }
 };
+
+// @desc    Add cards to a flashcard set
+// @route   POST /api/flashcards/:id/add-cards
+// @access  Private
+export const addCardsToSet = async (req, res, next) => {
+  try {
+    const { cards } = req.body;
+
+    if (!cards || cards.length === 0) {
+      return res.status(400).json({
+        success: false,
+        error: "Cards are required",
+      });
+    }
+
+    const cleanCards = cards.filter(
+      (c) => c.question?.trim() && c.answer?.trim(),
+    );
+
+    if (cleanCards.length === 0) {
+      return res.status(400).json({
+        success: false,
+        error: "No valid cards",
+      });
+    }
+
+    const flashcardSet = await Flashcard.findOne({
+      _id: req.params.id,
+      userId: req.user._id,
+    });
+
+    if (!flashcardSet) {
+      return res.status(404).json({
+        success: false,
+        error: "Flashcard set not found",
+        statusCode: 404,
+      });
+    }
+
+    const newCards = cleanCards.map((c) => ({
+      question: c.question.trim(),
+      answer: c.answer.trim(),
+      difficulty: c.difficulty || "medium",
+      reviewCount: 0,
+      isStarred: false,
+    }));
+
+    flashcardSet.cards.push(...newCards);
+    flashcardSet.count = flashcardSet.cards.length;
+    flashcardSet.masteryProgress = calculateMasteryProgressFL(flashcardSet.cards);
+
+    await flashcardSet.save();
+
+    res.status(200).json({
+      success: true,
+      data: flashcardSet,
+      message: `${newCards.length} cards added successfully`,
+    });
+  } catch (error) {
+    next(error);
+  }
+};

@@ -662,3 +662,61 @@ export const deleteQuiz = async (req, res, next) => {
     next(error);
   }
 };
+
+/**
+ * =====================================================
+ * POST /api/quizzes/:id/add-questions
+ * Add questions to a quiz set
+ * =====================================================
+ */
+export const addQuestionsToQuiz = async (req, res, next) => {
+  try {
+    const { questions } = req.body;
+
+    if (!questions || questions.length === 0) {
+      return res.status(400).json({
+        success: false,
+        error: "Questions are required",
+      });
+    }
+
+    const quiz = await Quiz.findOne({
+      _id: req.params.id,
+      userId: req.user._id,
+    });
+
+    if (!quiz) {
+      return res.status(404).json({
+        success: false,
+        error: "Quiz not found",
+      });
+    }
+
+    const validQuestions = questions.map((q, index) => {
+      if (!q.question || !q.options || q.options.length !== 4) {
+        throw new Error(`Invalid question provided`);
+      }
+
+      return {
+        question: q.question,
+        options: q.options,
+        correctAnswer: Number(q.correctAnswer) || 0,
+        explanation: q.explanation || "",
+        difficulty: q.difficulty || "medium",
+      };
+    });
+
+    quiz.questions.push(...validQuestions);
+    quiz.totalQuestions = quiz.questions.length;
+
+    await quiz.save();
+
+    res.status(200).json({
+      success: true,
+      data: quiz,
+      message: `${validQuestions.length} questions added successfully`,
+    });
+  } catch (error) {
+    next(error);
+  }
+};

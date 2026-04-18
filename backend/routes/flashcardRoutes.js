@@ -9,6 +9,7 @@ import {
   confirmFlashcardFromSheet,
   createManualFlashcard,
   downloadFlashcardTemplate,
+  addCardsToSet,
 } from "../controllers/flashcardController.js";
 
 import protect from "../middleware/auth.js";
@@ -25,6 +26,7 @@ router.post("/confirm", confirmFlashcardFromSheet);
 router.post("/manual", createManualFlashcard);
 
 // ✅ ACTION
+router.post("/:id/add-cards", addCardsToSet);
 router.post("/:cardId/review", reviewFlashcard);
 router.put("/:cardId/star", toggleStarFlashcard);
 router.delete("/:id", deleteFlashcardSet);

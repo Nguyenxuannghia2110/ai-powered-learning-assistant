@@ -677,3 +677,190 @@ export const getChatHistory = async (req, res, next) => {
     next(error);
   }
 };
+
+/**
+ * @route   POST /api/ai/generate-flashcards-from-text
+ * @desc    Generate flashcards from highlighted text
+ */
+export const generateFlashcardsFromText = async (req, res, next) => {
+  try {
+    const { text, documentId, count = 2 } = req.body;
+    const countNumber = parseInt(count, 10);
+
+    if (!text) {
+      return res.status(400).json({
+        success: false,
+        error: "Text is required",
+      });
+    }
+
+    if (!documentId) {
+      return res.status(400).json({
+        success: false,
+        error: "Document ID is required",
+      });
+    }
+
+    /* ================= AI CACHE CHECK ================= */
+    const questionHash = hashText(`flashcardsFromText:${countNumber}:${text}`);
+
+    const cached = await AiResponseCache.findOne({
+      userId: req.user._id,
+      documentId,
+      type: "flashcards",
+      questionHash,
+    });
+
+    let cards;
+
+    if (cached) {
+      cards = cached.output.cards;
+    } else {
+      cards = await geminiService.generateFlashcards(text, countNumber);
+
+      if (!cards || cards.length === 0) {
+        return res.status(200).json({
+          success: true,
+          data: null,
+          message: "No flashcards generated",
+        });
+      }
+
+      await AiResponseCache.create({
+        userId: req.user._id,
+        documentId,
+        type: "flashcards",
+        questionHash,
+        input: {
+          action: "generate-flashcards-from-text",
+          text,
+          count: countNumber,
+        },
+        output: { cards },
+        provider: "gemini",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: cards,
+      cached: !!cached,
+      message: cached
+        ? "Flashcards loaded from cache"
+        : "Flashcards generated successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * @route   POST /api/ai/generate-quiz-from-text
+ * @desc    Generate a quiz from highlighted text
+ */
+export const generateQuizFromText = async (req, res, next) => {
+  try {
+    const { text, documentId, numQuestions = 2 } = req.body;
+
+    if (!text) {
+      return res.status(400).json({
+        success: false,
+        error: "Text is required",
+        statusCode: 400,
+      });
+    }
+
+    if (!documentId) {
+      return res.status(400).json({
+        success: false,
+        error: "Document ID is required",
+        statusCode: 400,
+      });
+    }
+
+    let finalNumQuestions = parseInt(numQuestions);
+    if (isNaN(finalNumQuestions)) finalNumQuestions = 2;
+    // Highlighted text usually doesn't need many questions
+    finalNumQuestions = Math.min(Math.max(finalNumQuestions, 1), 10);
+
+    /* ================= TẠO HASH THEO INPUT ================= */
+    const questionHash = hashText(`quizFromText:${finalNumQuestions}:${text}`);
+
+    /* ================= CHECK CACHE ================= */
+    let questions;
+
+    const cached = await AiResponseCache.findOne({
+      userId: req.user._id,
+      documentId,
+      type: "quiz",
+      questionHash,
+    });
+
+    if (cached) {
+      questions = cached.output.questions;
+    } else {
+      /* ================= CALL GEMINI ================= */
+      questions = await geminiService.generateQuiz(text, finalNumQuestions);
+
+      if (!questions || questions.length === 0) {
+        return res.status(200).json({
+          success: true,
+          data: [],
+          message: "No quiz generated",
+        });
+      }
+
+      /* ================= SAVE CACHE ================= */
+      await AiResponseCache.create({
+        userId: req.user._id,
+        documentId,
+        type: "quiz",
+        questionHash,
+        input: `generate-quiz-from-text:${finalNumQuestions}:${text}`,
+        output: { questions },
+        provider: "gemini",
+      });
+    }
+
+    /* ================= NORMALIZE QUESTIONS ================= */
+    const normalizedQuestions = questions.map((q, index) => {
+      let correctIndex = q.correctAnswer;
+
+      if (typeof correctIndex === "string") {
+        const foundIndex = q.options?.findIndex(
+          (opt) =>
+            opt.toLowerCase().trim() === correctIndex.toLowerCase().trim(),
+        );
+        correctIndex = foundIndex !== -1 ? foundIndex : 0;
+      }
+
+      if (isNaN(correctIndex)) correctIndex = 0;
+
+      return {
+        question: q.question || `Question ${index + 1}`,
+        options: q.options?.slice(0, 4) || [
+          "Option A",
+          "Option B",
+          "Option C",
+          "Option D",
+        ],
+        correctAnswer: Number(correctIndex),
+        explanation: q.explanation || "",
+        difficulty: q.difficulty || "easy",
+      };
+    });
+
+    res.status(200).json({
+      success: true,
+      cached: !!cached,
+      requestedQuestions: finalNumQuestions,
+      actualQuestions: normalizedQuestions.length,
+      data: normalizedQuestions,
+      message: cached
+        ? "Quiz loaded from cache"
+        : "Quiz generated successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};

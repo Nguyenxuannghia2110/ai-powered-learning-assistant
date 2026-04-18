@@ -6,6 +6,8 @@ import {
   chat,
   explainConcept,
   getChatHistory,
+  generateFlashcardsFromText,
+  generateQuizFromText,
 } from "../controllers/aiController.js";
 
 import protect from "../middleware/auth.js";
@@ -24,8 +26,28 @@ router.post(
   generateFlashcards,
 );
 
+// ✅ Generate flashcards from highlighted text
+router.post(
+  "/generate-flashcards-from-text",
+  aiCache(
+    "flashcardsFromText",
+    (req) => `flashcardsFromText:${req.body.count || 2}:${req.body.text}`,
+  ),
+  generateFlashcardsFromText,
+);
+
 // ✅ Generate quiz questions
 router.post("/generate-quiz", aiCache("quiz"), generateQuiz);
+
+// ✅ Generate quiz from highlighted text
+router.post(
+  "/generate-quiz-from-text",
+  aiCache(
+    "quizFromText",
+    (req) => `quizFromText:${req.body.numQuestions || 2}:${req.body.text}`,
+  ),
+  generateQuizFromText,
+);
 
 // ✅ Generate summary
 router.post("/generate-summary", aiCache("summary"), generateSummary);
@@ -35,6 +57,7 @@ router.post("/chat", aiCache("chat"), chat);
 
 // ✅ Explain a concept
 router.post("/explain-concept", aiCache("concept"), explainConcept);
+
 
 // ✅ Get chat history
 router.get("/chat-history/:documentId", getChatHistory);
