@@ -296,17 +296,21 @@ export default function DocumentDetailPage() {
                     </button>
                   </div>
                   {document.extractedText && document.extractedText.trim().length > 50 && showExtractedText && (
-                    <div 
-                      className="bg-[#0a1f18] border border-emerald-800/50 rounded-xl p-6 max-h-[500px] overflow-auto relative cursor-text shadow-inner"
-                      onMouseUp={handleMouseUp}
-                    >
-                      <h3 className="font-semibold mb-4 text-sm text-emerald-300 uppercase tracking-wider border-b border-emerald-800/50 pb-2">
-                        Document Text
-                      </h3>
-                      <div className="text-[15px] text-gray-100 whitespace-pre-wrap leading-[1.8] font-sans text-justify">
-                        {document.extractedText}
+                      <div className="text-[15px] text-gray-100 font-sans text-justify space-y-6 bg-[#0a1f18] p-4 rounded-xl border border-emerald-800/50 shadow-inner max-h-[600px] overflow-auto cursor-text relative" onMouseUp={handleMouseUp}>
+                        <h3 className="font-semibold mb-4 text-sm text-emerald-300 uppercase tracking-wider sticky top-0 bg-[#0a1f18] z-10 pb-2 border-b border-emerald-800/50">
+                          Document Text
+                        </h3>
+                        {document.extractedText.split(document.extractedText.includes('\f') ? '\f' : '\n').filter(p => p.trim().length > 0).map((pageText, idx) => (
+                          <div key={idx} className="relative bg-[#02140f] p-6 md:p-8 hover:bg-[#031d16] transition-colors rounded-lg shadow-sm border border-emerald-800/30">
+                            <span className="absolute top-2 right-4 text-xs font-bold text-emerald-800 select-none">
+                              PAGE {idx + 1}
+                            </span>
+                            <p className="whitespace-pre-wrap leading-[1.8] mt-2">
+                              {pageText}
+                            </p>
+                          </div>
+                        ))}
                       </div>
-                    </div>
                   )}
                 </>
               )}
