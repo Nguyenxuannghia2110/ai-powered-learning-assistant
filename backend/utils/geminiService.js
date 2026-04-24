@@ -146,6 +146,81 @@ ${text.substring(0, 15000)}
   }
 };
 
+/* ================= SMART POLISH FLASHCARDS ================= */
+
+export const smartPolishFlashcards = async (topic, existingCards = [], mode = "topic", count = 5) => {
+  let prompt = "";
+
+  if (mode === "expand") {
+    const cardsText = existingCards
+      .map((c) => `Q: ${c.question}\nA: ${c.answer}`)
+      .join("\n\n");
+    prompt = `
+You are an expert educator. The user already has the following flashcards:
+
+${cardsText.substring(0, 5000)}
+
+Based on these existing concepts, generate exactly ${count} NEW flashcards to expand their knowledge.
+DO NOT repeat the existing flashcards.
+
+Format:
+Q: Question
+A: Answer
+D: easy | medium | hard
+
+Separate each flashcard with ---
+`;
+  } else {
+    prompt = `
+You are an expert educator. Generate exactly ${count} educational flashcards about the topic: "${topic}".
+
+Format:
+Q: Question
+A: Answer
+D: easy | medium | hard
+
+Separate each flashcard with ---
+`;
+  }
+
+  try {
+    const generatedText = await geminiRequest(prompt);
+    if (!generatedText) return [];
+
+    const flashcards = [];
+    const cards = generatedText
+      .split("---")
+      .map((c) => c.trim())
+      .filter(Boolean);
+
+    for (const card of cards) {
+      const lines = card.split("\n");
+
+      let question = "";
+      let answer = "";
+      let difficulty = "medium";
+
+      for (const line of lines) {
+        if (line.startsWith("Q:")) question = line.slice(2).trim();
+        if (line.startsWith("A:")) answer = line.slice(2).trim();
+        if (line.startsWith("D:")) {
+          const d = line.slice(2).trim().toLowerCase();
+          if (["easy", "medium", "hard"].includes(d)) difficulty = d;
+        }
+      }
+
+      if (question && answer) {
+        flashcards.push({ question, answer, difficulty });
+      }
+    }
+
+    return flashcards.slice(0, count);
+  } catch (error) {
+    console.error("Gemini smart polish flashcard error:", error);
+    throw new Error("Failed to smart polish flashcards");
+  }
+};
+
 /* ================= QUIZ ================= */
 
 export const generateQuiz = async (text, numQuestions = 5) => {
@@ -215,6 +290,100 @@ ${text.substring(0, 15000)}
   } catch (error) {
     console.error("Gemini quiz error:", error);
     throw new Error("Failed to generate quiz");
+  }
+};
+
+/* ================= SMART POLISH QUIZ ================= */
+
+export const smartPolishQuiz = async (topic, existingQuestions = [], mode = "topic", count = 5) => {
+  let prompt = "";
+
+  if (mode === "expand") {
+    const qsText = existingQuestions.map((q) => `Q: ${q.question}`).join("\n\n");
+    prompt = `
+You are an expert educator. The user already has the following quiz questions:
+
+${qsText.substring(0, 5000)}
+
+Based on these, generate exactly ${count} NEW multiple choice questions to expand their knowledge.
+DO NOT repeat the existing questions.
+
+Format:
+Q: Question
+01: Option A
+02: Option B
+03: Option C
+04: Option D
+C: Correct option (exact text)
+E: Explanation
+D: easy | medium | hard
+
+Separate with ---
+`;
+  } else {
+    prompt = `
+You are an expert educator. Generate exactly ${count} multiple choice questions about the topic: "${topic}".
+
+Format:
+Q: Question
+01: Option A
+02: Option B
+03: Option C
+04: Option D
+C: Correct option (exact text)
+E: Explanation
+D: easy | medium | hard
+
+Separate with ---
+`;
+  }
+
+  try {
+    const generatedText = await geminiRequest(prompt);
+    if (!generatedText) return [];
+
+    const questions = [];
+    const blocks = generatedText
+      .split("---")
+      .map((b) => b.trim())
+      .filter(Boolean);
+
+    for (const block of blocks) {
+      const lines = block.split("\n");
+
+      let question = "";
+      let options = [];
+      let correctAnswer = "";
+      let explanation = "";
+      let difficulty = "medium";
+
+      for (const line of lines) {
+        const t = line.trim();
+        if (t.startsWith("Q:")) question = t.slice(2).trim();
+        else if (/^0\d:/.test(t)) options.push(t.slice(3).trim());
+        else if (t.startsWith("C:")) correctAnswer = t.slice(2).trim();
+        else if (t.startsWith("E:")) explanation = t.slice(2).trim();
+        else if (t.startsWith("D:")) {
+          const d = t.slice(2).trim().toLowerCase();
+          if (["easy", "medium", "hard"].includes(d)) difficulty = d;
+        }
+      }
+
+      if (question && options.length === 4 && correctAnswer) {
+        questions.push({
+          question,
+          options,
+          correctAnswer,
+          explanation,
+          difficulty,
+        });
+      }
+    }
+
+    return questions.slice(0, count);
+  } catch (error) {
+    console.error("Gemini smart polish quiz error:", error);
+    throw new Error("Failed to smart polish quiz");
   }
 };
 

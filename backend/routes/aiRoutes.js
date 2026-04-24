@@ -8,6 +8,8 @@ import {
   getChatHistory,
   generateFlashcardsFromText,
   generateQuizFromText,
+  smartPolishFlashcardsController,
+  smartPolishQuizController,
 } from "../controllers/aiController.js";
 
 import protect from "../middleware/auth.js";
@@ -61,5 +63,9 @@ router.post("/explain-concept", aiCache("concept"), explainConcept);
 
 // ✅ Get chat history
 router.get("/chat-history/:documentId", getChatHistory);
+
+// ✅ Smart Polish
+router.post("/smart-polish-flashcard", smartPolishFlashcardsController);
+router.post("/smart-polish-quiz", smartPolishQuizController);
 
 export default router;

@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Trash2 } from 'lucide-react';
+import { Trash2, Sparkles } from 'lucide-react';
 import quizService from '../../services/quizService';
 import SpreadsheetUploadModal from './SpreadsheetUploadModal';
 import ValidationModal from './ValidationModal';
+import SmartPolishModal from '../../components/SmartPolishModal';
 
 export default function QuizDesignPage({ onBack, onGenerate }) {
   const [title, setTitle] = useState("Evaluation Matrix Alpha");
@@ -17,6 +18,7 @@ export default function QuizDesignPage({ onBack, onGenerate }) {
 
   const [isGenerating, setIsGenerating] = useState(false);
   const [isSpreadsheetOpen, setIsSpreadsheetOpen] = useState(false);
+  const [isSmartPolishOpen, setIsSmartPolishOpen] = useState(false);
   const [validationData, setValidationData] = useState(null);
 
   const handleAddQuestion = () => {
@@ -82,6 +84,19 @@ export default function QuizDesignPage({ onBack, onGenerate }) {
   const handleValidationConfirm = (newQuiz) => {
     setValidationData(null);
     onGenerate(newQuiz);
+  };
+
+  const handleSmartPolishApply = (newQuestions) => {
+    const questionsToAdd = newQuestions.map((q, i) => ({
+      id: Date.now() + i,
+      question: q.question,
+      options: q.options || ["", "", "", ""],
+      correctAnswer: q.correctAnswer ?? 0
+    }));
+    
+    // filter out initial empty question if any
+    const validCurrent = questions.filter(q => q.question.trim());
+    setQuestions([...validCurrent, ...questionsToAdd]);
   };
 
   return (
@@ -199,6 +214,13 @@ export default function QuizDesignPage({ onBack, onGenerate }) {
 
          <div className="flex items-center gap-6">
             <button 
+              onClick={() => setIsSmartPolishOpen(true)}
+              className="flex items-center gap-2 text-sm text-slate-300 font-semibold hover:text-white transition"
+            >
+               <Sparkles size={16} />
+               Smart Polish
+            </button>
+            <button 
               onClick={handleGenerateManual}
               disabled={isGenerating}
               className="px-8 py-3 rounded-full bg-emerald-400 hover:bg-emerald-300 disabled:opacity-50 text-emerald-950 font-black text-sm tracking-widest uppercase transition flex items-center gap-2 shadow-[0_0_20px_rgba(52,211,153,0.3)]"
@@ -220,6 +242,14 @@ export default function QuizDesignPage({ onBack, onGenerate }) {
         previewData={validationData} 
         providedTitle={title}
         onConfirm={handleValidationConfirm} 
+      />
+
+      <SmartPolishModal 
+        isOpen={isSmartPolishOpen}
+        onClose={() => setIsSmartPolishOpen(false)}
+        type="quiz"
+        existingData={questions.filter(q => q.question.trim())}
+        onApply={handleSmartPolishApply}
       />
     </div>
   );

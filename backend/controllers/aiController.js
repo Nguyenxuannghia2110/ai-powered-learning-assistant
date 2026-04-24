@@ -864,3 +864,29 @@ export const generateQuizFromText = async (req, res, next) => {
     next(error);
   }
 };
+
+/* =====================================================
+   SMART POLISH CONTROLLERS
+===================================================== */
+
+export const smartPolishFlashcardsController = async (req, res) => {
+  try {
+    const { topic, existingCards, mode, count } = req.body;
+    const cards = await geminiService.smartPolishFlashcards(topic, existingCards, mode, count);
+    res.status(200).json({ success: true, data: cards });
+  } catch (error) {
+    console.error("Smart Polish Flashcards Error:", error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+export const smartPolishQuizController = async (req, res) => {
+  try {
+    const { topic, existingQuestions, mode, count } = req.body;
+    const questions = await geminiService.smartPolishQuiz(topic, existingQuestions, mode, count);
+    res.status(200).json({ success: true, data: questions });
+  } catch (error) {
+    console.error("Smart Polish Quiz Error:", error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+};

@@ -3,6 +3,7 @@ import { Trash2, Plus, Sparkles } from 'lucide-react';
 import flashcardService from '../../services/flashcardService';
 import SpreadsheetUploadModal from './SpreadsheetUploadModal';
 import ValidationModal from './ValidationModal';
+import SmartPolishModal from '../../components/SmartPolishModal';
 
 export default function FlashcardDesignPage({ onBack, onGenerate }) {
   const [title, setTitle] = useState("Fundamentals of Neural Architecture");
@@ -14,6 +15,7 @@ export default function FlashcardDesignPage({ onBack, onGenerate }) {
   
   const [isGenerating, setIsGenerating] = useState(false);
   const [isSpreadsheetOpen, setIsSpreadsheetOpen] = useState(false);
+  const [isSmartPolishOpen, setIsSmartPolishOpen] = useState(false);
   const [validationData, setValidationData] = useState(null);
 
   const handleAddCard = () => {
@@ -58,6 +60,18 @@ export default function FlashcardDesignPage({ onBack, onGenerate }) {
   const handleValidationConfirm = (newSet) => {
     setValidationData(null);
     onGenerate(newSet);
+  };
+
+  const handleSmartPolishApply = (newCards) => {
+    const cardsToAdd = newCards.map((c, i) => ({
+      id: Date.now() + i,
+      question: c.question,
+      answer: c.answer
+    }));
+    
+    // remove the last empty card if it is empty to keep it clean
+    const filteredCards = cards.filter(c => c.question.trim() || c.answer.trim());
+    setCards([...filteredCards, ...cardsToAdd, { id: Date.now() + newCards.length, question: "", answer: "" }]);
   };
 
   return (
@@ -195,7 +209,10 @@ export default function FlashcardDesignPage({ onBack, onGenerate }) {
          </div>
 
          <div className="flex items-center gap-6">
-            <button className="flex items-center gap-2 text-sm text-slate-300 font-semibold hover:text-white transition">
+            <button 
+              onClick={() => setIsSmartPolishOpen(true)}
+              className="flex items-center gap-2 text-sm text-slate-300 font-semibold hover:text-white transition"
+            >
                <Sparkles size={16} />
                Smart Polish
             </button>
@@ -225,6 +242,14 @@ export default function FlashcardDesignPage({ onBack, onGenerate }) {
         previewData={validationData} 
         providedTitle={title}
         onConfirm={handleValidationConfirm} 
+      />
+
+      <SmartPolishModal 
+        isOpen={isSmartPolishOpen}
+        onClose={() => setIsSmartPolishOpen(false)}
+        type="flashcard"
+        existingData={cards.filter(c => c.question.trim() && c.answer.trim())}
+        onApply={handleSmartPolishApply}
       />
     </div>
   );
