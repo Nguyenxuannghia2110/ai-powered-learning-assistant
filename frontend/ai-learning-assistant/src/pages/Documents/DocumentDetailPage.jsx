@@ -46,6 +46,10 @@ export default function DocumentDetailPage() {
   // States for Action Modal (Flashcard / Quiz)
   const [modalOpen, setModalOpen] = useState(false);
   const [modalActionType, setModalActionType] = useState("flashcard");
+  
+  // Track selected set ID so subsequent highlights auto-append
+  const [selectedFlashcardSetId, setSelectedFlashcardSetId] = useState(null);
+  const [selectedQuizSetId, setSelectedQuizSetId] = useState(null);
 
   useEffect(() => {
     if (activeTab !== "content") {
@@ -133,71 +137,77 @@ export default function DocumentDetailPage() {
   };
 
   const handleQuickAdd = async (type) => {
-  setHighlightRect(null);
+    setHighlightRect(null);
 
-  const toastId = toast.loading(`Generating ${type}...`);
+    const toastId = toast.loading(`Generating ${type}...`);
 
-  try {
-    const getSetPath =
-      type === "flashcard"
-        ? API_PATHS.FLASHCARDS.GET_FLASHCARDS_FOR_DOC(document._id)
-        : API_PATHS.QUIZZES.GET_QUIZZES_FOR_DOC(document._id);
+    try {
+      const preferredSetId =
+        type === "flashcard" ? selectedFlashcardSetId : selectedQuizSetId;
 
-    const setsRes = await axiosInstance.get(getSetPath);
-    const sets = setsRes.data?.data || [];
+      const getSetPath =
+        type === "flashcard"
+          ? API_PATHS.FLASHCARDS.GET_FLASHCARDS_FOR_DOC(document._id)
+          : API_PATHS.QUIZZES.GET_QUIZZES_FOR_DOC(document._id);
 
-    const currentSet =
-      sets.find((s) => s.sourceType === "document") || sets[0];
+      const setsRes = await axiosInstance.get(getSetPath);
+      const sets = setsRes.data?.data || [];
 
-    if (!currentSet) {
-      toast.dismiss(toastId);
-      setModalActionType(type);
-      setModalOpen(true);
-      return;
+      let targetSet = null;
+      if (preferredSetId) {
+        targetSet = sets.find((s) => s._id === preferredSetId);
+      }
+
+      if (!targetSet) {
+        toast.dismiss(toastId);
+        setModalActionType(type);
+        setModalOpen(true);
+        return;
+      }
+
+      const generatePath =
+        type === "flashcard"
+          ? "/api/ai/generate-flashcards-from-text"
+          : "/api/ai/generate-quiz-from-text";
+
+      const payload =
+        type === "flashcard"
+          ? { text: highlightedText, count: 1, documentId: document._id }
+          : { text: highlightedText, numQuestions: 1, documentId: document._id };
+
+      const genRes = await axiosInstance.post(generatePath, payload);
+
+      const generatedItems = genRes.data.data;
+
+      if (!generatedItems || generatedItems.length === 0) {
+        toast.error(`Failed to generate ${type}`, { id: toastId });
+        return;
+      }
+
+      const appendPath =
+        type === "flashcard"
+          ? `/api/flashcards/${targetSet._id}/add-cards`
+          : `/api/quizzes/${targetSet._id}/add-questions`;
+
+      const appendPayload =
+        type === "flashcard"
+          ? { cards: generatedItems }
+          : { questions: generatedItems };
+
+      await axiosInstance.post(appendPath, appendPayload);
+
+      toast.success(
+        `${generatedItems.length} ${type}(s) added to "${targetSet.title}"`,
+        { id: toastId }
+      );
+
+      clearHighlight();
+      setActiveTab(type === "flashcard" ? "flashcards" : "quizzes");
+    } catch (err) {
+      console.error("Quick add error:", err);
+      toast.error("Failed to quick add", { id: toastId });
     }
-
-    const generatePath =
-      type === "flashcard"
-        ? "/api/ai/generate-flashcards-from-text"
-        : "/api/ai/generate-quiz-from-text";
-
-    const payload =
-      type === "flashcard"
-        ? { text: highlightedText, count: 1, documentId: document._id }
-        : { text: highlightedText, numQuestions: 1, documentId: document._id };
-
-    const genRes = await axiosInstance.post(generatePath, payload);
-
-    const generatedItems = genRes.data.data;
-
-    if (!generatedItems || generatedItems.length === 0) {
-      toast.error(`Failed to generate ${type}`, { id: toastId });
-      return;
-    }
-
-    const appendPath =
-      type === "flashcard"
-        ? `/api/flashcards/${currentSet._id}/add-cards`
-        : `/api/quizzes/${currentSet._id}/add-questions`;
-
-    const appendPayload =
-      type === "flashcard"
-        ? { cards: generatedItems }
-        : { questions: generatedItems };
-
-    await axiosInstance.post(appendPath, appendPayload);
-
-    toast.success(
-      `${generatedItems.length} ${type}(s) added to "${currentSet.title}"`,
-      { id: toastId }
-    );
-
-    clearHighlight();
-  } catch (err) {
-    console.error("Quick add error:", err);
-    toast.error("Failed to quick add", { id: toastId });
-  }
-};
+  };
 
   const openActionModal = (type) => {
     clearHighlight();
@@ -426,9 +436,12 @@ h-[80vh]
         text={highlightedText}
         documentId={document?._id}
         documentTitle={document?.title}
-        onSuccess={(type) => {
+        onSuccess={(type, setId) => {
            toast.success(`${type} generated and saved correctly!`);
+           if (type === "flashcard") setSelectedFlashcardSetId(setId);
+           else setSelectedQuizSetId(setId);
            clearHighlight();
+           setActiveTab(type === "flashcard" ? "flashcards" : "quizzes");
         }}
       />
     </div>

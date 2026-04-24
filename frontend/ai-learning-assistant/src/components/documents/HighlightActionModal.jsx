@@ -89,6 +89,8 @@ export default function HighlightActionModal({
       }
 
       /* ===== 2. SAVE ===== */
+      let finalSetId = selectedSetId;
+
       if (isCreatingNew || sets.length === 0) {
         // Create new set
         if (!newSetName.trim()) {
@@ -106,17 +108,18 @@ export default function HighlightActionModal({
             ? {
                 title: newSetName,
                 cards: generatedItems,
-                sourceType: "manual",
+                sourceType: "document",
                 documentId,
               }
             : {
                 title: newSetName,
                 questions: generatedItems,
-                sourceType: "manual",
+                sourceType: "document",
                 documentId,
               };
 
-        await axiosInstance.post(createPath, createPayload);
+        const createRes = await axiosInstance.post(createPath, createPayload);
+        finalSetId = createRes.data.data._id;
       } else {
         // Append to existing set
         const appendPath =
@@ -133,7 +136,7 @@ export default function HighlightActionModal({
       }
 
       /* ===== SUCCESS ===== */
-      onSuccess(actionType);
+      onSuccess(actionType, finalSetId);
       onClose();
     } catch (err) {
       console.error(`Failed to save ${actionType}:`, err);

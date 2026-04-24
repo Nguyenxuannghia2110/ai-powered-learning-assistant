@@ -253,7 +253,7 @@ export const downloadFlashcardTemplate = async (req, res, next) => {
 //POST /api/flashcards/manual
 export const createManualFlashcard = async (req, res, next) => {
   try {
-    let { title, cards } = req.body;
+    let { title, cards, documentId, sourceType } = req.body;
 
     if (!cards || cards.length === 0) {
       return res.status(400).json({
@@ -279,10 +279,10 @@ export const createManualFlashcard = async (req, res, next) => {
       title = cleanCards[0].question.slice(0, 30) || "Untitled Flashcards";
     }
 
-    const flashcardSet = await Flashcard.create({
+    const setPayload = {
       userId: req.user._id,
       title: title.trim(),
-      sourceType: "manual",
+      sourceType: sourceType || "manual",
       count: cleanCards.length,
       masteryProgress: 0,
       cards: cleanCards.map((c) => ({
@@ -292,7 +292,13 @@ export const createManualFlashcard = async (req, res, next) => {
         reviewCount: 0,
         isStarred: false,
       })),
-    });
+    };
+
+    if (documentId) {
+      setPayload.documentId = documentId;
+    }
+
+    const flashcardSet = await Flashcard.create(setPayload);
 
     res.status(201).json({
       success: true,

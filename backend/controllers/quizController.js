@@ -97,7 +97,7 @@ export const getQuizById = async (req, res, next) => {
 
 export const createManualQuiz = async (req, res, next) => {
   try {
-    const { title, questions } = req.body;
+    const { title, questions, documentId, sourceType } = req.body;
 
     if (!title || !questions || questions.length === 0) {
       return res.status(400).json({
@@ -121,13 +121,19 @@ export const createManualQuiz = async (req, res, next) => {
       };
     });
 
-    const quiz = await Quiz.create({
+    const quizPayload = {
       userId: req.user._id,
-      sourceType: "manual", // 🔥 QUAN TRỌNG
+      sourceType: sourceType || "manual", // 🔥 QUAN TRỌNG
       title,
       questions: validQuestions,
       totalQuestions: validQuestions.length,
-    });
+    };
+
+    if (documentId) {
+      quizPayload.documentId = documentId;
+    }
+
+    const quiz = await Quiz.create(quizPayload);
 
     res.status(201).json({
       success: true,
