@@ -325,7 +325,11 @@ export const logout = async (req, res) => {
     await User.updateOne({ refreshToken }, { refreshToken: null });
 
     // ❌ XÓA cookie
-    res.clearCookie("refreshToken");
+    res.clearCookie("refreshToken", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+    });
 
     res.json({
       success: true,

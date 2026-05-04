@@ -84,11 +84,18 @@ const changePassword = async (payload) => {
   return true;
 };
 
+/* ================= LOGOUT ================= */
+const logout = async () => {
+  const res = await axiosInstance.post(API_PATHS.AUTH.LOGOUT);
+  return res.data;
+};
+
 /* =====================================================
    EXPORT
 ===================================================== */
 const authService = {
   login,
+  logout,
   register,
   getProfile,
   updateProfile,

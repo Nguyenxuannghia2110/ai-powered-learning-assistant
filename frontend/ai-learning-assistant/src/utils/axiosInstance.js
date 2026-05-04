@@ -32,8 +32,13 @@ axiosInstance.interceptors.response.use(
 
     const { status } = error.response;
 
+    const isAuthRequest =
+      originalRequest.url.includes("/api/auth/login") ||
+      originalRequest.url.includes("/api/auth/register") ||
+      originalRequest.url.includes("/api/auth/refresh-token");
+
     /* ===== TOKEN EXPIRED ===== */
-    if (status === 401 && !originalRequest._retry) {
+    if (status === 401 && !originalRequest._retry && !isAuthRequest) {
       originalRequest._retry = true;
 
       if (isRefreshing) {
@@ -69,7 +74,9 @@ axiosInstance.interceptors.response.use(
       } catch (err) {
         processQueue(err, null);
 
-        window.location.href = "/login";
+        if (window.location.pathname !== "/login") {
+          window.location.href = "/login";
+        }
 
         return Promise.reject(err);
       } finally {

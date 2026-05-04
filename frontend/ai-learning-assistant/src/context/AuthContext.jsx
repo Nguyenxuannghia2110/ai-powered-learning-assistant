@@ -16,7 +16,12 @@ export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   /* ================= LOGOUT ================= */
-  const logout = useCallback(() => {
+  const logout = useCallback(async () => {
+    try {
+      await authService.logout();
+    } catch (error) {
+      console.error("Logout API failed:", error);
+    }
     delete axiosInstance.defaults.headers.common["Authorization"];
 
     setUser(null);
