@@ -153,24 +153,79 @@ export default function SmartPolishModal({ isOpen, onClose, type = "flashcard", 
               
               <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2">
                 {previewData.map((item, idx) => (
-                  <div key={idx} className="bg-[#111714] border border-[#1e2924] rounded-xl p-4">
-                    <p className="text-sm font-bold text-slate-300 mb-2">
-                      <span className="text-emerald-500 mr-2">Q:</span>
-                      {item.question}
-                    </p>
+                  <div key={idx} className="bg-[#111714] border border-[#1e2924] rounded-xl p-4 space-y-3">
                     {type === "flashcard" ? (
-                      <p className="text-sm text-slate-400">
-                        <span className="text-slate-500 mr-2">A:</span>
-                        {item.answer}
-                      </p>
+                      <>
+                        <div>
+                          <label className="text-xs text-emerald-500 font-bold mb-1 block">Question:</label>
+                          <textarea 
+                            value={item.question}
+                            onChange={(e) => {
+                              const newData = [...previewData];
+                              newData[idx].question = e.target.value;
+                              setPreviewData(newData);
+                            }}
+                            className="w-full bg-black/50 border border-[#1e2924] rounded-lg p-2 text-sm text-white focus:border-emerald-500 outline-none resize-none"
+                            rows={2}
+                          />
+                        </div>
+                        <div>
+                          <label className="text-xs text-slate-500 font-bold mb-1 block">Answer:</label>
+                          <textarea 
+                            value={item.answer}
+                            onChange={(e) => {
+                              const newData = [...previewData];
+                              newData[idx].answer = e.target.value;
+                              setPreviewData(newData);
+                            }}
+                            className="w-full bg-black/50 border border-[#1e2924] rounded-lg p-2 text-sm text-white focus:border-emerald-500 outline-none resize-none"
+                            rows={2}
+                          />
+                        </div>
+                      </>
                     ) : (
-                      <div className="mt-2 space-y-1">
-                        {item.options.map((opt, oIdx) => (
-                          <div key={oIdx} className={`text-xs px-2 py-1 rounded ${item.correctAnswer === oIdx ? 'bg-emerald-500/20 text-emerald-400 font-semibold' : 'text-slate-500'}`}>
-                            {['A', 'B', 'C', 'D'][oIdx]}: {opt}
-                          </div>
-                        ))}
-                      </div>
+                      <>
+                        <div>
+                           <label className="text-xs text-emerald-500 font-bold mb-1 block">Question:</label>
+                           <textarea 
+                            value={item.question}
+                            onChange={(e) => {
+                              const newData = [...previewData];
+                              newData[idx].question = e.target.value;
+                              setPreviewData(newData);
+                            }}
+                            className="w-full bg-black/50 border border-[#1e2924] rounded-lg p-2 text-sm text-white focus:border-emerald-500 outline-none resize-none"
+                            rows={2}
+                          />
+                        </div>
+                        <div className="mt-2 space-y-2">
+                          <label className="text-xs text-slate-500 font-bold block">Options (Select correct):</label>
+                          {item.options.map((opt, oIdx) => (
+                            <div key={oIdx} className="flex items-center gap-2">
+                              <input 
+                                type="radio" 
+                                name={`correct-${idx}`}
+                                checked={item.correctAnswer === oIdx}
+                                onChange={() => {
+                                  const newData = [...previewData];
+                                  newData[idx].correctAnswer = oIdx;
+                                  setPreviewData(newData);
+                                }}
+                                className="accent-emerald-500"
+                              />
+                              <input 
+                                value={opt}
+                                onChange={(e) => {
+                                  const newData = [...previewData];
+                                  newData[idx].options[oIdx] = e.target.value;
+                                  setPreviewData(newData);
+                                }}
+                                className={`flex-1 bg-black/50 border rounded-lg p-1.5 text-sm outline-none focus:border-emerald-500 ${item.correctAnswer === oIdx ? 'border-emerald-500/50 text-emerald-400 font-medium' : 'border-[#1e2924] text-slate-300'}`}
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      </>
                     )}
                   </div>
                 ))}

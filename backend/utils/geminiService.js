@@ -462,3 +462,63 @@ ${context.substring(0, 10000)}
     throw new Error("Failed to explain concept");
   }
 };
+
+/* ================= WORKSPACE ROADMAP ================= */
+
+export const generateRoadmap = async (topic, goal) => {
+  const prompt = `
+You are an expert curriculum designer and AI Planning Agent.
+The user wants to learn about the topic: "${topic}".
+Goal/Context: "${goal || 'General understanding'}"
+
+Generate a structured learning roadmap. Break it down into 3 to 7 logical steps (nodes).
+For each step, provide a short, catchy title and a brief description of what will be learned.
+
+Respond strictly in JSON format. The JSON should be an array of objects. Do not include markdown code block syntax (like \`\`\`json).
+Example:
+[
+  { "title": "Introduction to X", "description": "Learn the basics..." },
+  { "title": "Advanced X", "description": "Deep dive into..." }
+]
+`;
+
+  try {
+    const generatedText = await geminiRequest(prompt);
+    if (!generatedText) return [];
+
+    let parsed = safeJsonParse(generatedText);
+    if (!parsed) {
+        const match = generatedText.match(/\[[\s\S]*\]/);
+        if (match) parsed = JSON.parse(match[0]);
+    }
+    
+    if (Array.isArray(parsed)) {
+      return parsed;
+    }
+    return [];
+  } catch (error) {
+    console.error("Gemini roadmap error:", error);
+    throw new Error("Failed to generate roadmap");
+  }
+};
+
+export const generateLessonNode = async (topic, nodeTitle, nodeDescription) => {
+  const prompt = `
+You are an expert tutor. Create a comprehensive but concise mini-lesson (around 400-800 words) for the following topic and specific sub-topic.
+
+Main Topic: ${topic}
+Current Lesson: ${nodeTitle}
+Lesson Objective: ${nodeDescription}
+
+Format the response using Markdown. Use headings, bullet points, and code blocks (if applicable) to make it easy to read.
+Do not include flashcards or quizzes, just the lesson content.
+`;
+
+  try {
+    const generatedText = await geminiRequest(prompt);
+    return generatedText.trim();
+  } catch (error) {
+    console.error("Gemini lesson error:", error);
+    throw new Error("Failed to generate lesson content");
+  }
+};
