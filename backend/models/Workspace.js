@@ -1,3 +1,5 @@
+// models/Workspace.js
+
 import mongoose from "mongoose";
 
 /**
@@ -19,7 +21,7 @@ const resourceSchema = new mongoose.Schema(
         "document",
         "video",
         "exercise",
-        "chat"
+        "chat",
       ],
 
       required: true,
@@ -30,8 +32,8 @@ const resourceSchema = new mongoose.Schema(
 
       required: true,
 
-      // FIXED refPath
-      refPath: "resources.model",
+      // FIXED
+      refPath: "model",
     },
 
     model: {
@@ -43,7 +45,7 @@ const resourceSchema = new mongoose.Schema(
         "Quiz",
         "Document",
         "Note",
-        "ChatHistory"
+        "ChatHistory",
       ],
 
       required: true,
@@ -72,84 +74,25 @@ const resourceSchema = new mongoose.Schema(
 
 const nodeSchema = new mongoose.Schema(
   {
+    /**
+     * =====================================================
+     * BASIC INFO
+     * =====================================================
+     */
+
     title: {
       type: String,
       required: true,
       trim: true,
     },
 
-    description: {
+    slug: {
       type: String,
+      trim: true,
       default: "",
     },
 
-    order: {
-      type: Number,
-      required: true,
-    },
-
-    type: {
-      type: String,
-
-      enum: [
-        "lesson",
-        "practice",
-        "quiz",
-        "revision",
-        "project"
-      ],
-
-      default: "lesson",
-    },
-
-    status: {
-      type: String,
-
-      enum: [
-        "locked",
-        "unlocked",
-        "completed"
-      ],
-
-      default: "locked",
-    },
-
-    generationStatus: {
-      type: String,
-
-      enum: [
-        "idle",
-        "generating",
-        "completed",
-        "failed"
-      ],
-
-      default: "idle",
-    },
-
-    difficulty: {
-      type: String,
-
-      enum: [
-        "easy",
-        "medium",
-        "hard"
-      ],
-
-      default: "easy",
-    },
-
-    estimatedTime: {
-      type: Number,
-      default: 15, // minutes
-    },
-
-    xpReward: {
-      type: Number,
-      default: 50,
-    },
-
-    aiPromptUsed: {
+    description: {
       type: String,
       default: "",
     },
@@ -166,7 +109,52 @@ const nodeSchema = new mongoose.Schema(
       },
     ],
 
-    resources: [resourceSchema],
+    /**
+     * =====================================================
+     * LEARNING FLOW
+     * =====================================================
+     */
+
+    order: {
+      type: Number,
+      required: true,
+    },
+
+    type: {
+      type: String,
+
+      enum: [
+        "lesson",
+        "practice",
+        "quiz",
+        "revision",
+        "project",
+      ],
+
+      default: "lesson",
+    },
+
+    difficulty: {
+      type: String,
+
+      enum: [
+        "easy",
+        "medium",
+        "hard",
+      ],
+
+      default: "easy",
+    },
+
+    estimatedTime: {
+      type: Number,
+      default: 15,
+    },
+
+    xpReward: {
+      type: Number,
+      default: 50,
+    },
 
     prerequisites: [
       {
@@ -174,9 +162,51 @@ const nodeSchema = new mongoose.Schema(
       },
     ],
 
+    /**
+     * =====================================================
+     * STATUS
+     * =====================================================
+     */
+
+    status: {
+      type: String,
+
+      enum: [
+        "locked",
+        "unlocked",
+        "completed",
+      ],
+
+      default: "locked",
+    },
+
+    generationStatus: {
+      type: String,
+
+      enum: [
+        "idle",
+        "generating",
+        "completed",
+        "failed",
+      ],
+
+      default: "idle",
+    },
+
+    isGenerated: {
+      type: Boolean,
+      default: false,
+    },
+
     completedAt: Date,
 
     lastStudiedAt: Date,
+
+    /**
+     * =====================================================
+     * LEARNING ANALYTICS
+     * =====================================================
+     */
 
     studyCount: {
       type: Number,
@@ -190,7 +220,92 @@ const nodeSchema = new mongoose.Schema(
       max: 100,
     },
 
-    isGenerated: {
+    completionProgress: {
+      type: Number,
+      default: 0,
+      min: 0,
+      max: 100,
+    },
+
+    /**
+     * =====================================================
+     * AI
+     * =====================================================
+     */
+
+    aiPromptUsed: {
+      type: String,
+      default: "",
+    },
+
+    generatedBy: {
+      type: String,
+
+      enum: [
+        "gemini",
+        "openai",
+      ],
+
+      default: "gemini",
+    },
+
+    /**
+     * =====================================================
+     * UI
+     * =====================================================
+     */
+
+    icon: {
+      type: String,
+      default: "",
+    },
+
+    coverImage: {
+      type: String,
+      default: "",
+    },
+
+    /**
+     * =====================================================
+     * QUICK RESOURCE REFERENCES
+     * =====================================================
+     */
+
+    lessonResourceId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "WorkspaceLesson",
+    },
+
+    flashcardResourceId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Flashcard",
+    },
+
+    quizResourceId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Quiz",
+    },
+
+    /**
+     * =====================================================
+     * RESOURCE SYSTEM
+     * =====================================================
+     */
+
+    resources: [resourceSchema],
+
+    /**
+     * =====================================================
+     * SYSTEM
+     * =====================================================
+     */
+
+    version: {
+      type: Number,
+      default: 1,
+    },
+
+    isArchived: {
       type: Boolean,
       default: false,
     },
@@ -208,6 +323,12 @@ const nodeSchema = new mongoose.Schema(
 
 const workspaceSchema = new mongoose.Schema(
   {
+    /**
+     * =====================================================
+     * OWNER
+     * =====================================================
+     */
+
     userId: {
       type: mongoose.Schema.Types.ObjectId,
 
@@ -217,6 +338,12 @@ const workspaceSchema = new mongoose.Schema(
 
       index: true,
     },
+
+    /**
+     * =====================================================
+     * BASIC INFO
+     * =====================================================
+     */
 
     topic: {
       type: String,
@@ -236,13 +363,25 @@ const workspaceSchema = new mongoose.Schema(
       default: "",
     },
 
+    slug: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+
+    /**
+     * =====================================================
+     * LEARNING SETTINGS
+     * =====================================================
+     */
+
     level: {
       type: String,
 
       enum: [
         "beginner",
         "intermediate",
-        "advanced"
+        "advanced",
       ],
 
       default: "beginner",
@@ -255,7 +394,7 @@ const workspaceSchema = new mongoose.Schema(
         "visual",
         "practice",
         "reading",
-        "interactive"
+        "interactive",
       ],
 
       default: "interactive",
@@ -263,8 +402,21 @@ const workspaceSchema = new mongoose.Schema(
 
     language: {
       type: String,
+
+      enum: [
+        "en",
+        "vi",
+        "jp",
+      ],
+
       default: "en",
     },
+
+    /**
+     * =====================================================
+     * UI
+     * =====================================================
+     */
 
     coverImage: {
       type: String,
@@ -278,23 +430,17 @@ const workspaceSchema = new mongoose.Schema(
       },
     ],
 
+    /**
+     * =====================================================
+     * ROADMAP
+     * =====================================================
+     */
+
     nodes: [nodeSchema],
 
     currentNodeIndex: {
       type: Number,
       default: 0,
-    },
-
-    totalXP: {
-      type: Number,
-      default: 0,
-    },
-
-    progress: {
-      type: Number,
-      default: 0,
-      min: 0,
-      max: 100,
     },
 
     completedNodes: {
@@ -307,7 +453,20 @@ const workspaceSchema = new mongoose.Schema(
       default: 0,
     },
 
-    totalStudyTime: {
+    progress: {
+      type: Number,
+      default: 0,
+      min: 0,
+      max: 100,
+    },
+
+    /**
+     * =====================================================
+     * GAMIFICATION
+     * =====================================================
+     */
+
+    totalXP: {
       type: Number,
       default: 0,
     },
@@ -317,7 +476,24 @@ const workspaceSchema = new mongoose.Schema(
       default: 0,
     },
 
+    totalStudyTime: {
+      type: Number,
+      default: 0,
+    },
+
+    /**
+     * =====================================================
+     * ACTIVITY
+     * =====================================================
+     */
+
     lastStudiedAt: Date,
+
+    /**
+     * =====================================================
+     * VISIBILITY
+     * =====================================================
+     */
 
     isPublic: {
       type: Boolean,

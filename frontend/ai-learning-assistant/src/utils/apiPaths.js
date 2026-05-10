@@ -79,6 +79,21 @@ GET_BY_DOCUMENT: (documentId) => `/api/quizzes/document/${documentId}`,
   PROGRESS: {
     GET_DASHBOARD: "/api/progress/dashboard",
   },
+
+  // ================= WORKSPACES =================
+  WORKSPACES: {
+    GET_ALL: "/api/workspaces",
+    CREATE: "/api/workspaces",
+    GET_BY_ID: (id) => `/api/workspaces/${id}`,
+    UPDATE: (id) => `/api/workspaces/${id}`,
+    DELETE: (id) => `/api/workspaces/${id}`,
+    GENERATE_NODE_LESSON: (workspaceId, nodeId) => `/api/workspaces/${workspaceId}/nodes/${nodeId}/generate-lesson`,
+    GENERATE_NODE_FLASHCARDS: (workspaceId, nodeId) => `/api/workspaces/${workspaceId}/nodes/${nodeId}/generate-flashcards`,
+    GENERATE_NODE_QUIZ: (workspaceId, nodeId) => `/api/workspaces/${workspaceId}/nodes/${nodeId}/generate-quiz`,
+    GET_NODE_LESSON: (workspaceId, nodeId) => `/api/workspaces/${workspaceId}/nodes/${nodeId}/lesson`,
+    COMPLETE_NODE: (workspaceId, nodeId) => `/api/workspaces/${workspaceId}/nodes/${nodeId}/complete`,
+    RESET_PROGRESS: (workspaceId) => `/api/workspaces/${workspaceId}/reset-progress`,
+  },
 };
 
 export default API_PATHS;

@@ -16,6 +16,9 @@ import QuizResultPage from "./pages/Quizzes/QuizResultPage";
 import QuizzesPage from "./pages/QuizManual/QuizzesPage";
 import ProfilePage from "./pages/Profile/ProfilePage";
 import FlashcardsPage from "./pages/Flashcards/FlashcardsPage";
+import WorkspaceListPage from "./pages/Workspace/WorkspaceListPage";
+import WorkspaceDetailPage from "./pages/Workspace/WorkspaceDetailPage";
+import WorkspaceNodePage from "./pages/Workspace/WorkspaceNodePage";
 import { useAuth } from "./context/AuthContext";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 
@@ -77,6 +80,9 @@ const App = () => {
                <Route path="/quizzes" element={<QuizzesPage />} />
               <Route path="/flashcards" element={<FlashcardsPage />} />
               <Route path="/profile" element={<ProfilePage />} />
+              <Route path="/workspaces" element={<WorkspaceListPage />} />
+              <Route path="/workspaces/:id" element={<WorkspaceDetailPage />} />
+              <Route path="/workspaces/:id/nodes/:nodeId" element={<WorkspaceNodePage />} />
             </Route>
           </Route>
 

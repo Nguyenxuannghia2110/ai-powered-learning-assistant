@@ -231,405 +231,197 @@ export const getWorkspaceById = async (
 
 /**
  * =========================================================
- * GENERATE NODE CONTENT
+ * GENERATE NODE LESSON CONTENT
  * =========================================================
  */
-
-export const generateNodeContent =
-  async (req, res, next) => {
-    const session =
-      await mongoose.startSession();
-
+export const generateNodeLessonContent = async (req, res, next) => {
+    const session = await mongoose.startSession();
     try {
-      session.startTransaction();
+        session.startTransaction();
+        const workspace = await Workspace.findOne({ _id: req.params.id, userId: req.user._id }).session(session);
+        if (!workspace) { await session.abortTransaction(); return res.status(404).json({ success: false, error: "Workspace not found" }); }
+        
+        const node = workspace.nodes.id(req.params.nodeId);
+        if (!node) { await session.abortTransaction(); return res.status(404).json({ success: false, error: "Node not found" }); }
 
-      /**
-       * =====================================================
-       * FIND WORKSPACE
-       * =====================================================
-       */
+        if (node.generationStatus === "generating") {
+            await session.abortTransaction();
+            return res.status(400).json({ success: false, error: "Node is already generating" });
+        }
 
-      const workspace =
-        await Workspace.findOne({
-          _id: req.params.id,
+        node.generationStatus = "generating_lesson";
+        await workspace.save({ session });
 
-          userId: req.user._id,
-        }).session(session);
+        const lessonContent = await geminiService.generateLessonNode(workspace.topic, node.title, node.description);
+        if (!lessonContent) throw new Error("Failed to generate lesson");
 
-      if (!workspace) {
-        await session.abortTransaction();
+        const lesson = await WorkspaceLesson.create([{
+            workspaceId: workspace._id,
+            nodeId: node._id,
+            title: node.title,
+            content: lessonContent,
+            summary: node.summary || "",
+        }], { session });
 
-        return res.status(404).json({
-          success: false,
-          error: "Workspace not found",
-        });
-      }
-
-      /**
-       * =====================================================
-       * FIND NODE
-       * =====================================================
-       */
-
-      const node =
-        workspace.nodes.id(
-          req.params.nodeId
-        );
-
-      if (!node) {
-        await session.abortTransaction();
-
-        return res.status(404).json({
-          success: false,
-          error: "Node not found",
-        });
-      }
-
-      /**
-       * =====================================================
-       * PREVENT DUPLICATE GENERATION
-       * =====================================================
-       */
-
-      if (
-        node.generationStatus ===
-        "generating"
-      ) {
-        await session.abortTransaction();
-
-        return res.status(400).json({
-          success: false,
-          error:
-            "Node is already generating",
-        });
-      }
-
-      if (node.isGenerated) {
-        await session.abortTransaction();
-
-        return res.status(400).json({
-          success: false,
-          error:
-            "Node already generated",
-        });
-      }
-
-      /**
-       * =====================================================
-       * START GENERATION
-       * =====================================================
-       */
-
-      node.generationStatus =
-        "generating";
-
-      await workspace.save({
-        session,
-      });
-
-      /**
-       * =====================================================
-       * GENERATE LESSON
-       * =====================================================
-       */
-
-      const lessonContent =
-        await geminiService.generateLessonNode(
-          workspace.topic,
-          node.title,
-          node.description
-        );
-
-      if (!lessonContent) {
-        throw new Error(
-          "Failed to generate lesson"
-        );
-      }
-
-      /**
-       * =====================================================
-       * SAVE LESSON
-       * =====================================================
-       */
-
-      const lesson =
-        await WorkspaceLesson.create(
-          [
-            {
-              workspaceId:
-                workspace._id,
-
-              nodeId: node._id,
-
-              title: node.title,
-
-              content: lessonContent,
-
-              summary:
-                node.summary || "",
-            },
-          ],
-          { session }
-        );
-
-      /**
-       * =====================================================
-       * ADD LESSON RESOURCE
-       * =====================================================
-       */
-
-      node.resources.push({
-        type: "lesson",
-
-        resourceId: lesson[0]._id,
-
-        model: "WorkspaceLesson",
-
-        title: `${node.title} Lesson`,
-      });
-
-      /**
-       * =====================================================
-       * GENERATE FLASHCARDS + QUIZ
-       * =====================================================
-       */
-
-      const [cards, questions] =
-        await Promise.all([
-          geminiService.generateFlashcards(
-            lessonContent,
-            5
-          ),
-
-          geminiService.generateQuiz(
-            lessonContent,
-            3
-          ),
-        ]);
-
-      /**
-       * =====================================================
-       * CREATE FLASHCARD SET
-       * =====================================================
-       */
-
-      if (cards?.length) {
-        const flashcardSet =
-          await Flashcard.create(
-            [
-              {
-                userId:
-                  req.user._id,
-
-                sourceType:
-                  "topic_learning",
-
-                title: `${node.title} - Flashcards`,
-
-                count:
-                  cards.length,
-
-                masteryProgress: 0,
-
-                cards: cards.map(
-                  (card) => ({
-                    question:
-                      card.question,
-
-                    answer:
-                      card.answer,
-
-                    difficulty:
-                      card.difficulty ||
-                      "medium",
-
-                    reviewCount: 0,
-
-                    isStarred: false,
-                  })
-                ),
-              },
-            ],
-            { session }
-          );
-
+        node.resources = node.resources.filter(r => r.type !== "lesson");
         node.resources.push({
-          type: "flashcard",
-
-          resourceId:
-            flashcardSet[0]._id,
-
-          model: "Flashcard",
-
-          title: `${node.title} Flashcards`,
+            type: "lesson",
+            resourceId: lesson[0]._id,
+            model: "WorkspaceLesson",
+            title: `${node.title} Lesson`,
         });
-      }
 
-      /**
-       * =====================================================
-       * CREATE QUIZ SET
-       * =====================================================
-       */
-
-      if (questions?.length) {
-        const normalizedQuestions =
-          questions.map(
-            (q, index) => {
-              let correctIndex =
-                q.correctAnswer;
-
-              if (
-                typeof correctIndex ===
-                "string"
-              ) {
-                const foundIndex =
-                  q.options?.findIndex(
-                    (opt) =>
-                      opt
-                        .toLowerCase()
-                        .trim() ===
-                      correctIndex
-                        .toLowerCase()
-                        .trim()
-                  );
-
-                correctIndex =
-                  foundIndex !== -1
-                    ? foundIndex
-                    : 0;
-              }
-
-              if (
-                isNaN(correctIndex)
-              ) {
-                correctIndex = 0;
-              }
-
-              return {
-                question:
-                  q.question ||
-                  `Question ${
-                    index + 1
-                  }`,
-
-                options:
-                  q.options?.slice(
-                    0,
-                    4
-                  ) || [
-                    "A",
-                    "B",
-                    "C",
-                    "D",
-                  ],
-
-                correctAnswer:
-                  Number(
-                    correctIndex
-                  ),
-
-                explanation:
-                  q.explanation ||
-                  "",
-
-                difficulty:
-                  q.difficulty ||
-                  "medium",
-              };
-            }
-          );
-
-        const quizSet =
-          await Quiz.create(
-            [
-              {
-                userId:
-                  req.user._id,
-
-                sourceType:
-                  "topic_learning",
-
-                title: `${node.title} - Quiz`,
-
-                questions:
-                  normalizedQuestions,
-
-                totalQuestions:
-                  normalizedQuestions.length,
-
-                score: null,
-              },
-            ],
-            { session }
-          );
-
-        node.resources.push({
-          type: "quiz",
-
-          resourceId:
-            quizSet[0]._id,
-
-          model: "Quiz",
-
-          title: `${node.title} Quiz`,
-        });
-      }
-
-      /**
-       * =====================================================
-       * COMPLETE GENERATION
-       * =====================================================
-       */
-
-      node.isGenerated = true;
-
-      node.generationStatus =
-        "completed";
-
-      await workspace.save({
-        session,
-      });
-
-      await session.commitTransaction();
-
-      return res.status(200).json({
-        success: true,
-
-        message:
-          "Node content generated successfully",
-
-        data: node,
-      });
+        await workspace.save({ session });
+        await session.commitTransaction();
+        return res.status(200).json({ success: true, message: "Lesson generated successfully", data: node });
     } catch (error) {
-      await session.abortTransaction();
-
-      try {
-        await Workspace.updateOne(
-          {
-            _id: req.params.id,
-
-            "nodes._id":
-              req.params.nodeId,
-          },
-          {
-            $set: {
-              "nodes.$.generationStatus":
-                "failed",
-            },
-          }
-        );
-      } catch (e) {
-        console.error(
-          "Failed to update generation status",
-          e
-        );
-      }
-
-      next(error);
+        await session.abortTransaction();
+        try { await Workspace.updateOne({ _id: req.params.id, "nodes._id": req.params.nodeId }, { $set: { "nodes.$.generationStatus": "failed" } }); } catch (e) {}
+        next(error);
     } finally {
-      session.endSession();
+        session.endSession();
     }
-  };
+};
+
+/**
+ * =========================================================
+ * GENERATE NODE FLASHCARDS CONTENT
+ * =========================================================
+ */
+export const generateNodeFlashcardsContent = async (req, res, next) => {
+    const session = await mongoose.startSession();
+    try {
+        session.startTransaction();
+        const workspace = await Workspace.findOne({ _id: req.params.id, userId: req.user._id }).session(session);
+        if (!workspace) { await session.abortTransaction(); return res.status(404).json({ success: false, error: "Workspace not found" }); }
+        
+        const node = workspace.nodes.id(req.params.nodeId);
+        if (!node) { await session.abortTransaction(); return res.status(404).json({ success: false, error: "Node not found" }); }
+
+        const lessonResource = node.resources.find(r => r.type === "lesson");
+        if (!lessonResource) { await session.abortTransaction(); return res.status(400).json({ success: false, error: "Lesson must be generated first" }); }
+
+        const lesson = await WorkspaceLesson.findById(lessonResource.resourceId).session(session);
+        if (!lesson) { await session.abortTransaction(); return res.status(404).json({ success: false, error: "Lesson not found" }); }
+
+        node.generationStatus = "generating_flashcards";
+        await workspace.save({ session });
+
+        const cards = await geminiService.generateFlashcards(lesson.content, 5);
+
+        if (cards?.length) {
+            const flashcardSet = await Flashcard.create([{
+                userId: req.user._id,
+                sourceType: "topic_learning",
+                title: `${node.title} - Flashcards`,
+                count: cards.length,
+                masteryProgress: 0,
+                cards: cards.map(card => ({
+                    question: card.question,
+                    answer: card.answer,
+                    difficulty: card.difficulty || "medium",
+                    reviewCount: 0,
+                    isStarred: false,
+                }))
+            }], { session });
+
+            node.resources = node.resources.filter(r => r.type !== "flashcard");
+            node.resources.push({
+                type: "flashcard",
+                resourceId: flashcardSet[0]._id,
+                model: "Flashcard",
+                title: `${node.title} Flashcards`,
+            });
+        }
+
+        await workspace.save({ session });
+        await session.commitTransaction();
+        return res.status(200).json({ success: true, message: "Flashcards generated successfully", data: node });
+    } catch (error) {
+        await session.abortTransaction();
+        try { await Workspace.updateOne({ _id: req.params.id, "nodes._id": req.params.nodeId }, { $set: { "nodes.$.generationStatus": "failed" } }); } catch (e) {}
+        next(error);
+    } finally {
+        session.endSession();
+    }
+};
+
+/**
+ * =========================================================
+ * GENERATE NODE QUIZ CONTENT
+ * =========================================================
+ */
+export const generateNodeQuizContent = async (req, res, next) => {
+    const session = await mongoose.startSession();
+    try {
+        session.startTransaction();
+        const workspace = await Workspace.findOne({ _id: req.params.id, userId: req.user._id }).session(session);
+        if (!workspace) { await session.abortTransaction(); return res.status(404).json({ success: false, error: "Workspace not found" }); }
+        
+        const node = workspace.nodes.id(req.params.nodeId);
+        if (!node) { await session.abortTransaction(); return res.status(404).json({ success: false, error: "Node not found" }); }
+
+        const lessonResource = node.resources.find(r => r.type === "lesson");
+        if (!lessonResource) { await session.abortTransaction(); return res.status(400).json({ success: false, error: "Lesson must be generated first" }); }
+
+        const lesson = await WorkspaceLesson.findById(lessonResource.resourceId).session(session);
+        if (!lesson) { await session.abortTransaction(); return res.status(404).json({ success: false, error: "Lesson not found" }); }
+
+        node.generationStatus = "generating_quiz";
+        await workspace.save({ session });
+
+        const questions = await geminiService.generateQuiz(lesson.content, 3);
+
+        if (questions?.length) {
+            const normalizedQuestions = questions.map((q, index) => {
+                let correctIndex = q.correctAnswer;
+                if (typeof correctIndex === "string") {
+                    const foundIndex = q.options?.findIndex(opt => opt.toLowerCase().trim() === correctIndex.toLowerCase().trim());
+                    correctIndex = foundIndex !== -1 ? foundIndex : 0;
+                }
+                if (isNaN(correctIndex)) correctIndex = 0;
+
+                return {
+                    question: q.question || `Question ${index + 1}`,
+                    options: q.options?.slice(0, 4) || ["A", "B", "C", "D"],
+                    correctAnswer: Number(correctIndex),
+                    explanation: q.explanation || "",
+                    difficulty: q.difficulty || "medium",
+                };
+            });
+
+            const quizSet = await Quiz.create([{
+                userId: req.user._id,
+                sourceType: "topic_learning",
+                title: `${node.title} - Quiz`,
+                questions: normalizedQuestions,
+                totalQuestions: normalizedQuestions.length,
+                score: null,
+            }], { session });
+
+            node.resources = node.resources.filter(r => r.type !== "quiz");
+            node.resources.push({
+                type: "quiz",
+                resourceId: quizSet[0]._id,
+                model: "Quiz",
+                title: `${node.title} Quiz`,
+            });
+        }
+
+        node.isGenerated = true;
+        node.generationStatus = "completed";
+        await workspace.save({ session });
+        await session.commitTransaction();
+
+        return res.status(200).json({ success: true, message: "Quiz generated successfully", data: node });
+    } catch (error) {
+        await session.abortTransaction();
+        try { await Workspace.updateOne({ _id: req.params.id, "nodes._id": req.params.nodeId }, { $set: { "nodes.$.generationStatus": "failed" } }); } catch (e) {}
+        next(error);
+    } finally {
+        session.endSession();
+    }
+}
 
 /**
  * =========================================================

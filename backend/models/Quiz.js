@@ -10,7 +10,7 @@ const quizSchema = new mongoose.Schema(
 
     sourceType: {
       type: String,
-      enum: ["document", "manual", "sheet"],
+      enum: ["document", "manual", "sheet","topic_learning"],
       required: true,
     },
 

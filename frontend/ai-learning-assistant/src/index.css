@@ -111,3 +111,86 @@ html {
 .animate-fadeIn {
   animation: fadeIn 0.2s ease;
 }
+
+/* ================= MARKDOWN STYLING FOR LESSONS ================= */
+.markdown-lesson {
+  font-family: var(--font-display);
+  color: #e2e8f0;
+  font-size: 1.125rem;
+}
+.markdown-lesson h1, 
+.markdown-lesson h2, 
+.markdown-lesson h3, 
+.markdown-lesson h4 {
+  color: #34d399;
+  font-weight: 700;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+  line-height: 1.3;
+}
+.markdown-lesson h1 { font-size: 2.25rem; }
+.markdown-lesson h2 { font-size: 1.875rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem; }
+.markdown-lesson h3 { font-size: 1.5rem; }
+.markdown-lesson p {
+  line-height: 1.8;
+  margin-bottom: 1.25em;
+  color: #cbd5e1;
+}
+.markdown-lesson strong {
+  color: #ffffff;
+  font-weight: 600;
+  text-shadow: 0 0 10px rgba(52, 211, 153, 0.2);
+}
+.markdown-lesson ul {
+  list-style-type: disc;
+  padding-left: 1.5em;
+  margin-bottom: 1.25em;
+}
+.markdown-lesson ol {
+  list-style-type: decimal;
+  padding-left: 1.5em;
+  margin-bottom: 1.25em;
+}
+.markdown-lesson li {
+  margin-bottom: 0.5em;
+  color: #cbd5e1;
+  line-height: 1.6;
+}
+.markdown-lesson li::marker {
+  color: #34d399;
+}
+.markdown-lesson a {
+  color: #34d399;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.markdown-lesson blockquote {
+  border-left: 4px solid #34d399;
+  color: #94a3b8;
+  font-style: italic;
+  margin: 1.5em 0;
+  background: rgba(52, 211, 153, 0.05);
+  padding: 1em 1.5em;
+  border-radius: 0 12px 12px 0;
+}
+.markdown-lesson code {
+  background-color: rgba(52, 211, 153, 0.1);
+  color: #34d399;
+  padding: 0.2em 0.4em;
+  border-radius: 6px;
+  font-size: 0.9em;
+}
+.markdown-lesson pre {
+  background-color: #050807;
+  border: 1px solid rgba(255,255,255,0.1);
+  padding: 1.25em;
+  border-radius: 12px;
+  overflow-x: auto;
+  margin-bottom: 1.5em;
+  box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+}
+.markdown-lesson pre code {
+  background-color: transparent;
+  color: #e2e8f0;
+  padding: 0;
+}

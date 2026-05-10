@@ -9,7 +9,9 @@ import {
   getWorkspaces,
   getWorkspaceById,
 
-  generateNodeContent,
+  generateNodeLessonContent,
+  generateNodeFlashcardsContent,
+  generateNodeQuizContent,
   getNodeLesson,
   completeNode,
 
@@ -79,8 +81,18 @@ router
  */
 
 router.post(
-  "/:id/nodes/:nodeId/generate",
-  generateNodeContent
+  "/:id/nodes/:nodeId/generate-lesson",
+  generateNodeLessonContent
+);
+
+router.post(
+  "/:id/nodes/:nodeId/generate-flashcards",
+  generateNodeFlashcardsContent
+);
+
+router.post(
+  "/:id/nodes/:nodeId/generate-quiz",
+  generateNodeQuizContent
 );
 
 /**

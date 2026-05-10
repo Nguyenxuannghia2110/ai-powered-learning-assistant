@@ -9,6 +9,7 @@ import {
   User,
   Sparkles,
   Zap,
+  Compass,
 } from "lucide-react";
 
 export default function Sidebar({ mobileOpen, onCloseMobile }) {
@@ -17,6 +18,7 @@ export default function Sidebar({ mobileOpen, onCloseMobile }) {
 
   const navItems = [
     { path: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+    { path: "/workspaces", label: "Workspaces", icon: Compass },
     { path: "/documents", label: "Documents", icon: FileText },
     { path: "/flashcards", label: "Flashcards", icon: Layers },
     { path: "/quizzes", label: "Quizzes", icon: HelpCircle },
