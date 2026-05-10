@@ -256,7 +256,12 @@ export const updateProfile = async (req, res, next) => {
     // cập nhật nếu có gửi dữ liệu
     if (username) user.username = username;
     if (email) user.email = email;
-    if (profileImage !== undefined) user.profileImage = profileImage;
+    
+    if (req.file) {
+      user.profileImage = req.file.path;
+    } else if (profileImage !== undefined) {
+      user.profileImage = profileImage;
+    }
 
     const updatedUser = await user.save();
 

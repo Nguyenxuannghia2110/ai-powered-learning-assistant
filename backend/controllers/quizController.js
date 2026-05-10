@@ -14,6 +14,7 @@ export const getAllQuizzes = async (req, res, next) => {
 
     let filter = {
       userId: req.user._id,
+      sourceType: { $in: ["manual", "sheet", "topic_learning"] },
     };
 
     if (sourceType) {

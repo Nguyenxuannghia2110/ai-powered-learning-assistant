@@ -249,7 +249,7 @@ export const generateNodeLessonContent = async (req, res, next) => {
             return res.status(400).json({ success: false, error: "Node is already generating" });
         }
 
-        node.generationStatus = "generating_lesson";
+        node.generationStatus = "generating";
         await workspace.save({ session });
 
         const lessonContent = await geminiService.generateLessonNode(workspace.topic, node.title, node.description);
@@ -304,7 +304,7 @@ export const generateNodeFlashcardsContent = async (req, res, next) => {
         const lesson = await WorkspaceLesson.findById(lessonResource.resourceId).session(session);
         if (!lesson) { await session.abortTransaction(); return res.status(404).json({ success: false, error: "Lesson not found" }); }
 
-        node.generationStatus = "generating_flashcards";
+        node.generationStatus = "generating";
         await workspace.save({ session });
 
         const cards = await geminiService.generateFlashcards(lesson.content, 5);
@@ -367,7 +367,7 @@ export const generateNodeQuizContent = async (req, res, next) => {
         const lesson = await WorkspaceLesson.findById(lessonResource.resourceId).session(session);
         if (!lesson) { await session.abortTransaction(); return res.status(404).json({ success: false, error: "Lesson not found" }); }
 
-        node.generationStatus = "generating_quiz";
+        node.generationStatus = "generating";
         await workspace.save({ session });
 
         const questions = await geminiService.generateQuiz(lesson.content, 3);
@@ -421,7 +421,7 @@ export const generateNodeQuizContent = async (req, res, next) => {
     } finally {
         session.endSession();
     }
-}
+};
 
 /**
  * =========================================================

@@ -40,7 +40,7 @@ export const getFlashcardSet = async (req, res, next) => {
   try {
     const flashcards = await Flashcard.find({
       userId: req.user._id,
-      sourceType: { $in: ["manual", "sheet"] },
+      sourceType: { $in: ["manual", "sheet", "topic_learning"] },
     })
       .populate("documentId", "title fileName")
       .sort({ createdAt: -1 })
