@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
+import uploadToCloudinary from "../utils/uploadToCloudinary.js";
 
 //Generate JWT token
 const generateAccessToken = (id) => {
@@ -258,7 +259,8 @@ export const updateProfile = async (req, res, next) => {
     if (email) user.email = email;
     
     if (req.file) {
-      user.profileImage = req.file.path;
+      const result = await uploadToCloudinary(req.file.buffer, "ai-learning/users");
+      user.profileImage = result.secure_url;
     } else if (profileImage !== undefined) {
       user.profileImage = profileImage;
     }

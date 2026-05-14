@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Camera,
   Zap,
@@ -19,7 +19,7 @@ import authService from "../../services/authService";
 import { useAuth } from "../../context/AuthContext";
 
 const ProfilePage = () => {
-  const { logout } = useAuth();
+  const { logout, updateUser } = useAuth();
   const navigate = useNavigate();
 
   // State for form fields
@@ -27,7 +27,12 @@ const ProfilePage = () => {
     fullName: "",
     email: "",
     neuralBio: "",
+    profileImage: "",
   });
+
+  const [avatarFile, setAvatarFile] = useState(null);
+  const [avatarPreview, setAvatarPreview] = useState(null);
+  const fileInputRef = useRef(null);
 
   // State for visibility and toggles
   const [toggles, setToggles] = useState({
@@ -60,6 +65,7 @@ const ProfilePage = () => {
             userData.bio ||
             userData.neuralBio ||
             "Senior Neural Architect specializing in large-scale cognitive mapping...",
+          profileImage: userData.profileImage || "",
         });
 
         if (userData.settings) {
@@ -91,19 +97,34 @@ const ProfilePage = () => {
     try {
       if (!silent) setIsSaving(true);
 
-      const payload = {
-        username: profile.fullName,
-        bio: profile.neuralBio,
-        settings: toggles,
-      };
+      const formData = new FormData();
+      formData.append("username", profile.fullName);
+      if (profile.email) formData.append("email", profile.email);
+      
+      if (avatarFile) {
+        formData.append("avatar", avatarFile);
+      }
 
-      const response = await authService.updateProfile(payload);
+      const response = await authService.updateProfile(formData);
+      updateUser(response);
 
       if (!silent) toast.success("Profile updated ⚡");
     } catch (error) {
       toast.error(error.message || "Failed to update profile.");
     } finally {
       if (!silent) setIsSaving(false);
+    }
+  };
+
+  const handleAvatarClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setAvatarFile(file);
+      setAvatarPreview(URL.createObjectURL(file));
     }
   };
 
@@ -163,9 +184,8 @@ const ProfilePage = () => {
           <div className="relative group">
             <div className="w-28 h-28 rounded-full border-[3px] border-[#00FF9D] p-1 bg-black overflow-hidden relative">
               <div className="w-full h-full rounded-full bg-[#0a0f0d] flex items-center justify-center overflow-hidden">
-                {/* Fallback to icon if no avatar, but user likely wants a face */}
                 <img
-                  src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=400&h=400&fit=crop"
+                  src={avatarPreview || profile.profileImage || "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=400&h=400&fit=crop"}
                   alt="Avatar"
                   className="w-full h-full object-cover grayscale-[0.3]"
                 />
@@ -174,10 +194,18 @@ const ProfilePage = () => {
             <motion.button
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
+              onClick={handleAvatarClick}
               className="absolute bottom-0 right-0 bg-[#00FF9D] p-1.5 rounded-full text-black border-4 border-[#050807] shadow-lg group-hover:bg-[#00e08b] transition-colors"
             >
-              <Edit3 className="w-3.5 h-3.5" />
+              <Camera className="w-3.5 h-3.5" />
             </motion.button>
+            <input 
+              type="file" 
+              ref={fileInputRef} 
+              onChange={handleFileChange} 
+              accept="image/*" 
+              className="hidden" 
+            />
           </div>
 
           <h1 className="mt-8 text-3xl font-bold tracking-tight text-white mb-1">
