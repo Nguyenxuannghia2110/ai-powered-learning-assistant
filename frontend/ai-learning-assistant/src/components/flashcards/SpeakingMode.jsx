@@ -127,40 +127,40 @@ export default function SpeakingMode({
 
   return (
     <div className="w-full max-w-3xl mx-auto px-4">
-      <div className="bg-[#0f1714] border border-slate-800 rounded-3xl p-8 shadow-2xl flex flex-col items-center">
+      <div className="bg-[#0a0a0a] border border-[#212327] rounded-lg p-8 shadow-none flex flex-col items-center">
         
         <div className="w-full flex justify-between items-center mb-8">
-          <span className="text-sm font-semibold text-slate-400 uppercase tracking-wide">
+          <span className="text-[10px] font-mono font-semibold text-[#7d8187] uppercase tracking-widest">
             Speaking Mode
           </span>
-          <span className="text-sm text-slate-500">
+          <span className="text-xs font-mono text-[#7d8187] uppercase tracking-widest">
             {currentIndex + 1} / {total}
           </span>
         </div>
         
         <div className="text-center mb-8">
-            <p className="text-slate-400 mb-2">Read this out loud:</p>
-            <h2 className="text-4xl font-bold text-white mb-4">{card.question}</h2>
-            <p className="text-emerald-400 opacity-80">{card.answer}</p>
+            <p className="text-[#7d8187] mb-4 text-sm font-mono uppercase tracking-widest">Read this out loud:</p>
+            <h2 className="text-3xl md:text-4xl font-medium text-white mb-6 tracking-tight">{card.question}</h2>
+            <p className="text-white/50">{card.answer}</p>
         </div>
 
         <div className="flex gap-4 mb-8">
             <button
             onClick={speakOriginal}
-            className="w-14 h-14 bg-slate-800 text-emerald-400 rounded-full flex items-center justify-center hover:bg-slate-700 hover:scale-105 transition-all"
+            className="w-14 h-14 bg-transparent border border-white/25 text-white rounded-full flex items-center justify-center hover:bg-white/5 transition-all"
             title="Listen to the word"
             >
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" />
             </svg>
             </button>
 
             <button
             onClick={toggleRecording}
-            className={`w-14 h-14 rounded-full flex items-center justify-center hover:scale-105 transition-all ${
+            className={`w-14 h-14 rounded-full flex items-center justify-center transition-all ${
                 isRecording 
-                ? "bg-rose-500/20 text-rose-500 animate-pulse border border-rose-500" 
-                : "bg-emerald-600 text-white hover:bg-emerald-500"
+                ? "bg-rose-500/20 text-rose-400 animate-pulse border border-rose-500/50" 
+                : "bg-transparent border border-white/25 text-white hover:bg-white/5"
             }`}
             title={isRecording ? "Stop recording" : "Start recording"}
             >
@@ -170,21 +170,21 @@ export default function SpeakingMode({
             </button>
         </div>
 
-        <div className="w-full min-h-[100px] bg-[#1a2421] border border-slate-700 rounded-xl p-4 flex flex-col items-center justify-center">
+        <div className="w-full min-h-[100px] bg-[#1a1c20] border border-[#212327] rounded-lg p-4 flex flex-col items-center justify-center">
             {isRecording ? (
-                <p className="text-slate-400 italic flex items-center gap-2">
+                <p className="text-[#7d8187] font-mono uppercase tracking-widest text-xs flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-rose-500 animate-ping"></span>
                     Listening...
                 </p>
             ) : transcript ? (
                 <p className="text-white text-xl">"{transcript}"</p>
             ) : (
-                <p className="text-slate-600 italic">Click the microphone and start speaking</p>
+                <p className="text-[#7d8187] text-xs font-mono uppercase tracking-widest">Click the microphone and start speaking</p>
             )}
         </div>
 
         {isChecked && (
-          <div className="mt-6 w-full text-center animate-fade-in">
+          <div className="mt-8 w-full text-center">
             <p className={`text-lg font-medium mb-6 ${feedback.isCorrect ? "text-emerald-400" : "text-rose-400"}`}>
               {feedback.message}
             </p>
@@ -200,7 +200,7 @@ export default function SpeakingMode({
                   setFeedback(null);
                 }
               }}
-              className="px-8 py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-xl transition-colors"
+              className="px-8 py-3 bg-transparent hover:bg-white/5 border border-white/25 text-white font-normal rounded-full transition-colors"
             >
               {feedback.isCorrect ? "Next Card" : "Try Again"}
             </button>

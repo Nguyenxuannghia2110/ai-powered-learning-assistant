@@ -100,15 +100,15 @@ export default function FlashcardListPage({ onSelectSet, onCreateNew }) {
               onClick={() => onSelectSet(set)}
             >
               {/* DELETE */}
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setSetToDelete(set);
-                }}
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setSetToDelete(set);
+                  }}
                 className="absolute top-4 right-4 text-red-300 opacity-0 group-hover:opacity-100 transition-opacity hover:text-red-400 z-10"
-              >
-                <Trash2 size={16} />
-              </button>
+                >
+                  <Trash2 size={16} />
+                </button>
 
               <div className="flex flex-col h-full w-full text-left justify-between">
                 {/* TOP CONTENT */}

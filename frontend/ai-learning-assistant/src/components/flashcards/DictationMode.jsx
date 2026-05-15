@@ -61,28 +61,28 @@ export default function DictationMode({
 
   return (
     <div className="w-full max-w-3xl mx-auto px-4">
-      <div className="bg-[#0f1714] border border-slate-800 rounded-3xl p-8 shadow-2xl flex flex-col items-center">
+      <div className="bg-[#0a0a0a] border border-[#212327] rounded-lg p-8 shadow-none flex flex-col items-center">
         
         <div className="w-full flex justify-between items-center mb-8">
-          <span className="text-sm font-semibold text-slate-400 uppercase tracking-wide">
+          <span className="text-[10px] font-mono font-semibold text-[#7d8187] uppercase tracking-widest">
             Dictation Mode
           </span>
-          <span className="text-sm text-slate-500">
+          <span className="text-xs font-mono text-[#7d8187] uppercase tracking-widest">
             {currentIndex + 1} / {total}
           </span>
         </div>
 
         <button
           onClick={speakOriginal}
-          className="mb-8 w-20 h-20 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center hover:bg-emerald-500/30 hover:scale-105 transition-all"
+          className="mb-8 w-20 h-20 bg-transparent border border-white/25 text-white rounded-full flex items-center justify-center hover:bg-white/5 transition-all"
           title="Listen to the word"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-10 h-10">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-8 h-8">
             <path strokeLinecap="round" strokeLinejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" />
           </svg>
         </button>
 
-        <p className="text-slate-400 mb-6 text-center">Type the meaning / answer for what you hear:</p>
+        <p className="text-[#7d8187] mb-6 text-center text-sm font-mono uppercase tracking-widest">Type the meaning / answer for what you hear:</p>
 
         <input
           ref={inputRef}
@@ -91,12 +91,12 @@ export default function DictationMode({
           onChange={(e) => setUserInput(e.target.value)}
           onKeyDown={handleKeyDown}
           disabled={isChecked && feedback?.isCorrect}
-          className={`w-full bg-[#1a2421] border-2 rounded-xl px-6 py-4 text-xl text-white outline-none focus:border-emerald-500 transition-colors ${
+          className={`w-full bg-[#1a1c20] border rounded-lg px-6 py-4 text-xl text-white outline-none focus:border-white/50 transition-colors ${
             isChecked 
               ? feedback?.isCorrect 
-                ? "border-emerald-500 text-emerald-400" 
-                : "border-rose-500 text-rose-400"
-              : "border-slate-700"
+                ? "border-emerald-500/50 text-emerald-400" 
+                : "border-rose-500/50 text-rose-400"
+              : "border-[#212327]"
           }`}
           placeholder="Listen and type..."
         />
@@ -107,10 +107,10 @@ export default function DictationMode({
               {feedback.message}
             </p>
             {!feedback.isCorrect && (
-              <div className="bg-slate-800/50 rounded-lg p-4 mb-4">
-                <p className="text-sm text-slate-400 mb-1">Correct Answer:</p>
-                <p className="text-xl text-white font-semibold">{card.answer}</p>
-                <p className="text-sm text-emerald-400 mt-2">Word: {card.question}</p>
+              <div className="bg-[#191919] border border-[#212327] rounded-sm p-4 mb-4">
+                <p className="text-[11px] font-mono uppercase tracking-widest text-[#7d8187] mb-1">Correct Answer:</p>
+                <p className="text-xl text-white font-medium tracking-tight">{card.answer}</p>
+                <p className="text-sm text-[#dadbdf] mt-2">Word: {card.question}</p>
               </div>
             )}
             
@@ -126,7 +126,7 @@ export default function DictationMode({
                   if (inputRef.current) inputRef.current.focus();
                 }
               }}
-              className="px-8 py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-xl transition-colors"
+              className="px-8 py-3 bg-transparent hover:bg-white/5 border border-white/25 text-white font-normal rounded-full transition-colors mt-2"
             >
               {feedback.isCorrect ? "Next Card" : "Try Again"}
             </button>
@@ -137,7 +137,7 @@ export default function DictationMode({
           <button
             onClick={handleCheck}
             disabled={!userInput.trim()}
-            className="mt-6 px-8 py-3 bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 disabled:hover:bg-emerald-600 text-white font-semibold rounded-xl transition-colors"
+            className="mt-6 px-8 py-3 bg-transparent border border-white/25 hover:bg-white/5 disabled:opacity-50 disabled:cursor-not-allowed text-white font-normal rounded-full transition-colors"
           >
             Check Answer
           </button>

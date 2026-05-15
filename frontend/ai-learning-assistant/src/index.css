@@ -1,19 +1,130 @@
-@import url('https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400&family=Geist+Mono:wght@400&display=swap');
 @import "tailwindcss";
+
 @theme {
--- font-display: "Urbanist", sans-serif;
--- breakpoint-3xl: 1920px;
--- color-primary: #FF9324 ;
-}
-@layer base {
-html {
-font-family: var( -- font-display);
+  --font-display: "Inter", system-ui, sans-serif;
+  --font-mono: "Geist Mono", monospace;
+  --breakpoint-3xl: 1920px;
+  
+  --color-primary: #ffffff;
+  --color-canvas: #0a0a0a;
+  --color-canvas-soft: #1a1c20;
+  --color-canvas-card: #191919;
+  --color-canvas-mid: #363a3f;
+  --color-hairline: #212327;
+  --color-ink: #ffffff;
+  --color-body: #dadbdf;
+  --color-mute: #7d8187;
+  
+  --radius-sm: 8px;
+  --radius-pill: 9999px;
 }
 
-body {
-background-color: #fcfbfc;
+@layer base {
+  html, body {
+    background-color: var(--color-canvas) !important;
+    color: var(--color-ink) !important;
+    font-family: var(--font-display) !important;
+    font-weight: 400 !important;
+    scroll-behavior: smooth;
+  }
+
+  /* Typography Enforcements */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display) !important;
+    font-weight: 400 !important;
+    color: var(--color-ink) !important;
+  }
+  h1 { letter-spacing: -2.4px !important; }
+  h2 { letter-spacing: -1.8px !important; }
+  h3 { letter-spacing: -1.2px !important; }
+  h4 { letter-spacing: -0.6px !important; }
+
+  /* Eyebrows & labels */
+  .uppercase, .tracking-widest, .text-xs.font-semibold {
+    font-family: var(--font-mono) !important;
+    letter-spacing: 1.4px !important;
+    text-transform: uppercase !important;
+    font-weight: 400 !important;
+    color: var(--color-body) !important;
+  }
+
+  /* Button Enforcements - White Pill Outlines */
+  button, a.button-like {
+    border-radius: var(--radius-pill) !important;
+    background: transparent !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important;
+    color: var(--color-ink) !important;
+    box-shadow: none !important;
+    font-family: var(--font-display) !important;
+    font-weight: 400 !important;
+    text-transform: none !important;
+    letter-spacing: 0 !important;
+  }
+  button:hover {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border-color: rgba(255, 255, 255, 0.5) !important;
+  }
+  
+  /* Inputs */
+  input, textarea, select {
+    background: var(--color-canvas-soft) !important;
+    border: 1px solid var(--color-hairline) !important;
+    border-radius: var(--radius-sm) !important;
+    color: var(--color-ink) !important;
+    font-family: var(--font-display) !important;
+    font-weight: 400 !important;
+  }
+  input:focus, textarea:focus, select:focus {
+    outline: none !important;
+    border-color: rgba(255, 255, 255, 0.5) !important;
+    box-shadow: none !important;
+  }
+
+  /* Card Enforcements */
+  /* Target elements that act like cards via typical tailwind classes */
+  div.rounded-2xl, div.rounded-3xl, div.rounded-xl {
+    border-radius: var(--radius-sm) !important;
+    box-shadow: none !important;
+  }
+  
+  /* Surface Color Overrides */
+  [class*="bg-[#0b0f0e]"], 
+  [class*="bg-[#0a0f0d]"], 
+  [class*="bg-[#050807]"],
+  [class*="bg-emerald-900"],
+  [class*="bg-white/5"] {
+     background-color: var(--color-canvas-card) !important;
+     border-color: var(--color-hairline) !important;
+  }
+  
+  .bg-black {
+     background-color: var(--color-canvas) !important;
+  }
+
+  [class*="bg-gradient-to"] {
+     background: var(--color-canvas-card) !important;
+     border-color: var(--color-hairline) !important;
+  }
+
+  /* Erase emerald accents */
+  .text-emerald-400, .text-emerald-500, .text-emerald-300 {
+    color: var(--color-ink) !important;
+  }
+  .bg-emerald-500, .bg-emerald-400 {
+    background-color: transparent !important;
+  }
+  .border-emerald-500, .border-emerald-400, .border-emerald-800 {
+    border-color: rgba(255, 255, 255, 0.25) !important;
+  }
+
+  /* Sidebar/Header specific if any */
+  aside, header {
+    background-color: var(--color-canvas) !important;
+    border-color: var(--color-hairline) !important;
+  }
 }
-}
+
 .perspective-1000 {
   perspective: 1000px;
 }
@@ -40,106 +151,60 @@ background-color: #fcfbfc;
   }
 }
 
-/* ================= FLIPCARD UTILITIES ================= */
-@layer utilities {
-  .preserve-3d {
-    transform-style: preserve-3d;
-  }
-
-  .backface-hidden {
-    backface-visibility: hidden;
-  }
-
-  .rotate-y-180 {
-    transform: rotateY(180deg);
-  }
-}
-/* GLOBAL SMOOTH SCROLL */
-html {
-  scroll-behavior: smooth;
-}
-
 /* AI DASHBOARD SCROLLBAR */
 
 .custom-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: transparent transparent;
+  scrollbar-color: #212327 #0a0a0a;
 }
 
 /* Chrome / Edge / Safari */
 
 .custom-scrollbar::-webkit-scrollbar {
-  width: 2px;
+  width: 4px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: transparent;
+  background: #0a0a0a;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: transparent;
-  border-radius: 10px;
-  transition: all 0.25s ease;
+  background: #212327;
+  border-radius: 9999px;
 }
-
-/* Hiện scrollbar khi hover */
 
 .custom-scrollbar:hover::-webkit-scrollbar-thumb {
-  background: linear-gradient(
-    180deg,
-    #34d399,
-    #059669
-  );
-}
-
-/* Firefox */
-
-.custom-scrollbar:hover {
-  scrollbar-color: #10b981 transparent;
-}
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-fadeIn {
-  animation: fadeIn 0.2s ease;
+  background: #363a3f;
 }
 
 /* ================= MARKDOWN STYLING FOR LESSONS ================= */
 .markdown-lesson {
   font-family: var(--font-display);
-  color: #e2e8f0;
-  font-size: 1.125rem;
+  color: var(--color-body);
+  font-size: 1rem;
+  font-weight: 400;
 }
 .markdown-lesson h1, 
 .markdown-lesson h2, 
 .markdown-lesson h3, 
 .markdown-lesson h4 {
-  color: #34d399;
-  font-weight: 700;
+  color: var(--color-ink);
+  font-weight: 400;
   margin-top: 1.5em;
   margin-bottom: 0.5em;
   line-height: 1.3;
 }
-.markdown-lesson h1 { font-size: 2.25rem; }
-.markdown-lesson h2 { font-size: 1.875rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem; }
+.markdown-lesson h1 { font-size: 2.25rem; letter-spacing: -1.2px; }
+.markdown-lesson h2 { font-size: 1.875rem; border-bottom: 1px solid var(--color-hairline); padding-bottom: 0.5rem; letter-spacing: -0.6px; }
 .markdown-lesson h3 { font-size: 1.5rem; }
 .markdown-lesson p {
   line-height: 1.8;
   margin-bottom: 1.25em;
-  color: #cbd5e1;
+  color: var(--color-body);
 }
 .markdown-lesson strong {
-  color: #ffffff;
-  font-weight: 600;
-  text-shadow: 0 0 10px rgba(52, 211, 153, 0.2);
+  color: var(--color-ink);
+  font-weight: 400;
 }
 .markdown-lesson ul {
   list-style-type: disc;
@@ -153,44 +218,44 @@ html {
 }
 .markdown-lesson li {
   margin-bottom: 0.5em;
-  color: #cbd5e1;
+  color: var(--color-body);
   line-height: 1.6;
 }
 .markdown-lesson li::marker {
-  color: #34d399;
+  color: var(--color-mute);
 }
 .markdown-lesson a {
-  color: #34d399;
+  color: var(--color-ink);
   text-decoration: underline;
   text-underline-offset: 4px;
 }
 .markdown-lesson blockquote {
-  border-left: 4px solid #34d399;
-  color: #94a3b8;
-  font-style: italic;
+  border-left: 4px solid var(--color-hairline);
+  color: var(--color-mute);
   margin: 1.5em 0;
-  background: rgba(52, 211, 153, 0.05);
+  background: var(--color-canvas-soft);
   padding: 1em 1.5em;
-  border-radius: 0 12px 12px 0;
+  border-radius: var(--radius-sm);
 }
 .markdown-lesson code {
-  background-color: rgba(52, 211, 153, 0.1);
-  color: #34d399;
+  background-color: var(--color-canvas-mid);
+  color: var(--color-ink);
   padding: 0.2em 0.4em;
-  border-radius: 6px;
+  border-radius: 4px;
   font-size: 0.9em;
+  font-family: var(--font-mono);
 }
 .markdown-lesson pre {
-  background-color: #050807;
-  border: 1px solid rgba(255,255,255,0.1);
+  background-color: var(--color-canvas-soft);
+  border: 1px solid var(--color-hairline);
   padding: 1.25em;
-  border-radius: 12px;
+  border-radius: var(--radius-sm);
   overflow-x: auto;
   margin-bottom: 1.5em;
-  box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+  box-shadow: none;
 }
 .markdown-lesson pre code {
   background-color: transparent;
-  color: #e2e8f0;
+  color: var(--color-body);
   padding: 0;
 }

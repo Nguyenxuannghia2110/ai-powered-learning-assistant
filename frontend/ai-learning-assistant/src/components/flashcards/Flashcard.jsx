@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 
 const difficultyColors = {
-  easy: "bg-emerald-100 text-emerald-700 border border-emerald-200",
-  medium: "bg-amber-100 text-amber-700 border border-amber-200",
-  hard: "bg-rose-100 text-rose-700 border border-rose-200",
+  easy: "bg-white/10 text-white border border-[#212327]",
+  medium: "bg-white/10 text-white border border-[#212327]",
+  hard: "bg-white/10 text-white border border-[#212327]",
 };
 
 export default function Flashcard({
@@ -15,17 +15,6 @@ export default function Flashcard({
   onPrev,
 }) {
   const [isFlipped, setIsFlipped] = useState(false);
-
-  const progress = ((currentIndex + 1) / total) * 100;
-
-  const theme = {
-    background: "#080f0c",
-    surface: "rgba(255,255,255,0.05)",
-    border: "rgba(255,255,255,0.1)",
-    text: "rgba(255,255,255,0.9)",
-    subtext: "rgba(255,255,255,0.45)",
-    accent: "#10b981",
-  };
 
   /* ================= KEYBOARD CONTROL ================= */
 
@@ -53,11 +42,11 @@ export default function Flashcard({
   }, [onNext, onPrev]);
 
   return (
-    <div className="w-full max-w-5xl mx-auto px-4">
+    <div className="w-full max-w-4xl mx-auto px-4">
       {/* ================= FLASHCARD ================= */}
 
       <div
-        className="relative w-full h-[480px] md:h-[520px] perspective-1000 cursor-pointer group"
+        className="relative w-full h-[400px] md:h-[460px] perspective-1000 cursor-pointer group"
         onClick={() => setIsFlipped(!isFlipped)}
       >
         <div
@@ -68,22 +57,14 @@ export default function Flashcard({
           {/* ================= FRONT ================= */}
 
           <div
-            className="absolute inset-0 backface-hidden rounded-3xl border backdrop-blur-xl shadow-xl group-hover:shadow-2xl transition-all overflow-hidden"
-            style={{
-              background: theme.surface,
-              borderColor: theme.border,
-            }}
+            className="absolute inset-0 backface-hidden rounded-lg border border-[#212327] bg-[#0a0a0a] shadow-none overflow-hidden"
           >
-            {/* Glow */}
-            <div className="absolute -top-24 -left-16 w-64 h-64 bg-emerald-400/20 blur-2xl rounded-full"></div>
-            <div className="absolute -bottom-24 -right-16 w-64 h-64 bg-indigo-400/20 blur-2xl rounded-full"></div>
-
             {/* Header */}
-            <div className="absolute top-8 left-8 right-8 flex items-center justify-between">
+            <div className="absolute top-6 left-6 right-6 flex items-center justify-between">
               <span
-                className={`text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wide backdrop-blur-sm ${difficultyColors[card.difficulty]}`}
+                className={`text-[10px] font-mono px-3 py-1 rounded-sm uppercase tracking-widest ${difficultyColors[card.difficulty]}`}
               >
-                {card.difficulty}
+                {card.difficulty || "Standard"}
               </span>
 
               <button
@@ -91,10 +72,10 @@ export default function Flashcard({
                   e.stopPropagation();
                   onToggleStar(card._id);
                 }}
-                className={`transition transform hover:scale-110 ${
+                className={`transition ${
                   card.isStarred
-                    ? "text-amber-400"
-                    : "text-slate-300 hover:text-amber-400"
+                    ? "text-white opacity-100"
+                    : "text-[#7d8187] hover:text-white"
                 }`}
               >
                 <svg
@@ -103,7 +84,7 @@ export default function Flashcard({
                   viewBox="0 0 24 24"
                   strokeWidth={1.5}
                   stroke="currentColor"
-                  className="w-7 h-7"
+                  className="w-6 h-6"
                 >
                   <path
                     strokeLinecap="round"
@@ -116,61 +97,46 @@ export default function Flashcard({
 
             {/* Content */}
             <div className="h-full flex flex-col items-center justify-center px-10 md:px-20 text-center">
-              <p
-                className="text-xs uppercase tracking-widest mb-4 font-medium"
-                style={{ color: theme.subtext }}
-              >
+              <p className="text-[11px] font-mono uppercase tracking-widest mb-6 text-[#7d8187]">
                 Question
               </p>
 
-              <h3
-                className="text-2xl md:text-3xl lg:text-4xl font-bold leading-snug"
-                style={{ color: theme.text }}
-              >
+              <h3 className="text-2xl md:text-3xl font-medium leading-snug text-white tracking-tight">
                 {card.question}
               </h3>
             </div>
 
             {/* Footer */}
-            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-slate-400 text-sm flex items-center gap-2">
-              <span>Click or press SPACE to reveal</span>
+            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-[#7d8187] text-xs font-mono uppercase tracking-widest flex items-center gap-2 opacity-50">
+              <span>Press SPACE to reveal</span>
             </div>
           </div>
 
           {/* ================= BACK ================= */}
 
           <div
-            className="absolute inset-0 backface-hidden rotate-y-180 rounded-3xl border backdrop-blur-xl shadow-xl overflow-hidden"
-            style={{
-              background: theme.surface,
-              borderColor: theme.border,
-            }}
+            className="absolute inset-0 backface-hidden rotate-y-180 rounded-lg border border-white/25 bg-[#191919] shadow-none overflow-hidden"
           >
-            <div className="absolute -bottom-24 -right-16 w-64 h-64 bg-emerald-500/30 blur-3xl rounded-full"></div>
-
             {/* Header */}
             <div className="absolute top-6 left-6">
-              <span className="text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wide bg-emerald-100 text-emerald-700 border border-emerald-200">
+              <span className="text-[10px] font-mono px-3 py-1 rounded-sm uppercase tracking-widest bg-white/10 text-white border border-[#212327]">
                 Answer
               </span>
             </div>
 
             {/* Content */}
-            <div className="h-full flex flex-col items-center justify-center px-16 text-center">
-              <p className="text-xs text-emerald-600 uppercase tracking-widest mb-4 font-medium">
+            <div className="h-full flex flex-col items-center justify-center px-12 md:px-24 text-center">
+              <p className="text-[11px] font-mono uppercase tracking-widest mb-6 text-white/50">
                 Explanation
               </p>
 
-              <p
-                className="text-xl md:text-2xl lg:text-3xl font-semibold leading-relaxed whitespace-pre-line"
-                style={{ color: theme.text }}
-              >
+              <p className="text-xl md:text-2xl font-normal leading-relaxed whitespace-pre-line text-[#dadbdf] tracking-tight">
                 {card.answer}
               </p>
             </div>
 
             {/* Footer */}
-            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-slate-400 text-sm flex items-center gap-4">
+            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-[#7d8187] text-xs font-mono uppercase tracking-widest flex items-center gap-4 opacity-50">
               <span>SPACE Flip</span>
             </div>
           </div>

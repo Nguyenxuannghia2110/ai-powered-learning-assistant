@@ -57,7 +57,7 @@ export default function FlashcardsPage() {
 }, [currentIndex]);
 
   return (
-    <div className="w-full h-full bg-[#080f0c] min-h-screen text-slate-100 font-sans">
+    <div className="w-full h-full flex flex-col font-sans">
       {stage === 'list' && (
         <FlashcardListPage onSelectSet={goToStudy} onCreateNew={goToDesign} />
       )}
@@ -67,118 +67,121 @@ export default function FlashcardsPage() {
       )}
 
       {stage === 'study' && activeSet && (
-        <div className="p-6 flex flex-col items-center space-y-10 max-w-7xl mx-auto">
-          <div className="w-full flex flex-col md:flex-row items-center justify-between mb-6 gap-4">
-             <button
+        <div className="w-full max-w-5xl mx-auto flex flex-col h-full gap-6">
+          <div className="flex items-center justify-between">
+            <button
               onClick={goToList}
-              className="inline-flex items-center gap-2 text-sm font-medium text-emerald-200 hover:text-white transition-all duration-200 hover:-translate-x-0.5"
+              className="inline-flex items-center gap-2 text-sm text-[#7d8187] hover:text-white transition-all"
             >
               <ArrowLeft size={16} />
               Back to Sets
             </button>
-            <h2 className="text-2xl font-bold text-center">{activeSet.title || "Study Session"}</h2>
-            
+            <h2 className="text-xl font-medium tracking-tight text-white">{activeSet.title || "Study Session"}</h2>
+            <div className="w-24" /> {/* Spacer to center the title */}
+          </div>
+
+          <div className="flex-1 bg-[#191919] border border-[#212327] rounded-sm p-8 flex flex-col">
             {/* Mode Selector */}
-            <div className="flex bg-slate-800/50 p-1 rounded-xl border border-slate-700/50">
+            <div className="flex justify-center mb-8">
+              <div className="flex bg-[#0a0a0a] p-1 rounded-full border border-[#212327]">
+                <button
+                  onClick={() => setStudyMode('standard')}
+                  className={`flex items-center gap-2 px-4 py-1.5 rounded-full text-xs uppercase tracking-widest font-mono transition-all ${
+                    studyMode === 'standard' 
+                      ? 'bg-white/10 text-white' 
+                      : 'text-[#7d8187] hover:text-white'
+                  }`}
+                >
+                  <Layers size={14} />
+                  <span className="hidden sm:inline">Standard</span>
+                </button>
+                <button
+                  onClick={() => setStudyMode('dictation')}
+                  className={`flex items-center gap-2 px-4 py-1.5 rounded-full text-xs uppercase tracking-widest font-mono transition-all ${
+                    studyMode === 'dictation' 
+                      ? 'bg-white/10 text-white' 
+                      : 'text-[#7d8187] hover:text-white'
+                  }`}
+                >
+                  <Keyboard size={14} />
+                  <span className="hidden sm:inline">Dictation</span>
+                </button>
+                <button
+                  onClick={() => setStudyMode('speaking')}
+                  className={`flex items-center gap-2 px-4 py-1.5 rounded-full text-xs uppercase tracking-widest font-mono transition-all ${
+                    studyMode === 'speaking' 
+                      ? 'bg-white/10 text-white' 
+                      : 'text-[#7d8187] hover:text-white'
+                  }`}
+                >
+                  <Mic size={14} />
+                  <span className="hidden sm:inline">Speaking</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Flashcard Content */}
+            <div className="flex-1 flex flex-col justify-center items-center w-full max-w-3xl mx-auto">
+              {activeSet.cards && activeSet.cards[currentIndex] && (
+                <>
+                  {studyMode === 'standard' && (
+                    <Flashcard
+                      key={activeSet.cards[currentIndex]._id || currentIndex}
+                      card={activeSet.cards[currentIndex]}
+                      onToggleStar={handleToggleStar}
+                      onReview={handleReview}
+                      currentIndex={currentIndex}
+                      total={activeSet.cards.length}
+                      onNext={() => setCurrentIndex((i) => Math.min(i + 1, activeSet.cards.length - 1))}
+                      onPrev={() => setCurrentIndex((i) => Math.max(i - 1, 0))}
+                    />
+                  )}
+                  {studyMode === 'dictation' && (
+                    <DictationMode
+                      key={activeSet.cards[currentIndex]._id || currentIndex}
+                      card={activeSet.cards[currentIndex]}
+                      currentIndex={currentIndex}
+                      total={activeSet.cards.length}
+                      onNext={() => setCurrentIndex((i) => Math.min(i + 1, activeSet.cards.length - 1))}
+                      onPrev={() => setCurrentIndex((i) => Math.max(i - 1, 0))}
+                    />
+                  )}
+                  {studyMode === 'speaking' && (
+                    <SpeakingMode
+                      key={activeSet.cards[currentIndex]._id || currentIndex}
+                      card={activeSet.cards[currentIndex]}
+                      currentIndex={currentIndex}
+                      total={activeSet.cards.length}
+                      onNext={() => setCurrentIndex((i) => Math.min(i + 1, activeSet.cards.length - 1))}
+                      onPrev={() => setCurrentIndex((i) => Math.max(i - 1, 0))}
+                    />
+                  )}
+                </>
+              )}
+            </div>
+
+            {/* Pagination Controls */}
+            <div className="flex items-center justify-between mt-8 border-t border-[#212327] pt-6">
               <button
-                onClick={() => setStudyMode('standard')}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                  studyMode === 'standard' 
-                    ? 'bg-emerald-500/20 text-emerald-400 shadow-sm' 
-                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-700/50'
-                }`}
+                disabled={currentIndex === 0}
+                onClick={() => setCurrentIndex((i) => i - 1)}
+                className="px-6 py-2 rounded-full border border-[#212327] bg-[#0a0a0a] text-white text-sm hover:bg-white/5 transition disabled:opacity-40"
               >
-                <Layers size={16} />
-                <span className="hidden sm:inline">Standard</span>
+                Previous
               </button>
+
+              <span className="text-xs font-mono uppercase tracking-widest text-[#7d8187]">
+                {currentIndex + 1} / {activeSet.cards?.length || 0}
+              </span>
+
               <button
-                onClick={() => setStudyMode('dictation')}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                  studyMode === 'dictation' 
-                    ? 'bg-emerald-500/20 text-emerald-400 shadow-sm' 
-                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-700/50'
-                }`}
+                disabled={currentIndex === (activeSet.cards?.length || 1) - 1}
+                onClick={() => setCurrentIndex((i) => i + 1)}
+                className="px-6 py-2 rounded-full border border-[#212327] bg-[#0a0a0a] text-white text-sm hover:bg-white/5 transition disabled:opacity-40"
               >
-                <Keyboard size={16} />
-                <span className="hidden sm:inline">Dictation</span>
-              </button>
-              <button
-                onClick={() => setStudyMode('speaking')}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                  studyMode === 'speaking' 
-                    ? 'bg-emerald-500/20 text-emerald-400 shadow-sm' 
-                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-700/50'
-                }`}
-              >
-                <Mic size={16} />
-                <span className="hidden sm:inline">Speaking</span>
+                Next
               </button>
             </div>
-          </div>
-
-          <div className="w-full flex-grow flex items-center justify-center">
-            {activeSet.cards && activeSet.cards[currentIndex] && (
-              <>
-                {studyMode === 'standard' && (
-                  <Flashcard
-                    key={activeSet.cards[currentIndex]._id || currentIndex}
-                    card={activeSet.cards[currentIndex]}
-                    onToggleStar={handleToggleStar}
-                    onReview={handleReview}
-                    currentIndex={currentIndex}
-                    total={activeSet.cards.length}
-                    onNext={() => setCurrentIndex((i) => Math.min(i + 1, activeSet.cards.length - 1))}
-                    onPrev={() => setCurrentIndex((i) => Math.max(i - 1, 0))}
-                  />
-                )}
-                {studyMode === 'dictation' && (
-                  <DictationMode
-                    key={activeSet.cards[currentIndex]._id || currentIndex}
-                    card={activeSet.cards[currentIndex]}
-                    currentIndex={currentIndex}
-                    total={activeSet.cards.length}
-                    onNext={() => setCurrentIndex((i) => Math.min(i + 1, activeSet.cards.length - 1))}
-                    onPrev={() => setCurrentIndex((i) => Math.max(i - 1, 0))}
-                  />
-                )}
-                {studyMode === 'speaking' && (
-                  <SpeakingMode
-                    key={activeSet.cards[currentIndex]._id || currentIndex}
-                    card={activeSet.cards[currentIndex]}
-                    currentIndex={currentIndex}
-                    total={activeSet.cards.length}
-                    onNext={() => setCurrentIndex((i) => Math.min(i + 1, activeSet.cards.length - 1))}
-                    onPrev={() => setCurrentIndex((i) => Math.max(i - 1, 0))}
-                  />
-                )}
-              </>
-            )}
-          </div>
-
-          <div className="flex items-center gap-8">
-            <button
-              disabled={currentIndex === 0}
-              onClick={() => setCurrentIndex((i) => i - 1)}
-              className="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 disabled:opacity-40"
-            >
-              ← Previous
-            </button>
-
-            <span className="text-sm font-medium text-slate-400">
-              {currentIndex + 1} / {activeSet.cards?.length || 0}
-            </span>
-
-            <button
-              disabled={currentIndex === (activeSet.cards?.length || 1) - 1}
-              onClick={() => {
-                // If it's the last card, we can either stay disabled or let them complete.
-                // Currently just using disabled.
-                setCurrentIndex((i) => i + 1);
-              }}
-              className="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 disabled:opacity-40"
-            >
-              Next →
-            </button>
           </div>
         </div>
       )}

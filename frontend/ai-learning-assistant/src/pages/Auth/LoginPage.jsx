@@ -44,38 +44,38 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-emerald-50 via-sky-50 to-indigo-50 px-4">
+    <div className="h-screen w-screen flex items-center justify-center bg-black px-4 overflow-hidden">
       {/* Card */}
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
+      <div className="w-full max-w-md bg-[#1a1c20] rounded-lg border border-[#212327] p-8 shadow-none">
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="flex justify-center mb-4">
-            <div className="w-14 h-14 rounded-full bg-emerald-100 flex items-center justify-center">
-              <BrainCircuit className="w-7 h-7 text-emerald-600" />
+          <div className="flex justify-center mb-6">
+            <div className="w-12 h-12 rounded-full border border-[#212327] bg-[#191919] flex items-center justify-center">
+              <BrainCircuit className="w-6 h-6 text-white" />
             </div>
           </div>
-          <h1 className="text-2xl font-bold text-slate-800">Welcome back</h1>
-          <p className="text-slate-500 mt-1">
-            Sign in to continue your learning journey
+          <h1 className="text-2xl font-bold text-white tracking-tight">Welcome back</h1>
+          <p className="text-[#7d8187] mt-2 text-sm uppercase tracking-widest font-mono">
+            Sign in to continue
           </p>
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <form onSubmit={handleSubmit} className="space-y-6">
           {/* Email */}
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">
+            <label className="block text-xs font-mono tracking-widest text-[#7d8187] uppercase mb-2">
               Email
             </label>
             <div className="relative">
               <div
                 className={`absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none ${
                   focusedField === "email"
-                    ? "text-emerald-500"
-                    : "text-slate-400"
+                    ? "text-white"
+                    : "text-[#7d8187]"
                 }`}
               >
-                <Mail size={18} />
+                <Mail size={16} />
               </div>
               <input
                 type="email"
@@ -84,7 +84,7 @@ const LoginPage = () => {
                 onFocus={() => setFocusedField("email")}
                 onBlur={() => setFocusedField(null)}
                 placeholder="you@example.com"
-                className="w-full pl-11 pr-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition"
+                className="w-full pl-11 pr-4 py-3 bg-[#0a0a0a] border border-[#212327] rounded-lg text-white placeholder-[#7d8187] focus:ring-0 focus:border-white/50 outline-none transition"
                 required
               />
             </div>
@@ -92,18 +92,18 @@ const LoginPage = () => {
 
           {/* Password */}
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">
+            <label className="block text-xs font-mono tracking-widest text-[#7d8187] uppercase mb-2">
               Password
             </label>
             <div className="relative">
               <div
                 className={`absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none ${
                   focusedField === "password"
-                    ? "text-emerald-500"
-                    : "text-slate-400"
+                    ? "text-white"
+                    : "text-[#7d8187]"
                 }`}
               >
-                <Lock className="" strokeWidth={2} />
+                <Lock size={16} />
               </div>
               <input
                 type="password"
@@ -112,7 +112,7 @@ const LoginPage = () => {
                 onFocus={() => setFocusedField("password")}
                 onBlur={() => setFocusedField(null)}
                 placeholder="••••••••"
-                className="w-full pl-11 pr-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition"
+                className="w-full pl-11 pr-4 py-3 bg-[#0a0a0a] border border-[#212327] rounded-lg text-white placeholder-[#7d8187] focus:ring-0 focus:border-white/50 outline-none transition"
                 required
               />
             </div>
@@ -122,28 +122,28 @@ const LoginPage = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 rounded-xl transition disabled:opacity-60 disabled:cursor-not-allowed"
+            className="w-full flex items-center justify-center gap-2 bg-transparent hover:bg-white/5 border border-white/25 text-white font-normal py-3 rounded-full transition disabled:opacity-50 disabled:cursor-not-allowed mt-4"
           >
             {loading ? (
               <>
-                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                 Signing in...
               </>
             ) : (
               <>
                 Sign in
-                <ArrowRight size={18} />
+                <ArrowRight size={16} />
               </>
             )}
           </button>
         </form>
 
         {/* Signup link */}
-        <p className="text-center text-sm text-slate-500 mt-6">
+        <p className="text-center text-sm text-[#7d8187] mt-8">
           Don’t have an account?{" "}
           <Link
             to="/register"
-            className="text-emerald-600 font-medium hover:underline"
+            className="text-white hover:underline transition"
           >
             Sign up
           </Link>

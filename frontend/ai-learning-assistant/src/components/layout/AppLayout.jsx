@@ -30,36 +30,39 @@ const AppLayout = () => {
   const location = useLocation();
 
   return (
-    <div className="min-h-screen flex bg-black overflow-x-hidden">
+    <div className="h-screen w-screen flex bg-black overflow-hidden">
       {/* Sidebar */}
       <Sidebar
         mobileOpen={mobileSidebarOpen}
         onCloseMobile={() => setMobileSidebarOpen(false)}
       />
 
-      {/* Main Content */}
-      <main className="flex-1 md:ml-64 pt-24 px-6 md:px-8 pb-8 bg-[#050807]">
+      {/* Main Content wrapper */}
+      <div className="flex-1 md:ml-64 flex flex-col h-full bg-black relative">
         <Header
           onToggleMobileSidebar={() =>
             setMobileSidebarOpen(!mobileSidebarOpen)
           }
         />
 
-        {/* Page Transition */}
-        <AnimatePresence mode="wait" initial={false}>
-          <motion.div
-            key={location.pathname}
-            variants={pageVariants}
-            initial="initial"
-            animate="animate"
-            exit="exit"
-            transition={pageTransition}
-            style={{ willChange: "transform, opacity" }}
-          >
-            <Outlet />
-          </motion.div>
-        </AnimatePresence>
-      </main>
+        {/* Scrollable Page Content */}
+        <main className="flex-1 overflow-y-auto custom-scrollbar pt-24 px-6 md:px-8 pb-8">
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.div
+              key={location.pathname}
+              variants={pageVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              transition={pageTransition}
+              style={{ willChange: "transform, opacity" }}
+              className="h-full"
+            >
+              <Outlet />
+            </motion.div>
+          </AnimatePresence>
+        </main>
+      </div>
     </div>
   );
 };

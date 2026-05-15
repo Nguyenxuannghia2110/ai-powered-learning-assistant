@@ -1,120 +1,65 @@
 import { useState } from "react";
-import AiResultModal from "../../components/common/AiResultModal";
 import axiosInstance from "../../utils/axiosInstance";
+import ReactMarkdown from "react-markdown";
 
 export default function AiActions({ documentId }) {
-  const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [title, setTitle] = useState("");
-  const [result, setResult] = useState("");
-  const [concept, setConcept] = useState("");
-  const [cached, setCached] = useState(false);
+  const [summary, setSummary] = useState("");
+  const [error, setError] = useState("");
 
-  /* ===================== SUMMARY ===================== */
   const handleSummary = async () => {
     if (!documentId) {
       console.error("❌ documentId missing");
       return;
     }
-    setTitle("Document Summary");
-    setOpen(true);
     setLoading(true);
-    setResult("");
+    setSummary("");
+    setError("");
     try {
       const res = await axiosInstance.post("/api/ai/generate-summary", {
         documentId,
       });
-      setResult(res.data?.data?.summary || "");
-      setCached(res.data?.cached === true);
+      setSummary(res.data?.data?.summary || "");
     } catch {
-      setResult("Failed to generate summary.");
+      setError("Failed to generate summary.");
       console.log("📄 documentId:", documentId);
     } finally {
       setLoading(false);
     }
   };
 
-  /* ===================== CONCEPT ===================== */
-  const handleConcept = async () => {
-    if (!concept.trim()) return;
-
-    if (!documentId) {
-      console.error("❌ documentId missing");
-      return;
-    }
-
-    setTitle(`Explain: ${concept}`);
-    setOpen(true);
-    setLoading(true);
-    setResult("");
-
-    try {
-      const res = await axiosInstance.post("/api/ai/explain-concept", {
-        documentId,
-        concept,
-      });
-
-      setResult(res.data?.data?.explanation || "");
-      setCached(res.data?.cached === true);
-    } catch (err) {
-      console.error("❌ Explain concept error:", err.response?.data);
-      setResult("Failed to explain concept.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
-    <>
-      {/* ================= SUMMARY ================= */}
-      <div className="bg-white rounded-xl p-5 shadow-sm flex justify-between items-center mb-4">
+    <div className="p-4 space-y-4">
+      <div className="bg-[#0b0f0e] border border-white/10 rounded-2xl p-6 shadow-sm flex justify-between items-center">
         <div>
-          <h3 className="font-semibold">Generate Summary</h3>
-          <p className="text-sm text-gray-500">
-            Get a concise summary of the entire document.
+          <h3 className="text-lg font-semibold text-white">Document Summary</h3>
+          <p className="text-sm text-gray-400 mt-1">
+            Get a concise AI-generated summary of the entire document.
           </p>
         </div>
 
         <button
           onClick={handleSummary}
-          className="bg-emerald-500 text-white px-4 py-2 rounded-lg"
+          disabled={loading}
+          className="bg-emerald-500 hover:bg-emerald-600 text-black font-semibold px-5 py-2.5 rounded-xl transition disabled:opacity-50"
         >
-          Summarize
+          {loading ? "Summarizing..." : summary ? "Regenerate" : "Summarize"}
         </button>
       </div>
 
-      {/* ================= CONCEPT ================= */}
-      <div className="bg-white rounded-xl p-5 shadow-sm">
-        <h3 className="font-semibold mb-2">Explain a Concept</h3>
-        <p className="text-sm text-gray-500 mb-4">
-          Enter a topic or concept from the document.
-        </p>
-
-        <div className="flex gap-2">
-          <input
-            value={concept}
-            onChange={(e) => setConcept(e.target.value)}
-            placeholder="e.g. React Hooks"
-            className="flex-1 border rounded-lg px-3 py-2 text-sm"
-          />
-          <button
-            onClick={handleConcept}
-            className="bg-emerald-500 text-white px-4 rounded-lg"
-          >
-            Explain
-          </button>
+      {error && (
+        <div className="bg-red-500/10 border border-red-500/20 text-red-400 p-4 rounded-xl">
+          {error}
         </div>
-      </div>
+      )}
 
-      {/* ================= MODAL ================= */}
-      <AiResultModal
-        open={open}
-        title={title}
-        loading={loading}
-        content={result}
-        cached={cached}
-        onClose={() => setOpen(false)}
-      />
-    </>
+      {summary && (
+        <div className="bg-[#0b0f0e] border border-white/10 rounded-2xl p-6 text-gray-200">
+          <div className="prose prose-invert max-w-none">
+            <ReactMarkdown>{summary}</ReactMarkdown>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }

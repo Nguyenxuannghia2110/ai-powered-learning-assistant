@@ -5,12 +5,12 @@ const QuizCard = ({ quiz, onStart, onDelete }) => {
   return (
     <div
       className="
-        group
+      group
         relative
 aspect-[8/5]
 flex
 flex-col
-justify-between
+      justify-between
 rounded-2xl
 p-5
 bg-gradient-to-br
@@ -57,7 +57,7 @@ transition-all
       <div className="mt-6 space-y-4">
         <div className="inline-block px-4 py-2 bg-emerald-900/40 text-emerald-200 rounded-xl text-sm font-semibold">
           {quiz.totalQuestions} Questions
-        </div>
+      </div>
 
         <button
           onClick={() => onStart(quiz)}

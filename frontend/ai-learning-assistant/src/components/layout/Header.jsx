@@ -91,7 +91,7 @@ const Header = () => {
   /* ================= UI ================= */
 
   return (
-    <header className="fixed top-0 left-[260px] right-0 h-[70px] z-40 backdrop-blur-xl bg-black/30 border-b border-white/10 flex items-center justify-between px-8">
+    <header className="absolute top-0 left-0 right-0 h-[70px] z-40 backdrop-blur-xl bg-black/30 border-b border-white/10 flex items-center justify-between px-8">
       {/* SEARCH */}
       <div className="relative w-[400px]">
         <Search
