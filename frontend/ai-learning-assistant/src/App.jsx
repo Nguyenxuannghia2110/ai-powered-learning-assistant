@@ -21,8 +21,14 @@ import WorkspaceDetailPage from "./pages/Workspace/WorkspaceDetailPage";
 import WorkspaceNodePage from "./pages/Workspace/WorkspaceNodePage";
 import { useAuth } from "./context/AuthContext";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
+import AdminProtectedRoute from "./components/auth/AdminProtectedRoute";
 
 import AppLayout from "./components/layout/AppLayout";
+import AdminLayout from "./components/layout/AdminLayout";
+
+import AdminDashboardPage from "./pages/Admin/AdminDashboardPage";
+import AdminUsersPage from "./pages/Admin/AdminUsersPage";
+import AdminContentPage from "./pages/Admin/AdminContentPage";
 
 import { Toaster } from "react-hot-toast";
 
@@ -83,6 +89,16 @@ const App = () => {
               <Route path="/workspaces" element={<WorkspaceListPage />} />
               <Route path="/workspaces/:id" element={<WorkspaceDetailPage />} />
               <Route path="/workspaces/:id/nodes/:nodeId" element={<WorkspaceNodePage />} />
+            </Route>
+          </Route>
+
+          {/* Admin Routes */}
+          <Route element={<AdminProtectedRoute />}>
+            <Route element={<AdminLayout />}>
+              <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
+              <Route path="/admin/users" element={<AdminUsersPage />} />
+              <Route path="/admin/content" element={<AdminContentPage />} />
+              <Route path="/admin/settings" element={<div className="p-8">Settings (Coming Soon)</div>} />
             </Route>
           </Route>
 

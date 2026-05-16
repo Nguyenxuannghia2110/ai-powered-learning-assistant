@@ -18,6 +18,7 @@ import quizRoutes from "./routes/quizRoutes.js";
 import progressRoutes from "./routes/progressRoutes.js";
 import workspaceRoutes from "./routes/workspaceRoutes.js";
 import uploadRoutes from "./routes/uploadRoutes.js";
+import adminRoutes from "./routes/adminRoutes.js";
 
 // ES6 module_dirname alter
 const __filename = fileURLToPath(import.meta.url);
@@ -54,6 +55,7 @@ app.use("/api/quizzes", quizRoutes);
 app.use("/api/progress", progressRoutes);
 app.use("/api/workspaces", workspaceRoutes);
 app.use("/api/upload", uploadRoutes);
+app.use("/api/admin", adminRoutes);
 
 app.use(errorHandler);
 
