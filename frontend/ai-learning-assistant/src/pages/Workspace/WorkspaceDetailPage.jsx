@@ -68,7 +68,7 @@ export default function WorkspaceDetailPage() {
   if (loading) {
     return (
       <div className="flex justify-center py-20">
-        <div className="w-8 h-8 border-4 border-emerald-500/30 border-t-emerald-500 rounded-full animate-spin" />
+        <div className="w-8 h-8 border-4 border-primary/30 border-t-emerald-500 rounded-full animate-spin" />
       </div>
     );
   }
@@ -80,41 +80,41 @@ export default function WorkspaceDetailPage() {
       {/* Back Button */}
       <button
         onClick={() => navigate("/workspaces")}
-        className="flex items-center gap-2 text-gray-400 hover:text-white mb-8 transition-colors"
+        className="flex items-center gap-2 text-body hover:text-ink mb-8 transition-colors"
       >
         <ArrowLeft className="w-4 h-4" />
         Back to Workspaces
       </button>
 
       {/* Header Section */}
-      <div className="bg-gradient-to-br from-[#0a0f0d] to-[#0d1411] border border-white/10 rounded-3xl p-8 mb-10 relative overflow-hidden">
+      <div className="bg-canvas-card border border-hairline rounded-md p-8 mb-10 relative overflow-hidden">
         {/* Decorative background glow */}
-        <div className="absolute -top-40 -right-40 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -top-40 -right-40 w-96 h-96 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
         
         <div className="relative z-10 flex flex-col md:flex-row md:items-start justify-between gap-6">
           <div className="flex-1">
             <div className="flex items-center gap-3 mb-4">
-              <div className="px-3 py-1 bg-emerald-500/20 text-emerald-400 text-xs font-semibold uppercase tracking-wider rounded-full border border-emerald-500/20">
+              <div className="px-3 py-1 bg-primary/20 text-primary text-xs font-semibold uppercase tracking-wider rounded-full border border-primary/20">
                 {workspace.level}
               </div>
-              <div className="px-3 py-1 bg-white/5 text-gray-400 text-xs font-semibold uppercase tracking-wider rounded-full border border-white/10">
+              <div className="px-3 py-1 bg-canvas-card text-body text-xs font-semibold uppercase tracking-wider rounded-full border border-hairline">
                 {workspace.learningStyle}
               </div>
             </div>
 
-            <h1 className="text-4xl font-extrabold text-white mb-4 leading-tight">
+            <h1 className="text-4xl font-extrabold text-ink mb-4 leading-tight">
               {workspace.topic}
             </h1>
 
             {workspace.goal && (
-              <p className="text-lg text-gray-300 mb-6 max-w-2xl">
+              <p className="text-lg text-body mb-6 max-w-2xl">
                 Goal: {workspace.goal}
               </p>
             )}
 
-            <div className="flex flex-wrap items-center gap-6 text-sm text-gray-400">
+            <div className="flex flex-wrap items-center gap-6 text-sm text-body">
               <div className="flex items-center gap-2">
-                <Brain className="w-4 h-4 text-emerald-400" />
+                <Brain className="w-4 h-4 text-primary" />
                 {workspace.nodes.length} Nodes
               </div>
               <div className="flex items-center gap-2">
@@ -149,8 +149,8 @@ export default function WorkspaceDetailPage() {
                 />
               </svg>
               <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <span className="text-2xl font-bold text-white">{workspace.progress}%</span>
-                <span className="text-xs text-gray-400">Completed</span>
+                <span className="text-2xl font-bold text-ink">{workspace.progress}%</span>
+                <span className="text-xs text-body">Completed</span>
               </div>
             </div>
 
@@ -159,7 +159,7 @@ export default function WorkspaceDetailPage() {
               <button
                 onClick={handleResetProgress}
                 title="Reset Progress"
-                className="p-2 bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white rounded-lg transition-colors border border-white/5 hover:border-white/20"
+                className="p-2 bg-canvas-card hover:bg-white/10 text-body hover:text-ink rounded-lg transition-colors border border-white/5 hover:border-hairline"
               >
                 <RotateCcw className="w-4 h-4" />
               </button>
@@ -177,8 +177,8 @@ export default function WorkspaceDetailPage() {
 
       {/* Roadmap Timeline */}
       <div className="relative">
-        <h2 className="text-2xl font-bold text-white mb-8 flex items-center gap-3">
-          <Compass className="w-6 h-6 text-emerald-400" />
+        <h2 className="text-2xl font-bold text-ink mb-8 flex items-center gap-3">
+          <Compass className="w-6 h-6 text-primary" />
           Learning Roadmap
         </h2>
 
@@ -201,12 +201,12 @@ export default function WorkspaceDetailPage() {
                 {/* Timeline Icon */}
                 <div className="relative z-10 flex flex-col items-center">
                   <div
-                    className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 border-2 transition-all duration-300 ${
+                    className={`w-14 h-14 rounded-md flex items-center justify-center shrink-0 border-2 transition-all duration-300 ${
                       isCompleted
-                        ? "bg-emerald-500/20 border-emerald-500 text-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.3)]"
+                        ? "bg-primary/20 border-primary text-primary shadow-[0_0_15px_rgba(16,185,129,0.3)]"
                         : isCurrent
                         ? "bg-blue-500/20 border-blue-500 text-blue-400 shadow-[0_0_15px_rgba(59,130,246,0.3)] scale-110"
-                        : "bg-[#0a0f0d] border-white/10 text-gray-500"
+                        : "bg-canvas-card border-hairline text-mute"
                     }`}
                   >
                     {isCompleted ? (
@@ -226,28 +226,28 @@ export default function WorkspaceDetailPage() {
                       navigate(`/workspaces/${id}/nodes/${node._id}`);
                     }
                   }}
-                  className={`flex-1 bg-[#0a0f0d] border ${
+                  className={`flex-1 bg-canvas-card border ${
                     isCurrent ? "border-blue-500/30 shadow-lg shadow-blue-500/5" : "border-white/5"
-                  } rounded-2xl p-6 transition-all duration-300 ${
-                    isUnlocked ? "hover:border-white/20 hover:bg-white/[0.02] cursor-pointer" : "cursor-not-allowed"
+                  } rounded-md p-6 transition-all duration-300 ${
+                    isUnlocked ? "hover:border-hairline hover:bg-white/[0.02] cursor-pointer" : "cursor-not-allowed"
                   }`}
                 >
                   <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
                     <div>
                       <div className="flex items-center gap-3 mb-2">
-                        <span className="text-sm font-medium text-gray-400">Step {index + 1}</span>
+                        <span className="text-sm font-medium text-body">Step {index + 1}</span>
                         <span className={`text-xs px-2 py-0.5 rounded-full border ${
                           node.type === "lesson" ? "bg-purple-500/10 text-purple-400 border-purple-500/20" :
                           node.type === "practice" ? "bg-orange-500/10 text-orange-400 border-orange-500/20" :
-                          "bg-gray-500/10 text-gray-400 border-gray-500/20"
+                          "bg-gray-500/10 text-body border-gray-500/20"
                         }`}>
                           {node.type}
                         </span>
                       </div>
-                      <h3 className={`text-xl font-bold mb-2 ${isUnlocked ? "text-white group-hover:text-emerald-400 transition-colors" : "text-gray-500"}`}>
+                      <h3 className={`text-xl font-bold mb-2 ${isUnlocked ? "text-ink group-hover:text-primary transition-colors" : "text-mute"}`}>
                         {node.title}
                       </h3>
-                      <p className={`text-sm ${isUnlocked ? "text-gray-400" : "text-gray-600"} max-w-2xl`}>
+                      <p className={`text-sm ${isUnlocked ? "text-body" : "text-gray-600"} max-w-2xl`}>
                         {node.description}
                       </p>
                     </div>
@@ -255,16 +255,16 @@ export default function WorkspaceDetailPage() {
                     {isUnlocked && (
                       <div className="flex items-center gap-4 shrink-0">
                         <div className="text-right">
-                          <p className="text-xs text-gray-500 mb-1">Estimated Time</p>
-                          <p className="text-sm font-medium text-white flex items-center justify-end gap-1">
-                            <Clock className="w-4 h-4 text-emerald-400" />
+                          <p className="text-xs text-mute mb-1">Estimated Time</p>
+                          <p className="text-sm font-medium text-ink flex items-center justify-end gap-1">
+                            <Clock className="w-4 h-4 text-primary" />
                             {node.estimatedTime} min
                           </p>
                         </div>
                         <div className="w-px h-10 bg-white/10 hidden md:block" />
                         <div className="text-right">
-                          <p className="text-xs text-gray-500 mb-1">XP Reward</p>
-                          <p className="text-sm font-medium text-white flex items-center justify-end gap-1">
+                          <p className="text-xs text-mute mb-1">XP Reward</p>
+                          <p className="text-sm font-medium text-ink flex items-center justify-end gap-1">
                             <Star className="w-4 h-4 text-yellow-400" />
                             +{node.xpReward}
                           </p>

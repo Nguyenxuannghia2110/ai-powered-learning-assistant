@@ -4,7 +4,7 @@ export default function StatCard({
   label,
   value,
   icon: Icon,
-  iconColor = "text-emerald-400",
+  iconColor = "text-primary",
 }) {
   return (
     <motion.div
@@ -14,12 +14,12 @@ export default function StatCard({
     w-full
     h-full
     relative
-    bg-[#0b0f0e]
-    border border-white/10
-    rounded-2xl
+    bg-canvas-card
+    border border-hairline
+    rounded-md
     p-8
     flex items-center gap-4
-    hover:border-emerald-400/40
+    hover:border-primary/40
     transition
     overflow-hidden
     "
@@ -43,7 +43,7 @@ export default function StatCard({
       </div>
 
       <div>
-        <p className="text-sm text-gray-400">{label}</p>
+        <p className="text-sm text-body">{label}</p>
         <p className="text-2xl font-bold">{value}</p>
       </div>
     </motion.div>

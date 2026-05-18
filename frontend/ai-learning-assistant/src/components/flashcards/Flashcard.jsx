@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 
 const difficultyColors = {
-  easy: "bg-white/10 text-white border border-[#212327]",
-  medium: "bg-white/10 text-white border border-[#212327]",
-  hard: "bg-white/10 text-white border border-[#212327]",
+  easy: "bg-canvas-mid text-ink border border-hairline",
+  medium: "bg-canvas-mid text-ink border border-hairline",
+  hard: "bg-canvas-mid text-ink border border-hairline",
 };
 
 export default function Flashcard({
@@ -57,7 +57,7 @@ export default function Flashcard({
           {/* ================= FRONT ================= */}
 
           <div
-            className="absolute inset-0 backface-hidden rounded-lg border border-[#212327] bg-[#0a0a0a] shadow-none overflow-hidden"
+            className="absolute inset-0 backface-hidden rounded-lg border border-hairline bg-canvas shadow-none overflow-hidden"
           >
             {/* Header */}
             <div className="absolute top-6 left-6 right-6 flex items-center justify-between">
@@ -74,8 +74,8 @@ export default function Flashcard({
                 }}
                 className={`transition ${
                   card.isStarred
-                    ? "text-white opacity-100"
-                    : "text-[#7d8187] hover:text-white"
+                    ? "text-ink opacity-100"
+                    : "text-mute hover:text-ink"
                 }`}
               >
                 <svg
@@ -97,17 +97,17 @@ export default function Flashcard({
 
             {/* Content */}
             <div className="h-full flex flex-col items-center justify-center px-10 md:px-20 text-center">
-              <p className="text-[11px] font-mono uppercase tracking-widest mb-6 text-[#7d8187]">
+              <p className="text-[11px] font-mono uppercase tracking-widest mb-6 text-mute">
                 Question
               </p>
 
-              <h3 className="text-2xl md:text-3xl font-medium leading-snug text-white tracking-tight">
+              <h3 className="text-2xl md:text-3xl font-medium leading-snug text-ink tracking-tight">
                 {card.question}
               </h3>
             </div>
 
             {/* Footer */}
-            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-[#7d8187] text-xs font-mono uppercase tracking-widest flex items-center gap-2 opacity-50">
+            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-mute text-xs font-mono uppercase tracking-widest flex items-center gap-2 opacity-50">
               <span>Press SPACE to reveal</span>
             </div>
           </div>
@@ -115,28 +115,28 @@ export default function Flashcard({
           {/* ================= BACK ================= */}
 
           <div
-            className="absolute inset-0 backface-hidden rotate-y-180 rounded-lg border border-white/25 bg-[#191919] shadow-none overflow-hidden"
+            className="absolute inset-0 backface-hidden rotate-y-180 rounded-lg border border-hairline bg-canvas-card shadow-none overflow-hidden"
           >
             {/* Header */}
             <div className="absolute top-6 left-6">
-              <span className="text-[10px] font-mono px-3 py-1 rounded-sm uppercase tracking-widest bg-white/10 text-white border border-[#212327]">
+              <span className="text-[10px] font-mono px-3 py-1 rounded-sm uppercase tracking-widest bg-canvas-mid text-ink border border-hairline">
                 Answer
               </span>
             </div>
 
             {/* Content */}
             <div className="h-full flex flex-col items-center justify-center px-12 md:px-24 text-center">
-              <p className="text-[11px] font-mono uppercase tracking-widest mb-6 text-white/50">
+              <p className="text-[11px] font-mono uppercase tracking-widest mb-6 text-mute">
                 Explanation
               </p>
 
-              <p className="text-xl md:text-2xl font-normal leading-relaxed whitespace-pre-line text-[#dadbdf] tracking-tight">
+              <p className="text-xl md:text-2xl font-normal leading-relaxed whitespace-pre-line text-body tracking-tight">
                 {card.answer}
               </p>
             </div>
 
             {/* Footer */}
-            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-[#7d8187] text-xs font-mono uppercase tracking-widest flex items-center gap-4 opacity-50">
+            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-mute text-xs font-mono uppercase tracking-widest flex items-center gap-4 opacity-50">
               <span>SPACE Flip</span>
             </div>
           </div>

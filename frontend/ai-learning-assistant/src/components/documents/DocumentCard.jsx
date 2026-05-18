@@ -11,79 +11,49 @@ const DocumentCard = ({ doc, onDeleteRequest }) => {
   return (
     <div
       onClick={handleNavigate}
-      className="
-      relative
-      bg-[#0b0f0e]
-      border border-white/10
-      rounded-2xl
-      p-6
-      space-y-5
-      hover:border-emerald-400/40
-      hover:shadow-lg hover:shadow-emerald-500/5
-      transition
-      cursor-pointer
-      "
+      className="bg-canvas-card rounded-md p-6 hover:bg-canvas-mid shadow-[0_8px_8px_rgba(0,0,0,0.3)] transition-all cursor-pointer group flex flex-col h-full relative overflow-hidden"
     >
-      {/* ICON + STATUS */}
-      <div className="flex items-center justify-between">
-        <div className="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center">
-          <FileText className="text-emerald-400" size={22} />
+      <div className="relative z-10 flex flex-col h-full">
+        {/* HEADER */}
+        <div className="flex justify-between items-start mb-4">
+          <div className="p-3 bg-primary/10 rounded-full text-primary">
+            <FileText className="w-6 h-6" />
+          </div>
+          <div className="px-3 py-1 bg-canvas-mid rounded-pill text-[12px] font-bold text-body uppercase tracking-[1.4px]">
+            {doc.status}
+          </div>
         </div>
 
-        <span
-          className={`text-xs px-2.5 py-1 rounded-full font-semibold
-          ${
-            doc.status === "ready"
-              ? "bg-emerald-500/10 text-emerald-400"
-              : doc.status === "processing"
-                ? "bg-yellow-500/10 text-yellow-400"
-                : "bg-red-500/10 text-red-400"
-          }`}
-        >
-          {doc.status}
-        </span>
-      </div>
-
-      {/* TITLE */}
-      <div>
-        <h3 className="font-semibold text-white truncate" title={doc.title}>
+        {/* TITLE */}
+        <h3 className="text-[18px] font-bold text-ink mb-2 group-hover:text-primary transition-colors line-clamp-2" title={doc.title}>
           {doc.title}
         </h3>
 
-        <p className="text-xs text-gray-500">
-          {(doc.fileSize / 1024).toFixed(1)} KB
+        {/* DETAILS */}
+        <p className="text-body text-sm mb-6 flex items-start gap-2 line-clamp-2">
+          {(doc.fileSize / 1024).toFixed(1)} KB • {doc.flashcardCount ?? 0} Flashcards • {doc.quizCount ?? 0} Quizzes
         </p>
-      </div>
 
-      {/* COUNTS */}
-      <div className="flex gap-4 text-xs font-semibold">
-        <span className="text-purple-400">
-          {doc.flashcardCount ?? 0} Flashcards
-        </span>
-
-        <span className="text-emerald-400">{doc.quizCount ?? 0} Quizzes</span>
-      </div>
-
-      {/* DATE */}
-      <div className="text-xs text-gray-500">
-        Uploaded {new Date(doc.uploadDate).toLocaleString("vi-VN")}
-      </div>
-
-      {/* ACTION */}
-      <div className="flex justify-end">
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            onDeleteRequest(doc);
-          }}
-          className="
-          text-red-400
-          hover:text-red-500
-          transition
-          "
-        >
-          <Trash2 size={16} />
-        </button>
+        {/* FOOTER */}
+        <div className="mt-auto space-y-4">
+          <div className="flex items-center justify-between pt-4 border-t border-hairline">
+            <div className="flex items-center gap-2 text-[12px] text-mute">
+              Uploaded {new Date(doc.uploadDate).toLocaleDateString()}
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onDeleteRequest(doc);
+                }}
+                className="w-8 h-8 rounded-full bg-canvas-mid flex items-center justify-center hover:bg-red-500 hover:text-white transition-colors text-mute"
+                title="Delete"
+              >
+                <Trash2 className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

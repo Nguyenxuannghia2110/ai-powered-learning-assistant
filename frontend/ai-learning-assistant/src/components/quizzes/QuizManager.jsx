@@ -170,7 +170,7 @@ const QuizManager = ({ documentId }) => {
         <div className="flex items-center justify-between mb-8">
           <div>
             <h2 className="text-3xl font-bold text-slate-100">My Quizzes</h2>
-            <p className="text-sm text-emerald-300/100 mt-1 font-medium">
+            <p className="text-sm text-primary/100 mt-1 font-medium">
               Generate and manage your quizzes effortlessly
             </p>
           </div>
@@ -179,7 +179,7 @@ const QuizManager = ({ documentId }) => {
             onClick={() => setShowGenerateModal(true)}
             disabled={generating}
             className="
-            px-5 py-2.5 bg-emerald-500 text-white rounded-xl font-semibold hover:bg-emerald-600
+            px-5 py-2.5 bg-primary text-ink rounded-xl font-semibold hover:bg-emerald-600
           "
           >
             {generating ? "Generating..." : "+ Generate Quiz"}
@@ -219,7 +219,7 @@ const QuizManager = ({ documentId }) => {
             onClick={() => setQuizToDelete(null)}
           />
 
-          <div className="relative bg-white rounded-2xl w-full max-w-md p-6 shadow-xl">
+          <div className="relative bg-white rounded-md w-full max-w-md p-6 shadow-xl">
             <h3 className="text-lg font-bold text-slate-800 mb-2">
               Delete Quiz
             </h3>
@@ -242,7 +242,7 @@ const QuizManager = ({ documentId }) => {
                   await handleDelete(quizToDelete._id);
                   setQuizToDelete(null);
                 }}
-                className="px-5 py-2 rounded-lg bg-red-500 hover:bg-red-600 text-white font-semibold"
+                className="px-5 py-2 rounded-lg bg-red-500 hover:bg-red-600 text-ink font-semibold"
               >
                 Delete
               </button>

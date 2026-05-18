@@ -52,14 +52,14 @@ export default function QuizListPage({ onSelectQuiz, onCreateNew }) {
       <div className="flex items-center justify-between mb-8">
         <div>
           <h2 className="text-3xl font-bold text-slate-100">My Quizzes</h2>
-          <p className="text-sm text-emerald-300/100 mt-1 font-medium">
+          <p className="text-sm text-primary/100 mt-1 font-medium">
             Manage your evaluation assessments
           </p>
         </div>
 
         <button
           onClick={onCreateNew}
-          className="px-5 py-2.5 bg-emerald-500 text-white rounded-xl font-semibold hover:bg-emerald-600 transition"
+          className="px-5 py-2.5 bg-primary text-ink rounded-xl font-semibold hover:bg-emerald-600 transition"
         >
           + Create New Quiz
         </button>
@@ -86,21 +86,21 @@ export default function QuizListPage({ onSelectQuiz, onCreateNew }) {
       {quizToDelete && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setQuizToDelete(null)} />
-          <div className="relative bg-[#111] border border-slate-800 rounded-2xl w-full max-w-sm p-6 shadow-xl">
-            <h3 className="font-bold text-lg text-white mb-2">Delete Quiz</h3>
+          <div className="relative bg-[#111] border border-slate-800 rounded-md w-full max-w-sm p-6 shadow-xl">
+            <h3 className="font-bold text-lg text-ink mb-2">Delete Quiz</h3>
             <p className="text-slate-400 text-sm mb-6">
               Are you sure you want to delete <span className="font-semibold text-slate-200">{quizToDelete.title}</span>? This action cannot be undone.
             </p>
             <div className="flex justify-end gap-3 mt-4">
               <button
                 onClick={() => setQuizToDelete(null)}
-                className="px-4 py-2 rounded-xl bg-slate-800 text-white hover:bg-slate-700 transition"
+                className="px-4 py-2 rounded-xl bg-slate-800 text-ink hover:bg-slate-700 transition"
               >
                 Cancel
               </button>
               <button
                 onClick={() => handleDelete(quizToDelete._id)}
-                className="px-4 py-2 rounded-xl bg-red-600 text-white hover:bg-red-700 transition"
+                className="px-4 py-2 rounded-xl bg-red-600 text-ink hover:bg-red-700 transition"
               >
                 Delete
               </button>

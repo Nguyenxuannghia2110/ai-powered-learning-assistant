@@ -30,21 +30,21 @@ export default function ValidationModal({ isOpen, onClose, previewData, onConfir
 
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center bg-[#080f0c]/90 backdrop-blur-sm p-4">
-      <div className="relative w-full max-w-5xl bg-[#131715] border border-[#1e2924] rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+      <div className="relative w-full max-w-5xl bg-[#131715] border border-[#1e2924] rounded-md shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
         {/* Header */}
         <div className="p-8 pb-6 shrink-0 relative">
           <button 
             onClick={onClose}
-            className="absolute top-6 right-6 text-slate-400 hover:text-white transition"
+            className="absolute top-6 right-6 text-slate-400 hover:text-ink transition"
           >
             <X size={20} />
           </button>
           
-          <div className="flex items-center gap-2 text-emerald-400 text-xs font-bold uppercase tracking-widest mb-3">
+          <div className="flex items-center gap-2 text-primary text-xs font-bold uppercase tracking-widest mb-3">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
             STRUCTURAL VALIDATION REQUIRED
           </div>
-          <h2 className="text-3xl font-black text-white mb-2">Review & Validate</h2>
+          <h2 className="text-3xl font-black text-ink mb-2">Review & Validate</h2>
           <p className="text-slate-400 text-sm">
             The neural engine has synthesized {validCards.length + errorCards.length} new core concepts. Please verify the structural integrity before finalizing the deployment.
           </p>
@@ -84,11 +84,11 @@ export default function ValidationModal({ isOpen, onClose, previewData, onConfir
                       <div key={idx} className="grid grid-cols-[1fr_2fr_150px] gap-4 p-4 hover:bg-[#1f2522] transition items-center text-sm">
                          <div>
                             {isValid || !isQuestionEmpty ? (
-                              <span className="text-white font-medium">{card.question}</span>
+                              <span className="text-ink font-medium">{card.question}</span>
                             ) : (
                               <div className="inline-block border border-rose-400/50 rounded-full px-4 py-2 text-slate-400 relative">
                                 Undefined cognitive node...
-                                <div className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-rose-500 rounded-full text-white text-[10px] flex items-center justify-center font-bold">!</div>
+                                <div className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-rose-500 rounded-full text-ink text-[10px] flex items-center justify-center font-bold">!</div>
                               </div>
                             )}
                          </div>
@@ -99,14 +99,14 @@ export default function ValidationModal({ isOpen, onClose, previewData, onConfir
                             ) : (
                               <div className="inline-block border border-rose-400/50 rounded-full px-4 py-2 text-slate-400 relative">
                                 Empty semantic map...
-                                <div className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-rose-500 rounded-full text-white text-[10px] flex items-center justify-center font-bold">!</div>
+                                <div className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-rose-500 rounded-full text-ink text-[10px] flex items-center justify-center font-bold">!</div>
                               </div>
                             )}
                          </div>
 
                          <div className="flex justify-end pr-2">
                             {isValid ? (
-                               <div className="bg-emerald-500/10 text-emerald-400 font-bold text-[10px] uppercase tracking-wider px-3 py-1 rounded-md border border-emerald-500/20">
+                               <div className="bg-primary/10 text-primary font-bold text-[10px] uppercase tracking-wider px-3 py-1 rounded-md border border-primary/20">
                                 VALIDATED
                                </div>
                             ) : (
@@ -128,7 +128,7 @@ export default function ValidationModal({ isOpen, onClose, previewData, onConfir
         {/* Footer */}
         <div className="p-6 bg-[#0f1311] border-t border-[#1e2924] shrink-0 flex items-center justify-between">
            <div className="flex items-center gap-3 bg-[#131715] px-4 py-2 rounded-full border border-[#1e2924]">
-              <div className="text-emerald-400">
+              <div className="text-primary">
                 <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
               </div>
               <span className="text-slate-400 text-xs italic">Waiting for manual override on {errorCards.length} conflict nodes...</span>

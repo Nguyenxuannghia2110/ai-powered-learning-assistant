@@ -117,15 +117,15 @@ const DocumentListPage = () => {
 
   /* ================= RENDER ================= */
   return (
-    <div className="space-y-8 text-white">
+    <div className="space-y-8 text-ink">
       {/* HEADER */}
       <div className="space-y-6">
         {/* ROW 1 */}
         <div className="flex items-start justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-white">Document Library</h1>
+            <h1 className="text-3xl font-bold text-ink">Document Library</h1>
 
-            <p className="text-gray-400 text-sm mt-1">
+            <p className="text-body text-sm mt-1">
               Central hub for your learning materials and AI-generated insights.
             </p>
           </div>
@@ -133,10 +133,10 @@ const DocumentListPage = () => {
           <button
             onClick={() => setUploadOpen(true)}
             className="flex items-center gap-2
-      bg-emerald-500 hover:bg-emerald-600
+      bg-primary hover:bg-emerald-600
       text-black font-semibold
       px-6 py-3 rounded-xl
-      shadow-lg shadow-emerald-500/20 transition"
+      shadow-lg shadow-[0_8px_8px_rgba(0,0,0,0.3)] transition"
           >
             <Upload size={18} />
             Upload New Document
@@ -147,11 +147,11 @@ const DocumentListPage = () => {
         <div className="flex items-center justify-between flex-wrap gap-4">
           {/* LEFT TABS */}
           <div className="flex gap-3">
-            <button className="px-4 py-2 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+            <button className="px-4 py-2 rounded-xl bg-primary/20 text-primary border border-primary/30">
               All Files
             </button>
 
-            <button className="px-4 py-2 rounded-xl bg-white/5 text-gray-300 border border-white/10 hover:bg-white/10">
+            <button className="px-4 py-2 rounded-xl bg-canvas-card text-body border border-hairline hover:bg-white/10">
               Recently Added
             </button>
           </div>
@@ -162,7 +162,7 @@ const DocumentListPage = () => {
             <div className="relative">
               <Search
                 size={16}
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-body"
               />
 
               <input
@@ -172,9 +172,9 @@ const DocumentListPage = () => {
                 onChange={(e) => setSearch(e.target.value)}
                 className="pl-9 pr-4 py-2 w-56
           rounded-xl
-          bg-white/5
-          border border-white/10
-          text-sm text-white
+          bg-canvas-card
+          border border-hairline
+          text-sm text-ink
           placeholder-gray-400
           focus:outline-none
           focus:ring-2
@@ -185,9 +185,9 @@ const DocumentListPage = () => {
             {/* SORT */}
             <select
               className="px-3 py-2 rounded-xl
-        bg-white/5
-        border border-white/10
-        text-sm text-gray-300
+        bg-canvas-card
+        border border-hairline
+        text-sm text-body
         focus:outline-none"
             >
               <option>Sort by</option>
@@ -198,8 +198,8 @@ const DocumentListPage = () => {
             {/* GRID / LIST */}
             <button
               onClick={() => setView("grid")}
-              className={`p-2 rounded-xl border border-white/10
-        ${view === "grid" ? "bg-emerald-500/20 text-emerald-400" : "bg-white/5 text-gray-400"}
+              className={`p-2 rounded-xl border border-hairline
+        ${view === "grid" ? "bg-primary/20 text-primary" : "bg-canvas-card text-body"}
         `}
             >
               <Grid size={18} />
@@ -207,8 +207,8 @@ const DocumentListPage = () => {
 
             <button
               onClick={() => setView("list")}
-              className={`p-2 rounded-xl border border-white/10
-        ${view === "list" ? "bg-emerald-500/20 text-emerald-400" : "bg-white/5 text-gray-400"}
+              className={`p-2 rounded-xl border border-hairline
+        ${view === "list" ? "bg-primary/20 text-primary" : "bg-canvas-card text-body"}
         `}
             >
               <List size={18} />
@@ -219,7 +219,7 @@ const DocumentListPage = () => {
 
       {/* DOCUMENT LIST */}
       {filteredDocs.length === 0 ? (
-        <div className="text-center py-20 text-gray-400">
+        <div className="text-center py-20 text-body">
           No documents found
         </div>
       ) : (
@@ -259,13 +259,13 @@ const DocumentListPage = () => {
         w-full max-w-2xl
         max-h-[85vh]
         overflow-y-auto
-        rounded-2xl
-        bg-[#0b0f0e]
-        border border-white/10
+        rounded-md
+        bg-canvas-card
+        border border-hairline
         shadow-2xl
         p-8
         space-y-6
-        text-white
+        text-ink
         "
             >
               {/* HEADER */}
@@ -274,17 +274,17 @@ const DocumentListPage = () => {
 
                 <button
                   onClick={() => setUploadOpen(false)}
-                  className="text-gray-400 hover:text-white"
+                  className="text-body hover:text-ink"
                 >
                   <X size={20} />
                 </button>
               </div>
 
-              <hr className="border-white/10" />
+              <hr className="border-hairline" />
 
               {/* TILE */}
               <div className="space-y-2">
-                <label className="text-xs uppercase tracking-widest text-gray-400">
+                <label className="text-xs uppercase tracking-widest text-body">
                   Document Name
                 </label>
 
@@ -296,7 +296,7 @@ const DocumentListPage = () => {
           px-5 py-4
           rounded-xl
           bg-black/40
-          border border-white/10
+          border border-hairline
           placeholder-gray-500
           focus:outline-none
           focus:ring-2
@@ -327,7 +327,7 @@ const DocumentListPage = () => {
 
                 <p className="font-medium">Click to upload or drag and drop</p>
 
-                <p className="text-sm text-gray-400">PDF up to 10MB</p>
+                <p className="text-sm text-body">PDF up to 10MB</p>
 
                 {uploadFile && (
                   <p className="mt-3 text-sm font-semibold text-indigo-600">
@@ -352,8 +352,8 @@ const DocumentListPage = () => {
           py-3
           rounded-xl
           bg-black
-          border border-white/10
-          hover:bg-white/5
+          border border-hairline
+          hover:bg-canvas-card
           transition"
                 >
                   Cancel
@@ -368,7 +368,7 @@ const DocumentListPage = () => {
           font-semibold
           flex items-center justify-center gap-2
 ${
-  uploading ? "bg-gray-600" : "bg-emerald-500 hover:bg-emerald-600 text-black"
+  uploading ? "bg-gray-600" : "bg-primary hover:bg-emerald-600 text-black"
 }`}
                 >
                   <Upload size={18} />
@@ -383,11 +383,11 @@ ${
       {/* DELETE MODAL */}
       {docToDelete && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-sm space-y-4">
+          <div className="bg-white rounded-md p-6 w-full max-w-sm space-y-4">
             <h3 className="font-bold text-lg text-gray-900">
               Delete document?
             </h3>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-mute">
               Are you sure you want to delete{" "}
               <span className="font-semibold">{docToDelete.title}</span>?
             </p>
@@ -400,7 +400,7 @@ ${
               </button>
               <button
                 onClick={handleDeleteConfirm}
-                className="px-4 py-2 rounded-xl bg-red-600 text-white flex items-center gap-2"
+                className="px-4 py-2 rounded-xl bg-red-600 text-ink flex items-center gap-2"
               >
                 <Trash2 size={16} /> Delete
               </button>

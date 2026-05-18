@@ -103,7 +103,7 @@ export default function WorkspaceNodePage() {
   if (loading) {
     return (
       <div className="flex justify-center py-20">
-        <div className="w-8 h-8 border-4 border-emerald-500/30 border-t-emerald-500 rounded-full animate-spin" />
+        <div className="w-8 h-8 border-4 border-primary/30 border-t-emerald-500 rounded-full animate-spin" />
       </div>
     );
   }
@@ -119,46 +119,46 @@ export default function WorkspaceNodePage() {
       {/* Back Button */}
       <button
         onClick={() => navigate(`/workspaces/${id}`)}
-        className="flex items-center gap-2 text-gray-400 hover:text-white mb-8 transition-colors"
+        className="flex items-center gap-2 text-body hover:text-ink mb-8 transition-colors"
       >
         <ArrowLeft className="w-4 h-4" />
         Back to Roadmap
       </button>
 
       {/* Node Header */}
-      <div className="bg-[#0a0f0d] border border-white/10 rounded-3xl p-8 mb-8 relative overflow-hidden">
+      <div className="bg-canvas-card border border-hairline rounded-md p-8 mb-8 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/5 to-transparent pointer-events-none" />
         <div className="relative z-10">
           <div className="flex items-center justify-between mb-4">
-            <span className="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-xs font-semibold text-gray-300 uppercase tracking-wide">
+            <span className="px-3 py-1 bg-canvas-card border border-hairline rounded-full text-xs font-semibold text-body uppercase tracking-wide">
               Step {node.order} • {node.type}
             </span>
             {isCompleted && (
-              <span className="flex items-center gap-2 px-3 py-1 bg-emerald-500/20 text-emerald-400 text-xs font-semibold rounded-full border border-emerald-500/20">
+              <span className="flex items-center gap-2 px-3 py-1 bg-primary/20 text-primary text-xs font-semibold rounded-full border border-primary/20">
                 <CheckCircle2 className="w-4 h-4" />
                 Completed
               </span>
             )}
           </div>
-          <h1 className="text-3xl font-bold text-white mb-4">{node.title}</h1>
-          <p className="text-gray-400 max-w-3xl">{node.description}</p>
+          <h1 className="text-3xl font-bold text-ink mb-4">{node.title}</h1>
+          <p className="text-body max-w-3xl">{node.description}</p>
         </div>
       </div>
 
       {/* Content Section */}
       {!node.isGenerated ? (
-        <div className="bg-white/5 border border-white/10 rounded-3xl p-12 text-center">
-          <div className="w-20 h-20 bg-emerald-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
-            <Brain className="w-10 h-10 text-emerald-400" />
+        <div className="bg-canvas-card border border-hairline rounded-md p-12 text-center">
+          <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
+            <Brain className="w-10 h-10 text-primary" />
           </div>
-          <h2 className="text-2xl font-bold text-white mb-4">Ready to Learn?</h2>
-          <p className="text-gray-400 mb-8 max-w-lg mx-auto">
+          <h2 className="text-2xl font-bold text-ink mb-4">Ready to Learn?</h2>
+          <p className="text-body mb-8 max-w-lg mx-auto">
             Our AI will generate a personalized lesson, interactive flashcards, and a quiz based on this step's objectives.
           </p>
           <button
             onClick={handleGenerate}
             disabled={generating}
-            className="flex items-center gap-3 px-8 py-4 bg-emerald-500 hover:bg-emerald-600 text-black font-semibold rounded-xl transition-all mx-auto shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/40 disabled:opacity-50 disabled:cursor-not-allowed text-lg"
+            className="flex items-center gap-3 px-8 py-4 bg-primary hover:opacity-80 text-black font-bold rounded-full transition-all mx-auto shadow-lg shadow-[0_8px_8px_rgba(0,0,0,0.3)] hover:shadow-[0_8px_8px_rgba(0,0,0,0.3)] disabled:opacity-50 disabled:cursor-not-allowed text-lg"
           >
             {generating ? (
               <>
@@ -180,7 +180,7 @@ export default function WorkspaceNodePage() {
         <div className="space-y-8">
           {/* Lesson Content */}
           {lessonContent && (
-            <div className="bg-[#0a0f0d] border border-white/10 rounded-3xl p-8 max-h-[60vh] overflow-y-auto custom-scrollbar">
+            <div className="bg-canvas-card border border-hairline rounded-md p-8 max-h-[60vh] overflow-y-auto custom-scrollbar">
               <div className="markdown-lesson">
                 <ReactMarkdown>{lessonContent}</ReactMarkdown>
               </div>
@@ -192,14 +192,14 @@ export default function WorkspaceNodePage() {
             {flashcardResource && (
               <button
                 onClick={() => navigate(`/flashcards`)} // Need a way to select specific set, but navigating to flashcards page is ok for now
-                className="flex items-center gap-4 p-6 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 hover:border-white/20 transition-all text-left"
+                className="flex items-center gap-4 py-4 px-8 bg-canvas-card border border-hairline rounded-full hover:bg-canvas-mid hover:border-hairline transition-all text-left group"
               >
-                <div className="w-12 h-12 bg-purple-500/20 rounded-xl flex items-center justify-center shrink-0">
+                <div className="w-12 h-12 bg-purple-500/20 rounded-full flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
                   <Layers className="w-6 h-6 text-purple-400" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold text-white">Review Flashcards</h3>
-                  <p className="text-sm text-gray-400">Master key concepts</p>
+                  <h3 className="text-lg font-bold text-ink">Review Flashcards</h3>
+                  <p className="text-sm text-body">Master key concepts</p>
                 </div>
               </button>
             )}
@@ -207,28 +207,28 @@ export default function WorkspaceNodePage() {
             {quizResource && (
               <button
                 onClick={() => navigate(`/quizzes/${quizResource.resourceId}`)}
-                className="flex items-center gap-4 p-6 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 hover:border-white/20 transition-all text-left"
+                className="flex items-center gap-4 py-4 px-8 bg-canvas-card border border-hairline rounded-full hover:bg-canvas-mid hover:border-hairline transition-all text-left group"
               >
-                <div className="w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center shrink-0">
+                <div className="w-12 h-12 bg-blue-500/20 rounded-full flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
                   <HelpCircle className="w-6 h-6 text-blue-400" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold text-white">Take Quiz</h3>
-                  <p className="text-sm text-gray-400">Test your knowledge</p>
+                  <h3 className="text-lg font-bold text-ink">Take Quiz</h3>
+                  <p className="text-sm text-body">Test your knowledge</p>
                 </div>
               </button>
             )}
           </div>
 
           {/* Complete Button Fixed at Bottom */}
-          <div className="fixed bottom-0 left-0 lg:left-64 right-0 p-6 bg-black/80 backdrop-blur-md border-t border-white/10 flex justify-center z-40">
+          <div className="flex justify-center mt-12 pt-8 border-t border-hairline">
             <button
               onClick={handleComplete}
               disabled={isCompleted || completing}
-              className={`flex items-center gap-2 px-8 py-4 rounded-xl font-bold text-lg transition-all ${
+              className={`flex items-center gap-2 px-8 py-4 rounded-full font-bold text-lg transition-all ${
                 isCompleted
-                  ? "bg-emerald-500/20 text-emerald-400 cursor-not-allowed border border-emerald-500/20"
-                  : "bg-emerald-500 hover:bg-emerald-600 text-black shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/40"
+                  ? "bg-primary/20 text-primary cursor-not-allowed border border-primary/20"
+                  : "bg-primary hover:opacity-80 text-black shadow-lg shadow-[0_8px_8px_rgba(0,0,0,0.3)]"
               }`}
             >
               {isCompleted ? (

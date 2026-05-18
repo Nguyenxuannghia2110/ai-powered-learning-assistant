@@ -140,14 +140,14 @@ export default function SpeakingMode({
         
         <div className="text-center mb-8">
             <p className="text-[#7d8187] mb-4 text-sm font-mono uppercase tracking-widest">Read this out loud:</p>
-            <h2 className="text-3xl md:text-4xl font-medium text-white mb-6 tracking-tight">{card.question}</h2>
-            <p className="text-white/50">{card.answer}</p>
+            <h2 className="text-3xl md:text-4xl font-medium text-ink mb-6 tracking-tight">{card.question}</h2>
+            <p className="text-ink/50">{card.answer}</p>
         </div>
 
         <div className="flex gap-4 mb-8">
             <button
             onClick={speakOriginal}
-            className="w-14 h-14 bg-transparent border border-white/25 text-white rounded-full flex items-center justify-center hover:bg-white/5 transition-all"
+            className="w-14 h-14 bg-transparent border border-white/25 text-ink rounded-full flex items-center justify-center hover:bg-canvas-card transition-all"
             title="Listen to the word"
             >
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
@@ -160,7 +160,7 @@ export default function SpeakingMode({
             className={`w-14 h-14 rounded-full flex items-center justify-center transition-all ${
                 isRecording 
                 ? "bg-rose-500/20 text-rose-400 animate-pulse border border-rose-500/50" 
-                : "bg-transparent border border-white/25 text-white hover:bg-white/5"
+                : "bg-transparent border border-white/25 text-ink hover:bg-canvas-card"
             }`}
             title={isRecording ? "Stop recording" : "Start recording"}
             >
@@ -177,7 +177,7 @@ export default function SpeakingMode({
                     Listening...
                 </p>
             ) : transcript ? (
-                <p className="text-white text-xl">"{transcript}"</p>
+                <p className="text-ink text-xl">"{transcript}"</p>
             ) : (
                 <p className="text-[#7d8187] text-xs font-mono uppercase tracking-widest">Click the microphone and start speaking</p>
             )}
@@ -185,7 +185,7 @@ export default function SpeakingMode({
 
         {isChecked && (
           <div className="mt-8 w-full text-center">
-            <p className={`text-lg font-medium mb-6 ${feedback.isCorrect ? "text-emerald-400" : "text-rose-400"}`}>
+            <p className={`text-lg font-medium mb-6 ${feedback.isCorrect ? "text-primary" : "text-rose-400"}`}>
               {feedback.message}
             </p>
             
@@ -200,7 +200,7 @@ export default function SpeakingMode({
                   setFeedback(null);
                 }
               }}
-              className="px-8 py-3 bg-transparent hover:bg-white/5 border border-white/25 text-white font-normal rounded-full transition-colors"
+              className="px-8 py-3 bg-transparent hover:bg-canvas-card border border-white/25 text-ink font-normal rounded-full transition-colors"
             >
               {feedback.isCorrect ? "Next Card" : "Try Again"}
             </button>

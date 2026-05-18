@@ -11,7 +11,7 @@ const QuizTakePage = ({ quiz, onFinish, onBack }) => {
 
   if (!quiz || !quiz.questions?.length) {
     return (
-      <div className="text-center py-20 text-gray-400">
+      <div className="text-center py-20 text-body">
         No quiz data available
       </div>
     );
@@ -153,25 +153,25 @@ const QuizTakePage = ({ quiz, onFinish, onBack }) => {
   };
   /* ================= RENDER ================= */
   return (
-    <div className="min-h-screen bg-[#070b09] text-white">
+    <div className="min-h-screen bg-[#070b09] text-ink">
       <div className="w-full max-w-[1200px] mx-auto px-6 py-10 space-y-8">
         {/* HEADER */}
         <div className="flex justify-between items-center">
-          <div className="text-sm text-gray-400">
+          <div className="text-sm text-body">
             Question {currentIndex + 1} / {totalQuestions}
           </div>
 
-          <div className="text-sm text-gray-500">
+          <div className="text-sm text-mute">
             {answers.length} / {totalQuestions} answered
           </div>
 
           <button
             onClick={onBack}
-            className="px-4 py-2 rounded-xl border border-white/10 hover:border-white/20 text-gray-300"
+            className="px-4 py-2 rounded-xl border border-hairline hover:border-hairline text-body"
           >
             Cancel
           </button>
-          <div className="text-sm text-emerald-400">
+          <div className="text-sm text-primary">
             ⏱ {formatTime(timeSpent)}
           </div>
         </div>
@@ -179,13 +179,13 @@ const QuizTakePage = ({ quiz, onFinish, onBack }) => {
         {/* PROGRESS BAR */}
         <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
           <div
-            className="h-full bg-emerald-500 transition-all duration-500"
+            className="h-full bg-primary transition-all duration-500"
             style={{ width: `${progress}%` }}
           />
         </div>
 
         {/* QUESTION CARD */}
-        <div className="bg-[#0b0f0e] border border-white/10 rounded-2xl p-8 lg:p-10 space-y-6">
+        <div className="bg-canvas-card border border-hairline rounded-md p-8 lg:p-10 space-y-6">
           <h2 className="text-xl md:text-2xl lg:text-3xl font-semibold leading-relaxed">
             {currentQuestion.question}
           </h2>
@@ -201,8 +201,8 @@ const QuizTakePage = ({ quiz, onFinish, onBack }) => {
                   className={`w-full flex items-center justify-between px-6 py-4 rounded-xl border transition-all text-left
                 ${
                   isSelected
-                    ? "border-emerald-500 bg-emerald-500/10"
-                    : "border-white/10 hover:border-white/20"
+                    ? "border-primary bg-primary/10"
+                    : "border-hairline hover:border-hairline"
                 }`}
                 >
                   <div className="flex items-center gap-4">
@@ -210,8 +210,8 @@ const QuizTakePage = ({ quiz, onFinish, onBack }) => {
                       className={`w-6 h-6 rounded-full border flex items-center justify-center
                     ${
                       isSelected
-                        ? "bg-emerald-500 border-emerald-500"
-                        : "border-white/20"
+                        ? "bg-primary border-primary"
+                        : "border-hairline"
                     }`}
                     >
                       {isSelected && <Check size={14} />}
@@ -230,7 +230,7 @@ const QuizTakePage = ({ quiz, onFinish, onBack }) => {
           <button
             onClick={handlePrev}
             disabled={currentIndex === 0}
-            className="flex items-center gap-2 px-6 py-3 rounded-xl border border-white/10 text-gray-300 hover:bg-white/5 disabled:opacity-30"
+            className="flex items-center gap-2 px-6 py-3 rounded-xl border border-hairline text-body hover:bg-canvas-card disabled:opacity-30"
           >
             <ChevronLeft size={18} />
             Previous
@@ -241,7 +241,7 @@ const QuizTakePage = ({ quiz, onFinish, onBack }) => {
             {generatePageNumbers().map((item, idx) => {
               if (typeof item === "string") {
                 return (
-                  <span key={idx} className="px-2 text-gray-500">
+                  <span key={idx} className="px-2 text-mute">
                     ...
                   </span>
                 );
@@ -257,10 +257,10 @@ const QuizTakePage = ({ quiz, onFinish, onBack }) => {
                   className={`w-10 h-10 rounded-xl text-sm font-semibold transition
                 ${
                   isActive
-                    ? "bg-emerald-500 text-black scale-110"
+                    ? "bg-primary text-black scale-110"
                     : isAnswered
-                      ? "bg-emerald-500/10 border border-emerald-500/30 text-emerald-400"
-                      : "bg-white/5 text-gray-400 hover:bg-white/10"
+                      ? "bg-primary/10 border border-primary/30 text-primary"
+                      : "bg-canvas-card text-body hover:bg-white/10"
                 }`}
                 >
                   {item + 1}
@@ -273,7 +273,7 @@ const QuizTakePage = ({ quiz, onFinish, onBack }) => {
             onClick={handleNext}
             disabled={quiz?.completedAt}
             className="flex items-center gap-2 px-8 py-3 rounded-xl 
-          bg-emerald-500 text-black font-semibold hover:bg-emerald-400"
+          bg-primary text-black font-semibold hover:bg-emerald-400"
           >
             {currentIndex === totalQuestions - 1 ? "Finish" : "Next"}
             <ChevronRight size={18} />

@@ -75,7 +75,7 @@ export default function FlashcardDesignPage({ onBack, onGenerate }) {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#080f0c] text-white">
+    <div className="min-h-screen flex flex-col bg-[#080f0c] text-ink">
       {/* Top Header */}
       <div className="max-w-6xl w-full mx-auto px-6 pt-12 pb-6">
         <div className="flex justify-between items-start mb-6">
@@ -98,7 +98,7 @@ export default function FlashcardDesignPage({ onBack, onGenerate }) {
              </button>
              <button 
                onClick={() => setIsSpreadsheetOpen(true)}
-               className="px-6 py-2.5 rounded-full text-slate-300 font-medium text-sm hover:text-white transition"
+               className="px-6 py-2.5 rounded-full text-slate-300 font-medium text-sm hover:text-ink transition"
              >
                Spreadsheet Upload
              </button>
@@ -106,7 +106,7 @@ export default function FlashcardDesignPage({ onBack, onGenerate }) {
         </div>
 
         {/* Table Container */}
-        <div className="bg-[#111614] border border-[#1e2924] rounded-2xl overflow-hidden mt-8">
+        <div className="bg-[#111614] border border-[#1e2924] rounded-md overflow-hidden mt-8">
            {/* Table Header */}
            <div className="grid grid-cols-[60px_1fr_1.5fr_60px] gap-4 p-4 border-b border-[#1e2924] text-[10px] font-bold text-slate-500 tracking-widest uppercase">
               <div className="text-center">#</div>
@@ -123,7 +123,7 @@ export default function FlashcardDesignPage({ onBack, onGenerate }) {
                
                return (
                  <div key={card.id} className="grid grid-cols-[60px_1fr_1.5fr_60px] gap-4 p-4 items-start group transition hover:bg-[#151c19]">
-                    <div className={`text-center font-mono mt-3 ${isLastAndEmpty ? 'text-emerald-500 font-bold' : 'text-slate-500'}`}>
+                    <div className={`text-center font-mono mt-3 ${isLastAndEmpty ? 'text-primary font-bold' : 'text-slate-500'}`}>
                       {num}
                     </div>
                     
@@ -133,7 +133,7 @@ export default function FlashcardDesignPage({ onBack, onGenerate }) {
                            type="text"
                            value={card.question}
                            onChange={(e) => handleChangeCard(card.id, 'question', e.target.value)}
-                           className="w-full bg-[#0d120f] border border-[#1e2924] rounded-xl px-4 py-3 outline-none focus:border-emerald-500/50 transition text-sm"
+                           className="w-full bg-[#0d120f] border border-[#1e2924] rounded-xl px-4 py-3 outline-none focus:border-primary/50 transition text-sm"
                            placeholder="Start typing front side..."
                          />
                       ) : (
@@ -153,7 +153,7 @@ export default function FlashcardDesignPage({ onBack, onGenerate }) {
                            type="text"
                            value={card.answer}
                            onChange={(e) => handleChangeCard(card.id, 'answer', e.target.value)}
-                           className="w-full bg-[#0d120f] border border-[#1e2924] rounded-xl px-4 py-3 outline-none focus:border-emerald-500/50 transition text-sm"
+                           className="w-full bg-[#0d120f] border border-[#1e2924] rounded-xl px-4 py-3 outline-none focus:border-primary/50 transition text-sm"
                            placeholder="Start typing back side..."
                          />
                       ) : (
@@ -184,7 +184,7 @@ export default function FlashcardDesignPage({ onBack, onGenerate }) {
            <div className="p-6 flex justify-center pb-12">
              <button 
                onClick={handleAddCard}
-               className="flex items-center gap-2 px-6 py-2.5 rounded-full border border-dashed border-emerald-500/40 text-emerald-400 text-sm font-semibold hover:border-emerald-400 hover:bg-emerald-500/5 transition"
+               className="flex items-center gap-2 px-6 py-2.5 rounded-full border border-dashed border-primary/40 text-primary text-sm font-semibold hover:border-primary hover:bg-primary/5 transition"
              >
                <Plus size={16} />
                + Add New Card
@@ -199,19 +199,19 @@ export default function FlashcardDesignPage({ onBack, onGenerate }) {
       {/* Fixed Footer */}
       <div className="fixed bottom-0 left-0 right-0 border-t border-[#1e2924] bg-[#0c110e]/90 backdrop-blur-md px-8 py-5 flex items-center justify-between">
          <div className="flex items-center">
-            <button onClick={onBack} className="mr-8 text-slate-400 hover:text-white transition text-sm font-semibold">
+            <button onClick={onBack} className="mr-8 text-slate-400 hover:text-ink transition text-sm font-semibold">
               Cancel
             </button>
             <div className="flex flex-col border-l border-[#1e2924] pl-6">
                <span className="text-[10px] text-slate-500 uppercase font-bold tracking-widest">ACTIVE SET</span>
-               <span className="text-sm font-bold text-white">{cards.filter(c => c.question.trim() || c.answer.trim()).length} Cards Created</span>
+               <span className="text-sm font-bold text-ink">{cards.filter(c => c.question.trim() || c.answer.trim()).length} Cards Created</span>
             </div>
          </div>
 
          <div className="flex items-center gap-6">
             <button 
               onClick={() => setIsSmartPolishOpen(true)}
-              className="flex items-center gap-2 text-sm text-slate-300 font-semibold hover:text-white transition"
+              className="flex items-center gap-2 text-sm text-slate-300 font-semibold hover:text-ink transition"
             >
                <Sparkles size={16} />
                Smart Polish

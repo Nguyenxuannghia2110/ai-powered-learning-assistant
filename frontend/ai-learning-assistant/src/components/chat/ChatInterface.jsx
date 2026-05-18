@@ -126,7 +126,7 @@ export default function ChatInterface({ document }) {
         className="custom-scrollbar flex-1 overflow-y-auto p-6 space-y-6 bg-gradient-to-b from-[#041d16] to-[#02130f]"
       >
         {messages.length === 0 && (
-          <div className="text-center text-emerald-300/40 text-sm mt-24">
+          <div className="text-center text-primary/40 text-sm mt-24">
             Ask a question about this document
           </div>
         )}
@@ -139,10 +139,10 @@ export default function ChatInterface({ document }) {
             }`}
           >
             <div
-              className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm leading-relaxed
+              className={`max-w-[80%] rounded-md px-4 py-3 text-sm leading-relaxed
             ${
               m.role === "user"
-                ? "bg-gradient-to-r from-emerald-500 to-emerald-400 text-black shadow-lg shadow-emerald-500/20"
+                ? "bg-gradient-to-r from-emerald-500 to-emerald-400 text-black shadow-lg shadow-[0_8px_8px_rgba(0,0,0,0.3)]"
                 : "bg-[#0e2a22] border border-emerald-900 text-emerald-50"
             }`}
             >
@@ -152,7 +152,7 @@ export default function ChatInterface({ document }) {
                 <span>{m.content}</span>
               )}
 
-              <div className="text-[10px] text-emerald-300/60 mt-2 flex gap-2">
+              <div className="text-[10px] text-primary/60 mt-2 flex gap-2">
                 <span>
                   {m.timestamp &&
                     new Date(m.timestamp).toLocaleTimeString([], {
@@ -171,7 +171,7 @@ export default function ChatInterface({ document }) {
 
         {loading && (
           <div className="flex justify-start">
-            <div className="bg-[#0e2a22] border border-emerald-900 rounded-xl px-4 py-2 text-xs text-emerald-300">
+            <div className="bg-[#0e2a22] border border-emerald-900 rounded-xl px-4 py-2 text-xs text-primary">
               AI is thinking…
             </div>
           </div>
@@ -201,7 +201,7 @@ export default function ChatInterface({ document }) {
           px-4 py-3
           text-sm
           text-emerald-50
-          placeholder:text-emerald-300/40
+          placeholder:text-primary/40
           focus:outline-none
           focus:ring-2
           focus:ring-emerald-500
@@ -219,7 +219,7 @@ export default function ChatInterface({ document }) {
           from-emerald-500
           to-emerald-400
           text-black
-          shadow-lg shadow-emerald-500/30
+          shadow-lg shadow-[0_8px_8px_rgba(0,0,0,0.3)]
           hover:scale-105
           transition
           disabled:opacity-40

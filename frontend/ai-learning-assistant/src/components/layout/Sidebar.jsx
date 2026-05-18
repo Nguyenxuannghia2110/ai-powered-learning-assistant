@@ -37,138 +37,65 @@ export default function Sidebar({ mobileOpen, onCloseMobile }) {
 
       <aside
         className={`
-        fixed inset-y-0 left-0 z-50 w-64
-        bg-gradient-to-b
-        from-[#020617]
-        via-[#030712]
-        to-[#020617]
-        border-r border-white/5
-        backdrop-blur-xl
+        fixed inset-y-0 left-0 z-50 w-[260px]
+        bg-canvas
         transition-transform duration-300
         lg:translate-x-0
         ${mobileOpen ? "translate-x-0" : "-translate-x-full"}
       `}
       >
         {/* LOGO */}
-        <div className="p-6 flex items-center gap-3 border-b border-white/5">
+        <div className="p-6 flex items-center gap-3">
           <div
             className="
-            w-10 h-10
+            w-8 h-8
             flex items-center justify-center
-            rounded-xl
-            bg-gradient-to-br
-            from-emerald-400
-            to-emerald-600
-            shadow-lg shadow-emerald-500/30
+            rounded-full
+            bg-primary
           "
           >
-            <Sparkles className="text-black w-5 h-5" />
+            <div className="w-3 h-3 bg-canvas rounded-full"></div>
           </div>
 
-          <div>
-            <h1 className="font-semibold text-white text-lg tracking-tight">
-              StudyAI
-            </h1>
-            <p className="text-xs text-gray-500">Learning Assistant</p>
-          </div>
+          <h1 className="font-bold text-ink text-xl tracking-tight">
+            SpotifyLearn
+          </h1>
         </div>
 
         {/* NAV */}
-        <nav className="mt-6 px-3 space-y-1 relative">
+        <nav className="mt-2 px-4 space-y-1 relative">
           {navItems.map((item) => {
             const Icon = item.icon;
             const active = location.pathname.startsWith(item.path);
 
             return (
-              <motion.button
+              <button
                 key={item.path}
                 onClick={() => {
                   navigate(item.path);
                   onCloseMobile?.();
                 }}
-                whileHover={{ y: -2 }}
-                whileTap={{ scale: 0.98 }}
-                transition={{ type: "spring", stiffness: 300, damping: 25 }}
                 className={`
-                relative
-                group
                 w-full
-                flex items-center gap-3
+                flex items-center gap-4
                 px-4 py-3
-                rounded-xl
-                text-sm
-                transition-colors
+                rounded-md
+                text-sm transition-colors
                 ${
                   active
-                    ? `
-                    bg-white/5
-                    text-white
-                    border border-white/10
-                    shadow-lg shadow-emerald-500/10
-                    `
-                    : `
-                    text-gray-400
-                    hover:bg-white/5
-                    hover:text-white
-                    `
+                    ? "font-bold text-ink"
+                    : "font-normal text-body hover:text-ink"
                 }
                 `}
               >
-                {/* Animated ACTIVE BAR */}
-                {active && (
-                  <motion.div
-                    layoutId="sidebar-indicator"
-                    className="
-                    absolute left-0 top-1/2
-                    -translate-y-1/2
-                    w-1 h-6
-                    bg-emerald-400
-                    rounded-r
-                    shadow shadow-emerald-400/80
-                  "
-                  transition={{
-                    type: "spring",
-                    stiffness: 400,
-                    damping: 30,
-                  }}
-                  />
-                )}
-
-                {/* ICON */}
                 <Icon
-                  className={`w-5 h-5 ${
-                    active
-                      ? "text-emerald-400"
-                      : "text-gray-500 group-hover:text-gray-300"
+                  className={`w-6 h-6 ${
+                    active ? "text-ink" : "text-body"
                   }`}
+                  strokeWidth={active ? 2.5 : 2}
                 />
-
-                {/* LABEL */}
                 <span>{item.label}</span>
-
-                {/* ACTIVE DOT */}
-                {active && (
-                  <motion.div
-                    layoutId="sidebar-dot"
-                    className="ml-auto w-2 h-2 bg-emerald-400 rounded-full shadow shadow-emerald-400/80"
-                  />
-                )}
-
-                {/* HOVER GLOW */}
-                <div
-                  className="
-                  absolute inset-0
-                  rounded-xl
-                  opacity-0
-                  group-hover:opacity-100
-                  transition
-                  bg-gradient-to-r
-                  from-emerald-500/5
-                  to-green-400/5
-                  blur-lg
-                "
-                />
-              </motion.button>
+              </button>
             );
           })}
         </nav>
@@ -177,31 +104,27 @@ export default function Sidebar({ mobileOpen, onCloseMobile }) {
         <div className="absolute bottom-6 left-4 right-4">
           <div
             className="
-            p-4 rounded-2xl
-            bg-gradient-to-br
-            from-emerald-500/10
-            to-green-400/5
-            border border-emerald-500/20
-            backdrop-blur-xl
+            p-5 rounded-lg
+            bg-canvas-card
+            text-ink
+            relative
+            overflow-hidden
+            shadow-[0_8px_8px_rgba(0,0,0,0.3)]
           "
           >
-            <div className="flex items-center gap-2 mb-2">
-              <Zap className="w-4 h-4 text-emerald-400" />
-              <p className="text-sm font-semibold text-white">Pro Plan</p>
-            </div>
-
-            <p className="text-xs text-gray-400 mb-3">
-              Unlock unlimited AI flashcards, quizzes and analytics.
+            <p className="font-bold text-base mb-1 relative z-10">Premium Account</p>
+            <p className="text-xs text-body mb-4 relative z-10">
+              Upgrade to premium.
             </p>
 
             <button
               className="
-              w-full py-2 rounded-lg text-sm font-medium
-              bg-gradient-to-r from-emerald-400 to-green-500
-              text-black hover:scale-[1.03] transition
+              w-max px-6 py-2 rounded-pill text-sm font-bold uppercase tracking-[1.4px]
+              bg-ink text-canvas hover:bg-white hover:scale-105 transition-transform
+              flex items-center gap-2 relative z-10
             "
             >
-              Upgrade
+              Get now
             </button>
           </div>
         </div>

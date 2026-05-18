@@ -12,13 +12,13 @@ const EmptyState = ({
     <div className="py-24 flex flex-col items-center justify-center text-center space-y-6">
       
       {/* icon */}
-      <div className="w-16 h-16 flex items-center justify-center rounded-2xl bg-white/10 text-emerald-300">
+      <div className="w-16 h-16 flex items-center justify-center rounded-md bg-white/10 text-primary">
         <Zap size={28} />
       </div>
 
       {/* text */}
       <div className="space-y-2">
-        <h3 className="text-xl font-semibold text-white">
+        <h3 className="text-xl font-semibold text-ink">
           {title}
         </h3>
         <p className="text-emerald-200/70">
@@ -34,8 +34,8 @@ const EmptyState = ({
           className="
           px-6 py-3
           rounded-xl
-          bg-emerald-500
-          text-white
+          bg-primary
+          text-ink
           font-semibold
           hover:bg-emerald-600
           transition

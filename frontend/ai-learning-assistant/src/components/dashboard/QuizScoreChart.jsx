@@ -16,15 +16,15 @@ const QuizScoreChart = ({ data = [] }) => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
       className="bg-gradient-to-b from-[#07120e] to-[#050807] 
-      border border-white/10 rounded-xl p-6
-      hover:border-emerald-400/30 transition"
+      border border-hairline rounded-xl p-6
+      hover:border-primary/30 transition"
     >
-      <h2 className="text-lg font-semibold text-white mb-6">
+      <h2 className="text-lg font-semibold text-ink mb-6">
         Quiz Score Trend
       </h2>
 
       {data.length === 0 ? (
-        <p className="text-gray-500 text-sm">No quiz data yet</p>
+        <p className="text-mute text-sm">No quiz data yet</p>
       ) : (
         <ResponsiveContainer width="100%" height={320}>
           <LineChart data={data}>

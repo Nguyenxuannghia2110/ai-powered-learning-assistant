@@ -29,18 +29,18 @@ export default function ActivityTimeline({ activities = [] }) {
       className="bg-gradient-to-b
   from-[#07120e]
   to-[#050807]
-  border border-white/10
-  rounded-2xl
+  border border-hairline
+  rounded-md
   p-6
   h-[420px]
   overflow-y-auto
   custom-scrollbar
 "
     >
-      <h2 className="text-lg font-semibold text-white mb-6">Recent Activity</h2>
+      <h2 className="text-lg font-semibold text-ink mb-6">Recent Activity</h2>
 
       {activities.length === 0 ? (
-        <p className="text-gray-500 text-sm">No recent activity</p>
+        <p className="text-mute text-sm">No recent activity</p>
       ) : (
         <div className="space-y-6">
           {activities.map((item, index) => {
@@ -55,7 +55,7 @@ export default function ActivityTimeline({ activities = [] }) {
   gap-4
   p-2
   rounded-lg
-  hover:bg-white/5
+  hover:bg-canvas-card
   transition
   duration-200
   "
@@ -63,7 +63,7 @@ export default function ActivityTimeline({ activities = [] }) {
                 {/* Timeline icon */}
                 <div className="flex flex-col items-center">
                   <div
-                    className={`w-8 h-8 flex items-center justify-center rounded-full bg-black border border-white/10 ${getColor(
+                    className={`w-8 h-8 flex items-center justify-center rounded-full bg-black border border-hairline ${getColor(
                       item.type,
                     )}`}
                   >
@@ -85,7 +85,7 @@ export default function ActivityTimeline({ activities = [] }) {
                     </p>
                   )}
 
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs text-mute mt-1">
                     {format(new Date(item.createdAt), "MMM dd, HH:mm")}
                   </p>
                 </div>

@@ -225,8 +225,8 @@ export default function DocumentDetailPage() {
         onClick={() => navigate("/documents")}
         className="
     inline-flex items-center gap-2
-    text-sm text-emerald-200
-    hover:text-white
+    text-sm text-body
+    hover:text-ink
     transition font-medium
     "
       >
@@ -239,7 +239,7 @@ export default function DocumentDetailPage() {
         className="
     text-4xl
     font-extrabold
-    text-white
+    text-ink
     tracking-tight
     "
       >
@@ -264,11 +264,9 @@ export default function DocumentDetailPage() {
       >
         <div
           className="
-  rounded-2xl
-  border border-emerald-900
-  bg-gradient-to-b
-  from-[#061f18]
-  to-[#031712]
+  rounded-md
+  border border-hairline
+  bg-canvas-card
   min-h-[700px]
   overflow-hidden
 "
@@ -276,12 +274,12 @@ export default function DocumentDetailPage() {
           {activeTab === "content" && (
             <div className="p-4 space-y-4">
               {!document?.filePath ? (
-                <div className="flex items-center justify-center h-[400px] text-gray-400">
+                <div className="flex items-center justify-center h-[400px] text-body">
                   No document file
                 </div>
               ) : (
                 <>
-                  <div className="w-full h-[70vh] rounded-xl overflow-hidden border border-emerald-900 bg-black">
+                  <div className="w-full h-[70vh] rounded-xl overflow-hidden border border-hairline bg-black">
                     <iframe
                       src={document.filePath}
                       title={document.title}
@@ -292,27 +290,27 @@ export default function DocumentDetailPage() {
                     {document.extractedText && document.extractedText.trim().length > 50 ? (
                       <button
                         onClick={() => setShowExtractedText((v) => !v)}
-                        className="text-sm font-semibold text-emerald-400 hover:text-emerald-300 transition"
+                        className="text-sm font-semibold text-primary hover:text-primary transition"
                       >
                         {showExtractedText ? "Hide extracted text" : "Show extracted text"}
                       </button>
                     ) : <div />}
                     <button
                       onClick={() => setShowChatPanel((v) => !v)}
-                      className="flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 transition"
+                      className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition"
                     >
                       Chat
                       <MessageSquare size={20} />
                     </button>
                   </div>
                   {document.extractedText && document.extractedText.trim().length > 50 && showExtractedText && (
-                      <div className="text-[15px] text-gray-100 font-sans text-justify space-y-6 bg-[#0a1f18] p-4 rounded-xl border border-emerald-800/50 shadow-inner max-h-[600px] overflow-auto cursor-text relative" onMouseUp={handleMouseUp}>
-                        <h3 className="font-semibold mb-4 text-sm text-emerald-300 uppercase tracking-wider sticky top-0 bg-[#0a1f18] z-10 pb-2 border-b border-emerald-800/50">
+                      <div className="text-[15px] text-body font-sans text-justify space-y-6 bg-canvas-mid p-4 rounded-xl border border-hairline shadow-inner max-h-[600px] overflow-auto cursor-text relative" onMouseUp={handleMouseUp}>
+                        <h3 className="font-semibold mb-4 text-sm text-primary uppercase tracking-wider sticky top-0 bg-canvas-mid z-10 pb-2 border-b border-hairline">
                           Document Text
                         </h3>
                         {document.extractedText.split(document.extractedText.includes('\f') ? '\f' : '\n').filter(p => p.trim().length > 0).map((pageText, idx) => (
-                          <div key={idx} className="relative bg-[#02140f] p-6 md:p-8 hover:bg-[#031d16] transition-colors rounded-lg shadow-sm border border-emerald-800/30">
-                            <span className="absolute top-2 right-4 text-xs font-bold text-emerald-800 select-none">
+                          <div key={idx} className="relative bg-canvas p-6 md:p-8 hover:bg-canvas-card transition-colors rounded-lg shadow-sm border border-hairline">
+                            <span className="absolute top-2 right-4 text-xs font-bold text-mute select-none">
                               PAGE {idx + 1}
                             </span>
                             <p className="whitespace-pre-wrap leading-[1.8] mt-2">
@@ -334,7 +332,7 @@ export default function DocumentDetailPage() {
           {activeTab === "ai" && <AiActions documentId={document._id} />}
 
           {activeTab === "flashcards" && (
-            <FlashcardManager documentId={document._id} />
+            <FlashcardManager documentId={document._id} documentTitle={document.title} />
           )}
 
           {activeTab === "quizzes" && <QuizManager documentId={document._id} />}
@@ -342,11 +340,9 @@ export default function DocumentDetailPage() {
         {showChatPanel && activeTab === "content" && (
           <div
             className="
-    rounded-2xl
-border border-emerald-900
-bg-gradient-to-b
-from-[#061f18]
-to-[#031712]
+    rounded-md
+border border-hairline
+bg-canvas-card
 overflow-hidden
 h-[80vh]
     "
@@ -359,7 +355,7 @@ h-[80vh]
       {/* FLOATING HIGHLIGHT MENU */}
       {highlightRect && (
         <div
-          className="absolute z-50 flex items-center bg-zinc-900 text-white shadow-xl rounded-lg overflow-hidden border border-zinc-700 animate-in fade-in zoom-in duration-200"
+          className="absolute z-50 flex items-center bg-canvas-card text-ink shadow-xl rounded-lg overflow-hidden border border-hairline animate-in fade-in zoom-in duration-200"
           style={{
             top: highlightRect.top,
             left: highlightRect.left,
@@ -368,7 +364,7 @@ h-[80vh]
         >
           <button
             onClick={handleExplain}
-            className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium hover:bg-zinc-800 transition text-amber-200 border-r border-zinc-700"
+            className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium hover:bg-canvas-mid transition text-amber-200 border-r border-hairline"
             title="Giải thích khái niệm"
           >
             <BookOpen size={16} className="text-amber-400" />
@@ -377,16 +373,16 @@ h-[80vh]
           
           <button
             onClick={() => handleQuickAdd("flashcard")}
-            className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium hover:bg-zinc-800 transition text-emerald-200 border-r border-zinc-700"
+            className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium hover:bg-canvas-mid transition text-primary border-r border-hairline"
             title="Thêm nhanh Flashcard"
           >
-            <Zap size={16} className="text-emerald-400" />
+            <Zap size={16} className="text-primary" />
             Flashcard
           </button>
           
           <button
             onClick={() => handleQuickAdd("quiz")}
-            className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium hover:bg-zinc-800 transition text-blue-200 border-r border-zinc-700"
+            className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium hover:bg-canvas-mid transition text-blue-200 border-r border-hairline"
             title="Thêm nhanh Quiz"
           >
             <Target size={16} className="text-blue-400" />
@@ -395,21 +391,21 @@ h-[80vh]
 
           <div className="relative group">
             <button
-              className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium hover:bg-zinc-800 transition text-gray-200"
+              className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium hover:bg-canvas-mid transition text-body"
               title="Tuỳ chọn lưu..."
             >
               <MoreHorizontal size={16} />
             </button>
-            <div className="absolute right-0 top-full mt-1 hidden group-hover:block w-48 bg-zinc-900 rounded-lg shadow-xl border border-zinc-700 py-1">
+            <div className="absolute right-0 top-full mt-1 hidden group-hover:block w-48 bg-canvas-card rounded-lg shadow-xl border border-hairline py-1">
                <button
                  onClick={() => openActionModal("flashcard")}
-                 className="w-full text-left px-4 py-2 text-sm text-emerald-200 hover:bg-zinc-800"
+                 className="w-full text-left px-4 py-2 text-sm text-primary hover:bg-canvas-mid"
                >
                  Tạo Flashcard (Tùy chọn)
                </button>
                <button
                  onClick={() => openActionModal("quiz")}
-                 className="w-full text-left px-4 py-2 text-sm text-blue-200 hover:bg-zinc-800"
+                 className="w-full text-left px-4 py-2 text-sm text-blue-200 hover:bg-canvas-mid"
                >
                  Tạo Quiz (Tùy chọn)
                </button>
@@ -454,7 +450,7 @@ h-[80vh]
 
 function Placeholder({ label }) {
   return (
-    <div className="flex items-center justify-center h-[400px] text-gray-400">
+    <div className="flex items-center justify-center h-[400px] text-body">
       {label}
     </div>
   );

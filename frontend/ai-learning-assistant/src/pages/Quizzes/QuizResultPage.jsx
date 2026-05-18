@@ -7,18 +7,18 @@ const Section = ({ title, count, color, children }) => {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="border border-white/10 rounded-xl overflow-hidden">
+    <div className="border border-hairline rounded-xl overflow-hidden">
       <div
         onClick={() => setOpen(!open)}
-        className="flex justify-between items-center px-5 py-4 cursor-pointer hover:bg-white/5 transition"
+        className="flex justify-between items-center px-5 py-4 cursor-pointer hover:bg-canvas-card transition"
       >
         <div className="flex items-center gap-3">
           <div className={`w-3 h-3 rounded-full ${color}`} />
           <span className="font-medium">{title}</span>
-          <span className="text-sm text-gray-400">{count} Questions</span>
+          <span className="text-sm text-body">{count} Questions</span>
         </div>
 
-        <span className="text-gray-400 text-sm">{open ? "▲" : "▼"}</span>
+        <span className="text-body text-sm">{open ? "▲" : "▼"}</span>
       </div>
 
       {open && <div className="px-5 pb-5 space-y-4">{children}</div>}
@@ -109,9 +109,9 @@ const QuizResultPage = ({ quiz, onBack, onRemake }) => {
     /*------------------------loadinggg------------------*/
   }
   if (loading)
-    return <div className="text-center py-20 text-white">Loading...</div>;
+    return <div className="text-center py-20 text-ink">Loading...</div>;
   if (!result)
-    return <div className="text-center py-20 text-white">No result</div>;
+    return <div className="text-center py-20 text-ink">No result</div>;
 
   const { quiz: quizInfo, results } = result;
 
@@ -146,9 +146,9 @@ const QuizResultPage = ({ quiz, onBack, onRemake }) => {
         : "00:00";
         
   return (
-    <div className="max-w-5xl mx-auto px-6 py-10 text-white space-y-8">
+    <div className="max-w-5xl mx-auto px-6 py-10 text-ink space-y-8">
       {/* HEADER */}
-      <div className="bg-gradient-to-br from-[#06281f] via-[#063328] to-[#041c15] border border-emerald-800/40 rounded-2xl p-10 text-center space-y-6">
+      <div className="bg-gradient-to-br from-[#06281f] via-[#063328] to-[#041c15] border border-emerald-800/40 rounded-md p-10 text-center space-y-6">
         {/* SCORE */}
         <div className="relative w-44 h-44 mx-auto">
           <svg className="w-full h-full -rotate-90">
@@ -176,7 +176,7 @@ const QuizResultPage = ({ quiz, onBack, onRemake }) => {
 
           <div className="absolute inset-0 flex flex-col items-center justify-center">
             <span className="text-5xl font-extrabold">{animatedScore}%</span>
-            <span className="text-sm text-emerald-300">FINAL SCORE</span>
+            <span className="text-sm text-primary">FINAL SCORE</span>
           </div>
         </div>
 
@@ -198,18 +198,18 @@ const QuizResultPage = ({ quiz, onBack, onRemake }) => {
         </div>
 
         {/* TIME */}
-        <div className="max-w-sm mx-auto bg-white/5 border border-white/10 rounded-xl p-5 flex justify-between items-center">
+        <div className="max-w-sm mx-auto bg-canvas-card border border-hairline rounded-xl p-5 flex justify-between items-center">
           <div>
-            <div className="text-sm text-emerald-300">Time Spent</div>
+            <div className="text-sm text-primary">Time Spent</div>
             <div className="text-2xl font-semibold">{timeSpentDisplay}</div>
           </div>
-          <div className="text-xs text-gray-400">Avg ~30s/question</div>
+          <div className="text-xs text-body">Avg ~30s/question</div>
         </div>
       </div>
 
       {/* BREAKDOWN */}
       <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-emerald-300">
+        <h3 className="text-lg font-semibold text-primary">
           Performance Breakdown
         </h3>
 
@@ -217,7 +217,7 @@ const QuizResultPage = ({ quiz, onBack, onRemake }) => {
         <Section
           title="Correct Answers"
           count={correctCount}
-          color="bg-emerald-500"
+          color="bg-primary"
         >
           {results
             .filter((q) => q.isCorrect)
@@ -232,14 +232,14 @@ const QuizResultPage = ({ quiz, onBack, onRemake }) => {
                     const isCorrect = i === q.correctAnswerIndex;
                     const isUser = i === q.selectedAnswerIndex;
 
-                    let style = "border-white/10";
+                    let style = "border-hairline";
                     let label = "";
 
                     if (isCorrect && isUser) {
-                      style = "border-emerald-500 bg-emerald-500/10";
+                      style = "border-primary bg-primary/10";
                       label = "✓ Your answer";
                     } else if (isCorrect) {
-                      style = "border-emerald-500";
+                      style = "border-primary";
                       label = "✓ Correct";
                     }
 
@@ -256,7 +256,7 @@ const QuizResultPage = ({ quiz, onBack, onRemake }) => {
                 </div>
 
                 {q.explanation && (
-                  <p className="text-sm text-gray-400">💡 {q.explanation}</p>
+                  <p className="text-sm text-body">💡 {q.explanation}</p>
                 )}
               </div>
             ))}
@@ -281,11 +281,11 @@ const QuizResultPage = ({ quiz, onBack, onRemake }) => {
                     const isCorrect = i === q.correctAnswerIndex;
                     const isUser = i === q.selectedAnswerIndex;
 
-                    let style = "border-white/10";
+                    let style = "border-hairline";
                     let label = "";
 
                     if (isCorrect) {
-                      style = "border-emerald-500 bg-emerald-500/10";
+                      style = "border-primary bg-primary/10";
                       label = "✓ Correct answer";
                     } else if (isUser) {
                       style = "border-red-500 bg-red-500/10";
@@ -305,7 +305,7 @@ const QuizResultPage = ({ quiz, onBack, onRemake }) => {
                 </div>
 
                 {q.explanation && (
-                  <p className="text-sm text-gray-400">💡 {q.explanation}</p>
+                  <p className="text-sm text-body">💡 {q.explanation}</p>
                 )}
               </div>
             ))}
@@ -330,8 +330,8 @@ const QuizResultPage = ({ quiz, onBack, onRemake }) => {
                         key={i}
                         className={`px-3 py-2 rounded-lg border text-sm flex justify-between ${
                           isCorrect
-                            ? "border-emerald-500 bg-emerald-500/10"
-                            : "border-white/10"
+                            ? "border-primary bg-primary/10"
+                            : "border-hairline"
                         }`}
                       >
                         <span>{opt}</span>
@@ -344,7 +344,7 @@ const QuizResultPage = ({ quiz, onBack, onRemake }) => {
                 </div>
 
                 {q.explanation && (
-                  <p className="text-sm text-gray-400">💡 {q.explanation}</p>
+                  <p className="text-sm text-body">💡 {q.explanation}</p>
                 )}
               </div>
             ))}
@@ -358,7 +358,7 @@ const QuizResultPage = ({ quiz, onBack, onRemake }) => {
           onClick={handleRemake}
           disabled={loadingRemake}
           className="flex-1 flex items-center justify-center gap-2 px-5 py-3 rounded-xl 
-          bg-emerald-500 text-black font-semibold hover:bg-emerald-400 transition"
+          bg-primary text-black font-semibold hover:bg-emerald-400 transition"
         >
           {loadingRemake ? "Remaking..." : "🔄 Remake Quiz"}
         </button>
@@ -367,7 +367,7 @@ const QuizResultPage = ({ quiz, onBack, onRemake }) => {
         <button
           onClick={onBack}
           className="flex-1 px-5 py-3 rounded-xl 
-          bg-white/10 border border-white/10 text-white hover:bg-white/20 transition"
+          bg-white/10 border border-hairline text-ink hover:bg-white/20 transition"
         >
           ← Back to Library
         </button>

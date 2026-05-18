@@ -91,30 +91,30 @@ const Header = () => {
   /* ================= UI ================= */
 
   return (
-    <header className="absolute top-0 left-0 right-0 h-[70px] z-40 backdrop-blur-xl bg-black/30 border-b border-white/10 flex items-center justify-between px-8">
+    <header className="absolute top-0 left-0 right-0 h-[70px] z-40 backdrop-blur-xl bg-black/30 border-b border-hairline flex items-center justify-between px-8">
       {/* SEARCH */}
       <div className="relative w-[400px]">
         <Search
-          className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
+          className="absolute left-4 top-1/2 -translate-y-1/2 text-body"
           size={16}
         />
         <input
           placeholder="Search..."
-          className="w-full pl-10 pr-4 py-2.5 rounded-full bg-white/5 border border-white/10 text-sm text-gray-200 focus:outline-none focus:ring-2 focus:ring-emerald-400/30"
+          className="w-full pl-10 pr-4 py-2.5 rounded-full bg-canvas-card border border-hairline text-sm text-gray-200 focus:outline-none focus:ring-2 focus:ring-emerald-400/30"
         />
       </div>
 
       {/* RIGHT */}
       <div className="flex items-center gap-6">
         {/* AI */}
-        <div className="flex items-center gap-2 text-xs text-emerald-400 bg-emerald-400/10 px-3 py-1.5 rounded-full border border-emerald-400/20">
+        <div className="flex items-center gap-2 text-xs text-primary bg-emerald-400/10 px-3 py-1.5 rounded-full border border-primary/20">
           <Sparkles size={14} />
           AI Active
         </div>
 
         {/* NOTI */}
         <div className="relative cursor-pointer">
-          <Bell className="text-gray-300 hover:text-white" />
+          <Bell className="text-body hover:text-ink" />
           <span className="absolute -top-1 -right-1 w-2 h-2 bg-emerald-400 rounded-full animate-ping" />
         </div>
 
@@ -126,25 +126,25 @@ const Header = () => {
           >
             <img
               src={user?.profileImage || "https://i.pravatar.cc/40"}
-              className="w-9 h-9 rounded-full border border-white/10 group-hover:border-emerald-400"
+              className="w-9 h-9 rounded-full border border-hairline group-hover:border-primary"
             />
 
           </div>
 
           {/* DROPDOWN */}
           {open && (
-            <div className="absolute right-0 mt-4 w-80 rounded-2xl shadow-2xl border border-white/10 bg-[#0b0f0e]">
+            <div className="absolute right-0 mt-4 w-80 rounded-md shadow-2xl border border-hairline bg-canvas-card">
               {/* PROFILE */}
-              <div className="p-5 flex items-center gap-4 border-b border-white/10">
+              <div className="p-5 flex items-center gap-4 border-b border-hairline">
                 <img
                   src={user?.profileImage || "https://i.pravatar.cc/100"}
-                  className="w-12 h-12 rounded-full border border-white/10"
+                  className="w-12 h-12 rounded-full border border-hairline"
                 />
                 <div>
-                  <p className="text-white font-medium">
+                  <p className="text-ink font-medium">
                     {user?.username || "Guest"}
                   </p>
-                  <p className="text-xs text-gray-400">
+                  <p className="text-xs text-body">
                     {user?.email || "no-email"}
                   </p>
                 </div>
@@ -224,8 +224,8 @@ const MenuItem = ({ icon, label, onClick, danger, active, right }) => (
         danger
           ? "text-red-400 hover:bg-red-500/10"
           : active
-            ? "bg-white/10 text-white"
-            : "text-gray-300 hover:bg-white/10"
+            ? "bg-white/10 text-ink"
+            : "text-body hover:bg-white/10"
       }
     `}
   >

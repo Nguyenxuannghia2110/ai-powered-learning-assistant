@@ -44,10 +44,10 @@ const RegisterPage = () => {
         <div className="text-center mb-8">
           <div className="flex justify-center mb-6">
             <div className="w-12 h-12 rounded-full border border-[#212327] bg-[#191919] flex items-center justify-center">
-              <BrainCircuit className="w-6 h-6 text-white" />
+              <BrainCircuit className="w-6 h-6 text-ink" />
             </div>
           </div>
-          <h1 className="text-2xl font-bold text-white tracking-tight">Create account</h1>
+          <h1 className="text-2xl font-bold text-ink tracking-tight">Create account</h1>
           <p className="text-[#7d8187] mt-2 text-sm uppercase tracking-widest font-mono">
             Join and start your learning journey
           </p>
@@ -64,7 +64,7 @@ const RegisterPage = () => {
               <div
                 className={`absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none ${
                   focusedField === "username"
-                    ? "text-white"
+                    ? "text-ink"
                     : "text-[#7d8187]"
                 }`}
               >
@@ -77,7 +77,7 @@ const RegisterPage = () => {
                 onFocus={() => setFocusedField("username")}
                 onBlur={() => setFocusedField(null)}
                 placeholder="your name"
-                className="w-full pl-11 pr-4 py-3 bg-[#0a0a0a] border border-[#212327] rounded-lg text-white placeholder-[#7d8187] focus:ring-0 focus:border-white/50 outline-none transition"
+                className="w-full pl-11 pr-4 py-3 bg-[#0a0a0a] border border-[#212327] rounded-lg text-ink placeholder-[#7d8187] focus:ring-0 focus:border-white/50 outline-none transition"
                 required
               />
             </div>
@@ -92,7 +92,7 @@ const RegisterPage = () => {
               <div
                 className={`absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none ${
                   focusedField === "email"
-                    ? "text-white"
+                    ? "text-ink"
                     : "text-[#7d8187]"
                 }`}
               >
@@ -105,7 +105,7 @@ const RegisterPage = () => {
                 onFocus={() => setFocusedField("email")}
                 onBlur={() => setFocusedField(null)}
                 placeholder="you@example.com"
-                className="w-full pl-11 pr-4 py-3 bg-[#0a0a0a] border border-[#212327] rounded-lg text-white placeholder-[#7d8187] focus:ring-0 focus:border-white/50 outline-none transition"
+                className="w-full pl-11 pr-4 py-3 bg-[#0a0a0a] border border-[#212327] rounded-lg text-ink placeholder-[#7d8187] focus:ring-0 focus:border-white/50 outline-none transition"
                 required
               />
             </div>
@@ -120,7 +120,7 @@ const RegisterPage = () => {
               <div
                 className={`absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none ${
                   focusedField === "password"
-                    ? "text-white"
+                    ? "text-ink"
                     : "text-[#7d8187]"
                 }`}
               >
@@ -133,7 +133,7 @@ const RegisterPage = () => {
                 onFocus={() => setFocusedField("password")}
                 onBlur={() => setFocusedField(null)}
                 placeholder="••••••••"
-                className="w-full pl-11 pr-4 py-3 bg-[#0a0a0a] border border-[#212327] rounded-lg text-white placeholder-[#7d8187] focus:ring-0 focus:border-white/50 outline-none transition"
+                className="w-full pl-11 pr-4 py-3 bg-[#0a0a0a] border border-[#212327] rounded-lg text-ink placeholder-[#7d8187] focus:ring-0 focus:border-white/50 outline-none transition"
                 required
               />
             </div>
@@ -143,7 +143,7 @@ const RegisterPage = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full flex items-center justify-center gap-2 bg-transparent hover:bg-white/5 border border-white/25 text-white font-normal py-3 rounded-full transition disabled:opacity-50 disabled:cursor-not-allowed mt-4"
+            className="w-full flex items-center justify-center gap-2 bg-transparent hover:bg-canvas-card border border-white/25 text-ink font-normal py-3 rounded-full transition disabled:opacity-50 disabled:cursor-not-allowed mt-4"
           >
             {loading ? (
               <>
@@ -164,7 +164,7 @@ const RegisterPage = () => {
           Already have an account?{" "}
           <Link
             to="/login"
-            className="text-white hover:underline transition"
+            className="text-ink hover:underline transition"
           >
             Sign in
           </Link>

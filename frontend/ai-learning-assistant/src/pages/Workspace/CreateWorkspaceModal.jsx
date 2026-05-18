@@ -30,22 +30,22 @@ export default function CreateWorkspaceModal({ isOpen, onClose, onSubmit, isSubm
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 20 }}
-          className="w-full max-w-lg bg-[#0a0f0d] border border-white/10 rounded-2xl shadow-2xl overflow-hidden"
+          className="w-full max-w-lg bg-canvas-card border border-hairline rounded-md shadow-2xl overflow-hidden"
         >
           {/* Header */}
           <div className="flex items-center justify-between p-6 border-b border-white/5 bg-white/[0.02]">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-emerald-500/20 flex items-center justify-center">
-                <Sparkles className="w-5 h-5 text-emerald-400" />
+              <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center">
+                <Sparkles className="w-5 h-5 text-primary" />
               </div>
               <div>
-                <h2 className="text-xl font-bold text-white">New Workspace</h2>
-                <p className="text-sm text-gray-400">Generate a custom learning journey</p>
+                <h2 className="text-xl font-bold text-ink">New Workspace</h2>
+                <p className="text-sm text-body">Generate a custom learning journey</p>
               </div>
             </div>
             <button
               onClick={onClose}
-              className="p-2 text-gray-400 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+              className="p-2 text-body hover:text-ink hover:bg-white/10 rounded-lg transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
@@ -55,8 +55,8 @@ export default function CreateWorkspaceModal({ isOpen, onClose, onSubmit, isSubm
           <form onSubmit={handleSubmit} className="p-6 space-y-6">
             {/* Topic */}
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-300 flex items-center gap-2">
-                <BookOpen className="w-4 h-4 text-emerald-400" />
+              <label className="text-sm font-medium text-body flex items-center gap-2">
+                <BookOpen className="w-4 h-4 text-primary" />
                 Topic or Subject
               </label>
               <input
@@ -64,15 +64,15 @@ export default function CreateWorkspaceModal({ isOpen, onClose, onSubmit, isSubm
                 placeholder="e.g., Python Programming, World History, React Hooks..."
                 value={formData.topic}
                 onChange={(e) => setFormData({ ...formData, topic: e.target.value })}
-                className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 transition-all"
+                className="w-full bg-black/50 border border-hairline rounded-xl px-4 py-3 text-ink placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-primary/50 transition-all"
                 disabled={isSubmitting}
               />
             </div>
 
             {/* Goal */}
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-300 flex items-center gap-2">
-                <Target className="w-4 h-4 text-emerald-400" />
+              <label className="text-sm font-medium text-body flex items-center gap-2">
+                <Target className="w-4 h-4 text-primary" />
                 Learning Goal (Optional)
               </label>
               <input
@@ -80,7 +80,7 @@ export default function CreateWorkspaceModal({ isOpen, onClose, onSubmit, isSubm
                 placeholder="What do you want to achieve?"
                 value={formData.goal}
                 onChange={(e) => setFormData({ ...formData, goal: e.target.value })}
-                className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 transition-all"
+                className="w-full bg-black/50 border border-hairline rounded-xl px-4 py-3 text-ink placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-primary/50 transition-all"
                 disabled={isSubmitting}
               />
             </div>
@@ -88,11 +88,11 @@ export default function CreateWorkspaceModal({ isOpen, onClose, onSubmit, isSubm
             <div className="grid grid-cols-2 gap-4">
               {/* Level */}
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-300">Experience Level</label>
+                <label className="text-sm font-medium text-body">Experience Level</label>
                 <select
                   value={formData.level}
                   onChange={(e) => setFormData({ ...formData, level: e.target.value })}
-                  className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/50 transition-all appearance-none"
+                  className="w-full bg-black/50 border border-hairline rounded-xl px-4 py-3 text-ink focus:outline-none focus:ring-2 focus:ring-emerald-500/50 transition-all appearance-none"
                   disabled={isSubmitting}
                 >
                   <option value="beginner">Beginner</option>
@@ -103,11 +103,11 @@ export default function CreateWorkspaceModal({ isOpen, onClose, onSubmit, isSubm
 
               {/* Language */}
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-300">Language</label>
+                <label className="text-sm font-medium text-body">Language</label>
                 <select
                   value={formData.language}
                   onChange={(e) => setFormData({ ...formData, language: e.target.value })}
-                  className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/50 transition-all appearance-none"
+                  className="w-full bg-black/50 border border-hairline rounded-xl px-4 py-3 text-ink focus:outline-none focus:ring-2 focus:ring-emerald-500/50 transition-all appearance-none"
                   disabled={isSubmitting}
                 >
                   <option value="en">English</option>
@@ -119,8 +119,8 @@ export default function CreateWorkspaceModal({ isOpen, onClose, onSubmit, isSubm
 
             {/* Learning Style */}
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-300 flex items-center gap-2">
-                <Compass className="w-4 h-4 text-emerald-400" />
+              <label className="text-sm font-medium text-body flex items-center gap-2">
+                <Compass className="w-4 h-4 text-primary" />
                 Learning Style
               </label>
               <div className="grid grid-cols-2 gap-3">
@@ -131,8 +131,8 @@ export default function CreateWorkspaceModal({ isOpen, onClose, onSubmit, isSubm
                     onClick={() => setFormData({ ...formData, learningStyle: style })}
                     className={`px-4 py-3 rounded-xl border text-sm font-medium capitalize transition-all ${
                       formData.learningStyle === style
-                        ? "bg-emerald-500/20 border-emerald-500/50 text-emerald-400"
-                        : "bg-black/50 border-white/10 text-gray-400 hover:border-white/20 hover:text-gray-300"
+                        ? "bg-primary/20 border-primary/50 text-primary"
+                        : "bg-black/50 border-hairline text-body hover:border-hairline hover:text-body"
                     }`}
                     disabled={isSubmitting}
                   >
@@ -147,7 +147,7 @@ export default function CreateWorkspaceModal({ isOpen, onClose, onSubmit, isSubm
               <button
                 type="button"
                 onClick={onClose}
-                className="flex-1 px-4 py-3 rounded-xl bg-white/5 hover:bg-white/10 text-white font-medium transition-colors"
+                className="flex-1 px-4 py-3 rounded-xl bg-canvas-card hover:bg-white/10 text-ink font-medium transition-colors"
                 disabled={isSubmitting}
               >
                 Cancel
@@ -155,7 +155,7 @@ export default function CreateWorkspaceModal({ isOpen, onClose, onSubmit, isSubm
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="flex-[2] flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-black font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-[2] flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-primary hover:bg-emerald-600 text-black font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isSubmitting ? (
                   <>

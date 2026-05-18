@@ -71,12 +71,12 @@ export default function FlashcardsPage() {
           <div className="flex items-center justify-between">
             <button
               onClick={goToList}
-              className="inline-flex items-center gap-2 text-sm text-[#7d8187] hover:text-white transition-all"
+              className="inline-flex items-center gap-2 text-sm text-[#7d8187] hover:text-ink transition-all"
             >
               <ArrowLeft size={16} />
               Back to Sets
             </button>
-            <h2 className="text-xl font-medium tracking-tight text-white">{activeSet.title || "Study Session"}</h2>
+            <h2 className="text-xl font-medium tracking-tight text-ink">{activeSet.title || "Study Session"}</h2>
             <div className="w-24" /> {/* Spacer to center the title */}
           </div>
 
@@ -88,8 +88,8 @@ export default function FlashcardsPage() {
                   onClick={() => setStudyMode('standard')}
                   className={`flex items-center gap-2 px-4 py-1.5 rounded-full text-xs uppercase tracking-widest font-mono transition-all ${
                     studyMode === 'standard' 
-                      ? 'bg-white/10 text-white' 
-                      : 'text-[#7d8187] hover:text-white'
+                      ? 'bg-white/10 text-ink' 
+                      : 'text-[#7d8187] hover:text-ink'
                   }`}
                 >
                   <Layers size={14} />
@@ -99,8 +99,8 @@ export default function FlashcardsPage() {
                   onClick={() => setStudyMode('dictation')}
                   className={`flex items-center gap-2 px-4 py-1.5 rounded-full text-xs uppercase tracking-widest font-mono transition-all ${
                     studyMode === 'dictation' 
-                      ? 'bg-white/10 text-white' 
-                      : 'text-[#7d8187] hover:text-white'
+                      ? 'bg-white/10 text-ink' 
+                      : 'text-[#7d8187] hover:text-ink'
                   }`}
                 >
                   <Keyboard size={14} />
@@ -110,8 +110,8 @@ export default function FlashcardsPage() {
                   onClick={() => setStudyMode('speaking')}
                   className={`flex items-center gap-2 px-4 py-1.5 rounded-full text-xs uppercase tracking-widest font-mono transition-all ${
                     studyMode === 'speaking' 
-                      ? 'bg-white/10 text-white' 
-                      : 'text-[#7d8187] hover:text-white'
+                      ? 'bg-white/10 text-ink' 
+                      : 'text-[#7d8187] hover:text-ink'
                   }`}
                 >
                   <Mic size={14} />
@@ -165,7 +165,7 @@ export default function FlashcardsPage() {
               <button
                 disabled={currentIndex === 0}
                 onClick={() => setCurrentIndex((i) => i - 1)}
-                className="px-6 py-2 rounded-full border border-[#212327] bg-[#0a0a0a] text-white text-sm hover:bg-white/5 transition disabled:opacity-40"
+                className="px-6 py-2 rounded-full border border-[#212327] bg-[#0a0a0a] text-ink text-sm hover:bg-canvas-card transition disabled:opacity-40"
               >
                 Previous
               </button>
@@ -177,7 +177,7 @@ export default function FlashcardsPage() {
               <button
                 disabled={currentIndex === (activeSet.cards?.length || 1) - 1}
                 onClick={() => setCurrentIndex((i) => i + 1)}
-                className="px-6 py-2 rounded-full border border-[#212327] bg-[#0a0a0a] text-white text-sm hover:bg-white/5 transition disabled:opacity-40"
+                className="px-6 py-2 rounded-full border border-[#212327] bg-[#0a0a0a] text-ink text-sm hover:bg-canvas-card transition disabled:opacity-40"
               >
                 Next
               </button>

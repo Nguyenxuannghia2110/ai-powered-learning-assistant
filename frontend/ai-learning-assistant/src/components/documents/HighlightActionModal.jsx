@@ -191,7 +191,7 @@ export default function HighlightActionModal({
           </h2>
           <button
             onClick={onClose}
-            className="p-1 text-emerald-400 hover:text-white hover:bg-emerald-800 rounded-lg transition"
+            className="p-1 text-primary hover:text-ink hover:bg-emerald-800 rounded-lg transition"
           >
             <X size={20} />
           </button>
@@ -217,7 +217,7 @@ export default function HighlightActionModal({
                 <div
                   className={`flex items-center p-3 border rounded-lg cursor-pointer transition ${
                     !isCreatingNew
-                      ? "bg-emerald-900/40 border-emerald-500"
+                      ? "bg-emerald-900/40 border-primary"
                       : "bg-[#061f18] border-emerald-900 hover:bg-emerald-900/20"
                   }`}
                   onClick={() => setIsCreatingNew(false)}
@@ -258,7 +258,7 @@ export default function HighlightActionModal({
               <div
                 className={`flex items-center p-3 border rounded-lg cursor-pointer transition ${
                   isCreatingNew || sets.length === 0
-                    ? "bg-emerald-900/40 border-emerald-500"
+                    ? "bg-emerald-900/40 border-primary"
                     : "bg-[#061f18] border-emerald-900 hover:bg-emerald-900/20"
                 }`}
                 onClick={() => setIsCreatingNew(true)}
@@ -305,7 +305,7 @@ export default function HighlightActionModal({
               <button
                 type="submit"
                 disabled={loading}
-                className="flex items-center justify-center px-4 py-2 text-sm font-bold text-white bg-emerald-600 rounded-lg min-w-[100px]"
+                className="flex items-center justify-center px-4 py-2 text-sm font-bold text-ink bg-emerald-600 rounded-lg min-w-[100px]"
               >
                 {loading ? (
                   <Loader2 size={16} className="animate-spin" />
@@ -323,7 +323,7 @@ export default function HighlightActionModal({
               </div>
             )}
             <div className="flex justify-between items-center mb-2">
-              <h4 className="text-sm font-bold text-emerald-400 uppercase tracking-widest">Review Generated Items</h4>
+              <h4 className="text-sm font-bold text-primary uppercase tracking-widest">Review Generated Items</h4>
             </div>
             
             <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2">
@@ -332,7 +332,7 @@ export default function HighlightActionModal({
                   {actionType === "flashcard" ? (
                     <>
                       <div>
-                        <label className="text-xs text-emerald-500 font-bold mb-1 block">Question:</label>
+                        <label className="text-xs text-primary font-bold mb-1 block">Question:</label>
                         <textarea 
                           value={item.question}
                           onChange={(e) => {
@@ -340,7 +340,7 @@ export default function HighlightActionModal({
                             newData[idx].question = e.target.value;
                             setPreviewData(newData);
                           }}
-                          className="w-full bg-black/50 border border-emerald-900/50 rounded-lg p-2 text-sm text-white focus:border-emerald-500 outline-none resize-none"
+                          className="w-full bg-black/50 border border-emerald-900/50 rounded-lg p-2 text-sm text-ink focus:border-primary outline-none resize-none"
                           rows={2}
                         />
                       </div>
@@ -353,7 +353,7 @@ export default function HighlightActionModal({
                             newData[idx].answer = e.target.value;
                             setPreviewData(newData);
                           }}
-                          className="w-full bg-black/50 border border-emerald-900/50 rounded-lg p-2 text-sm text-white focus:border-emerald-500 outline-none resize-none"
+                          className="w-full bg-black/50 border border-emerald-900/50 rounded-lg p-2 text-sm text-ink focus:border-primary outline-none resize-none"
                           rows={2}
                         />
                       </div>
@@ -361,7 +361,7 @@ export default function HighlightActionModal({
                   ) : (
                     <>
                       <div>
-                         <label className="text-xs text-emerald-500 font-bold mb-1 block">Question:</label>
+                         <label className="text-xs text-primary font-bold mb-1 block">Question:</label>
                          <textarea 
                           value={item.question}
                           onChange={(e) => {
@@ -369,7 +369,7 @@ export default function HighlightActionModal({
                             newData[idx].question = e.target.value;
                             setPreviewData(newData);
                           }}
-                          className="w-full bg-black/50 border border-emerald-900/50 rounded-lg p-2 text-sm text-white focus:border-emerald-500 outline-none resize-none"
+                          className="w-full bg-black/50 border border-emerald-900/50 rounded-lg p-2 text-sm text-ink focus:border-primary outline-none resize-none"
                           rows={2}
                         />
                       </div>
@@ -395,7 +395,7 @@ export default function HighlightActionModal({
                                 newData[idx].options[oIdx] = e.target.value;
                                 setPreviewData(newData);
                               }}
-                              className={`flex-1 bg-black/50 border rounded-lg p-1.5 text-sm outline-none focus:border-emerald-500 ${item.correctAnswer === oIdx ? 'border-emerald-500/50 text-emerald-400 font-medium' : 'border-emerald-900/50 text-emerald-100'}`}
+                              className={`flex-1 bg-black/50 border rounded-lg p-1.5 text-sm outline-none focus:border-primary ${item.correctAnswer === oIdx ? 'border-primary/50 text-primary font-medium' : 'border-emerald-900/50 text-emerald-100'}`}
                             />
                           </div>
                         ))}
@@ -420,7 +420,7 @@ export default function HighlightActionModal({
                 type="button"
                 onClick={handleSave}
                 disabled={isSaving}
-                className="flex items-center justify-center px-4 py-2 text-sm font-bold text-white bg-emerald-600 rounded-lg min-w-[100px]"
+                className="flex items-center justify-center px-4 py-2 text-sm font-bold text-ink bg-emerald-600 rounded-lg min-w-[100px]"
               >
                 {isSaving ? (
                   <Loader2 size={16} className="animate-spin" />

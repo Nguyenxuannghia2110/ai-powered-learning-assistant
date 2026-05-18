@@ -74,16 +74,16 @@ export default function SpreadsheetUploadModal({ isOpen, onClose, onUploadSucces
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#080f0c]/80 backdrop-blur-sm p-4">
-      <div className="relative w-full max-w-lg bg-[#111614] border border-[#1e2924] rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+      <div className="relative w-full max-w-lg bg-[#111614] border border-[#1e2924] rounded-md shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
         <button 
           onClick={onClose}
-          className="absolute top-4 right-4 text-slate-400 hover:text-white transition"
+          className="absolute top-4 right-4 text-slate-400 hover:text-ink transition"
         >
           <X size={20} />
         </button>
 
         <div className="p-8 flex flex-col items-center">
-          <div className="w-12 h-12 bg-emerald-900/40 text-emerald-400 rounded-full flex items-center justify-center mb-6 border border-emerald-800/50">
+          <div className="w-12 h-12 bg-emerald-900/40 text-primary rounded-full flex items-center justify-center mb-6 border border-emerald-800/50">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
               <polyline points="14 2 14 8 20 8"></polyline>
@@ -93,7 +93,7 @@ export default function SpreadsheetUploadModal({ isOpen, onClose, onUploadSucces
             </svg>
           </div>
 
-          <h2 className="text-2xl font-bold text-white mb-2 text-center">Dataset Integration</h2>
+          <h2 className="text-2xl font-bold text-ink mb-2 text-center">Dataset Integration</h2>
           <p className="text-slate-400 text-sm text-center mb-8">
             Synchronize your local cognitive data to the Luminal core.
           </p>
@@ -107,8 +107,8 @@ export default function SpreadsheetUploadModal({ isOpen, onClose, onUploadSucces
           />
 
           <div 
-            className={`w-full aspect-[21/9] border-2 border-dashed rounded-2xl flex flex-col items-center justify-center cursor-pointer transition-colors ${
-              dragActive ? "border-emerald-400 bg-emerald-900/20" : "border-emerald-800/50 hover:bg-[#1a231f] hover:border-emerald-600/50"
+            className={`w-full aspect-[21/9] border-2 border-dashed rounded-md flex flex-col items-center justify-center cursor-pointer transition-colors ${
+              dragActive ? "border-primary bg-emerald-900/20" : "border-emerald-800/50 hover:bg-[#1a231f] hover:border-emerald-600/50"
             }`}
             onDragEnter={handleDrag}
             onDragLeave={handleDrag}
@@ -116,8 +116,8 @@ export default function SpreadsheetUploadModal({ isOpen, onClose, onUploadSucces
             onDrop={handleDrop}
             onClick={() => inputRef.current?.click()}
           >
-            <UploadCloud className="w-10 h-10 text-emerald-400 mb-3" />
-            <p className="font-medium text-white mb-1">
+            <UploadCloud className="w-10 h-10 text-primary mb-3" />
+            <p className="font-medium text-ink mb-1">
               {file ? file.name : "Drag & drop your matrix here"}
             </p>
             {!file && (
@@ -141,7 +141,7 @@ export default function SpreadsheetUploadModal({ isOpen, onClose, onUploadSucces
             
             <button 
               onClick={handleDownloadTemplate}
-              className="text-sm text-slate-400 hover:text-white flex items-center gap-1 border-b border-transparent hover:border-slate-400 pb-0.5 transition"
+              className="text-sm text-slate-400 hover:text-ink flex items-center gap-1 border-b border-transparent hover:border-slate-400 pb-0.5 transition"
             >
               <Download size={14} /> Download template
             </button>

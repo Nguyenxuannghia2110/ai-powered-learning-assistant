@@ -30,10 +30,10 @@ export default function AiActions({ documentId }) {
 
   return (
     <div className="p-4 space-y-4">
-      <div className="bg-[#0b0f0e] border border-white/10 rounded-2xl p-6 shadow-sm flex justify-between items-center">
+      <div className="bg-canvas-card border border-hairline rounded-md p-6 shadow-sm flex justify-between items-center">
         <div>
-          <h3 className="text-lg font-semibold text-white">Document Summary</h3>
-          <p className="text-sm text-gray-400 mt-1">
+          <h3 className="text-lg font-semibold text-ink">Document Summary</h3>
+          <p className="text-sm text-body mt-1">
             Get a concise AI-generated summary of the entire document.
           </p>
         </div>
@@ -41,7 +41,7 @@ export default function AiActions({ documentId }) {
         <button
           onClick={handleSummary}
           disabled={loading}
-          className="bg-emerald-500 hover:bg-emerald-600 text-black font-semibold px-5 py-2.5 rounded-xl transition disabled:opacity-50"
+          className="bg-primary hover:bg-emerald-600 text-black font-semibold px-5 py-2.5 rounded-xl transition disabled:opacity-50"
         >
           {loading ? "Summarizing..." : summary ? "Regenerate" : "Summarize"}
         </button>
@@ -54,7 +54,7 @@ export default function AiActions({ documentId }) {
       )}
 
       {summary && (
-        <div className="bg-[#0b0f0e] border border-white/10 rounded-2xl p-6 text-gray-200">
+        <div className="bg-canvas-card border border-hairline rounded-md p-6 text-gray-200">
           <div className="prose prose-invert max-w-none">
             <ReactMarkdown>{summary}</ReactMarkdown>
           </div>

@@ -28,18 +28,18 @@ export default function ValidationModal({ isOpen, onClose, previewData, onConfir
 
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center bg-[#080f0c]/90 backdrop-blur-sm px-4 py-8">
-      <div className="relative w-full max-w-5xl h-full max-h-[90vh] bg-[#0b110e] border border-[#1e2924] rounded-3xl shadow-2xl flex flex-col pt-8 pb-0">
+      <div className="relative w-full max-w-5xl h-full max-h-[90vh] bg-[#0b110e] border border-[#1e2924] rounded-md shadow-2xl flex flex-col pt-8 pb-0">
         
         {/* Header */}
         <div className="px-10 pb-6 shrink-0 relative border-b border-[#1e2924] bg-[#0b110e] z-10">
           <button 
             onClick={onClose}
-            className="absolute top-0 right-10 text-slate-500 hover:text-white transition"
+            className="absolute top-0 right-10 text-slate-500 hover:text-ink transition"
           >
             <X size={24} />
           </button>
           
-          <h2 className="text-4xl font-black text-white tracking-tight mb-2">Neural Architectures</h2>
+          <h2 className="text-4xl font-black text-ink tracking-tight mb-2">Neural Architectures</h2>
           <p className="text-slate-400 text-sm max-w-2xl">
             Review your AI-generated quiz questions. Adjust accuracy markers or edit strings before finalizing the deployment.
           </p>
@@ -53,12 +53,12 @@ export default function ValidationModal({ isOpen, onClose, previewData, onConfir
               const isValid = q.valid;
 
               return (
-                <div key={idx} className="bg-[#131715] border border-[#1e2924] rounded-2xl p-6 relative group">
+                <div key={idx} className="bg-[#131715] border border-[#1e2924] rounded-md p-6 relative group">
                   <div className="absolute top-6 right-6 text-[10px] font-bold text-slate-500 tracking-wider">
                     Q-{qNum}
                   </div>
                   
-                  <h3 className="text-xl font-bold text-white mb-6 pr-12">
+                  <h3 className="text-xl font-bold text-ink mb-6 pr-12">
                     {q.question || "Empty Question Prompt"}
                   </h3>
 
@@ -72,7 +72,7 @@ export default function ValidationModal({ isOpen, onClose, previewData, onConfir
                            key={oIdx}
                            className={`relative rounded-xl p-4 flex items-start gap-4 border transition-colors ${
                               isCorrect 
-                                ? 'bg-[#0f1d16] border-emerald-500/50' 
+                                ? 'bg-[#0f1d16] border-primary/50' 
                                 : 'bg-[#181c1a] border-[#222a27]'
                            }`}
                          >
@@ -82,12 +82,12 @@ export default function ValidationModal({ isOpen, onClose, previewData, onConfir
                               {letter}
                             </div>
                             <div className="flex-1 pt-0.5">
-                              <p className={`text-sm leading-relaxed ${isCorrect ? 'text-white' : 'text-slate-300'}`}>
+                              <p className={`text-sm leading-relaxed ${isCorrect ? 'text-ink' : 'text-slate-300'}`}>
                                 {opt}
                               </p>
                             </div>
                             {isCorrect && (
-                              <div className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 bg-emerald-500 rounded-full flex items-center justify-center text-emerald-950">
+                              <div className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 bg-primary rounded-full flex items-center justify-center text-emerald-950">
                                 <Check size={12} strokeWidth={4} />
                               </div>
                             )}
@@ -121,7 +121,7 @@ export default function ValidationModal({ isOpen, onClose, previewData, onConfir
            <div className="flex items-center gap-4">
               <button 
                 onClick={onClose}
-                className="w-12 h-12 rounded-full border border-[#2a3630] hover:bg-[#1f2824] transition flex items-center justify-center text-slate-400 hover:text-white"
+                className="w-12 h-12 rounded-full border border-[#2a3630] hover:bg-[#1f2824] transition flex items-center justify-center text-slate-400 hover:text-ink"
               >
                 <X size={20} />
               </button>

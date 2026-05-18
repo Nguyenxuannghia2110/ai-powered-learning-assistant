@@ -165,7 +165,7 @@ const ProfilePage = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#050807] flex items-center justify-center">
+      <div className="min-h-screen bg-canvas-card flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
           <Loader2 className="w-10 h-10 text-[#00FF9D] animate-spin" />
           <p className="text-[#00FF9D] text-[10px] tracking-[0.4em] uppercase">
@@ -177,13 +177,13 @@ const ProfilePage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#050807] text-[#e4e4e7] selection:bg-[#00FF9D]/30">
+    <div className="min-h-screen bg-canvas-card text-[#e4e4e7] selection:bg-[#00FF9D]/30">
       <div className="relative max-w-2xl mx-auto px-6 pb-24 pt-8">
         {/* Profile Header */}
         <div className="flex flex-col items-center mb-12">
           <div className="relative group">
             <div className="w-28 h-28 rounded-full border-[3px] border-[#00FF9D] p-1 bg-black overflow-hidden relative">
-              <div className="w-full h-full rounded-full bg-[#0a0f0d] flex items-center justify-center overflow-hidden">
+              <div className="w-full h-full rounded-full bg-canvas-card flex items-center justify-center overflow-hidden">
                 <img
                   src={avatarPreview || profile.profileImage || "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=400&h=400&fit=crop"}
                   alt="Avatar"
@@ -208,7 +208,7 @@ const ProfilePage = () => {
             />
           </div>
 
-          <h1 className="mt-8 text-3xl font-bold tracking-tight text-white mb-1">
+          <h1 className="mt-8 text-3xl font-bold tracking-tight text-ink mb-1">
             {profile.fullName || "Loading..."}
           </h1>
           <p className="text-[#00FF9D] font-medium text-xs tracking-widest opacity-80">
@@ -220,7 +220,7 @@ const ProfilePage = () => {
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-[#0b0f0e] rounded-[32px] p-10 shadow-2xl border border-white/5"
+          className="bg-canvas-card rounded-[32px] p-10 shadow-2xl border border-white/5"
         >
           {/* PERSONAL IDENTITY */}
           <section className="mb-14">
@@ -231,20 +231,20 @@ const ProfilePage = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-y-10 gap-x-12">
               {/* Full Name */}
               <div className="relative space-y-2">
-                <label className="block text-[10px] tracking-[0.1em] text-white/40 uppercase font-bold">
+                <label className="block text-[10px] tracking-[0.1em] text-ink/40 uppercase font-bold">
                   Full Name
                 </label>
-                <div className="flex items-center group border-b border-white/10 hover:border-[#00FF9D]/30 transition-all pb-1">
+                <div className="flex items-center group border-b border-hairline hover:border-[#00FF9D]/30 transition-all pb-1">
                   <input
                     type="text"
                     name="fullName"
                     value={profile.fullName}
                     onChange={handleChange}
-                    className="w-full bg-transparent py-1.5 text-white/90 focus:outline-none tracking-wide text-sm font-medium pr-10"
+                    className="w-full bg-transparent py-1.5 text-ink/90 focus:outline-none tracking-wide text-sm font-medium pr-10"
                   />
                   <button
                     onClick={() => handleSave()}
-                    className="absolute right-0 text-white/20 hover:text-[#00FF9D] transition-colors"
+                    className="absolute right-0 text-ink/20 hover:text-[#00FF9D] transition-colors"
                     title="Save Name"
                   >
                     <Edit3 className="w-4 h-4" />
@@ -254,11 +254,11 @@ const ProfilePage = () => {
 
               {/* Email - Read Only */}
               <div className="space-y-2">
-                <label className="block text-[10px] tracking-[0.1em] text-white/40 uppercase font-bold">
+                <label className="block text-[10px] tracking-[0.1em] text-ink/40 uppercase font-bold">
                   Email Address
                 </label>
-                <div className="border-b border-white/10 pb-2.5">
-                  <span className="text-white/60 text-sm font-medium tracking-wide">
+                <div className="border-b border-hairline pb-2.5">
+                  <span className="text-ink/60 text-sm font-medium tracking-wide">
                     {profile.email}
                   </span>
                 </div>
@@ -266,15 +266,15 @@ const ProfilePage = () => {
 
               {/* Password - Read Only Dots */}
               <div className="space-y-2">
-                <label className="block text-[10px] tracking-[0.1em] text-white/40 uppercase font-bold">
+                <label className="block text-[10px] tracking-[0.1em] text-ink/40 uppercase font-bold">
                   Access Credentials
                 </label>
-                <div className="border-b border-white/10 pb-2.5">
+                <div className="border-b border-hairline pb-2.5">
                   <div className="flex items-center justify-between">
-                    <span className="text-white/40 text-sm font-medium tracking-[0.4em] translate-y-0.5">
+                    <span className="text-ink/40 text-sm font-medium tracking-[0.4em] translate-y-0.5">
                       ••••••••••••
                     </span>
-                    <Shield className="w-4 h-4 text-white/10" />
+                    <Shield className="w-4 h-4 text-ink/10" />
                   </div>
                 </div>
               </div>
@@ -282,18 +282,18 @@ const ProfilePage = () => {
 
             {/* Neural Bio */}
             <div className="mt-10 space-y-2">
-              <label className="block text-[10px] tracking-[0.1em] text-white/40 uppercase font-bold">
+              <label className="block text-[10px] tracking-[0.1em] text-ink/40 uppercase font-bold">
                 Neural Bio
               </label>
               <textarea
                 name="neuralBio"
                 value={profile.neuralBio}
                 onChange={handleChange}
-                className="w-full bg-transparent py-1.5 text-white/80 focus:outline-none tracking-wide text-sm font-medium pr-10 leading-relaxed min-h-[60px] resize-none"
+                className="w-full bg-transparent py-1.5 text-ink/80 focus:outline-none tracking-wide text-sm font-medium pr-10 leading-relaxed min-h-[60px] resize-none"
               />
             </div>
 
-            <div className="h-px bg-white/5 mt-10" />
+            <div className="h-px bg-canvas-card mt-10" />
           </section>
 
           {/* SYSTEM PARAMETERS */}
@@ -306,7 +306,7 @@ const ProfilePage = () => {
               {/* Notifications */}
               <div className="flex items-center justify-between group">
                 <div className="flex items-center gap-5">
-                  <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center">
+                  <div className="w-10 h-10 rounded-xl bg-canvas-card flex items-center justify-center">
                     <Bell className="w-5 h-5 text-zinc-400 group-hover:text-[#00FF9D] transition-colors" />
                   </div>
                   <div>
@@ -335,7 +335,7 @@ const ProfilePage = () => {
               {/* High Contrast */}
               <div className="flex items-center justify-between group">
                 <div className="flex items-center gap-5">
-                  <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center">
+                  <div className="w-10 h-10 rounded-xl bg-canvas-card flex items-center justify-center">
                     <Monitor className="w-5 h-5 text-zinc-400 group-hover:text-[#00FF9D] transition-colors" />
                   </div>
                   <div>
@@ -367,7 +367,7 @@ const ProfilePage = () => {
                 className="w-full flex items-center justify-between group"
               >
                 <div className="flex items-center gap-5">
-                  <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center group-hover:bg-[#00FF9D]/10 transition-colors">
+                  <div className="w-10 h-10 rounded-xl bg-canvas-card flex items-center justify-center group-hover:bg-[#00FF9D]/10 transition-colors">
                     <Zap className="w-5 h-5 text-zinc-400 group-hover:text-[#00FF9D] transition-colors" />
                   </div>
                   <div className="text-left">
@@ -379,7 +379,7 @@ const ProfilePage = () => {
                     </p>
                   </div>
                 </div>
-                <ChevronRight className="w-5 h-5 text-zinc-600 group-hover:text-white transition-all transform group-hover:translate-x-1" />
+                <ChevronRight className="w-5 h-5 text-zinc-600 group-hover:text-ink transition-all transform group-hover:translate-x-1" />
               </button>
             </div>
           </section>
@@ -400,7 +400,7 @@ const ProfilePage = () => {
               )}
               {isSaving ? "SYNCHRONIZING..." : "Save Changes"}
             </motion.button>
-            <p className="mt-6 text-center text-white/10 text-[9px] uppercase tracking-[0.3em] font-medium">
+            <p className="mt-6 text-center text-ink/10 text-[9px] uppercase tracking-[0.3em] font-medium">
               Last Synchronized:{" "}
               {new Date().toLocaleTimeString([], {
                 hour: "2-digit",
@@ -438,7 +438,7 @@ const ProfilePage = () => {
               initial={{ scale: 0.9, opacity: 0, y: 20 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.9, opacity: 0, y: 20 }}
-              className="w-full max-w-md bg-[#0b0f0e] border border-white/10 rounded-[40px] p-10 shadow-2xl overflow-hidden relative"
+              className="w-full max-w-md bg-canvas-card border border-hairline rounded-[40px] p-10 shadow-2xl overflow-hidden relative"
             >
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#00FF9D] to-transparent opacity-50" />
 
@@ -453,7 +453,7 @@ const ProfilePage = () => {
                   { id: "confirmPassword", placeholder: "VERIFY_KEY" },
                 ].map((field) => (
                   <div key={field.id} className="space-y-2">
-                    <label className="text-[9px] text-white/30 uppercase font-bold tracking-widest">
+                    <label className="text-[9px] text-ink/30 uppercase font-bold tracking-widest">
                       {field.placeholder}
                     </label>
                     <input
@@ -465,7 +465,7 @@ const ProfilePage = () => {
                           [field.id]: e.target.value,
                         }))
                       }
-                      className="w-full bg-white/5 border-b border-white/10 py-3 px-4 text-white focus:border-[#00FF9D] focus:bg-[#00FF9D]/5 outline-none transition-all rounded-lg text-sm"
+                      className="w-full bg-canvas-card border-b border-hairline py-3 px-4 text-ink focus:border-[#00FF9D] focus:bg-[#00FF9D]/5 outline-none transition-all rounded-lg text-sm"
                     />
                   </div>
                 ))}
@@ -474,7 +474,7 @@ const ProfilePage = () => {
               <div className="flex gap-4 mt-12">
                 <button
                   onClick={() => setOpenPasswordModal(false)}
-                  className="flex-1 py-4 text-white/40 text-[11px] font-bold uppercase tracking-widest hover:text-white transition-colors"
+                  className="flex-1 py-4 text-ink/40 text-[11px] font-bold uppercase tracking-widest hover:text-ink transition-colors"
                 >
                   Abort
                 </button>
@@ -482,7 +482,7 @@ const ProfilePage = () => {
                 <button
                   onClick={handlePasswordUpdate}
                   disabled={isSaving}
-                  className="flex-1 py-4 bg-[#00FF9D] text-black text-[11px] font-black uppercase tracking-widest rounded-2xl shadow-[0_10px_20px_-5px_rgba(0,255,157,0.3)]"
+                  className="flex-1 py-4 bg-[#00FF9D] text-black text-[11px] font-black uppercase tracking-widest rounded-md shadow-[0_10px_20px_-5px_rgba(0,255,157,0.3)]"
                 >
                   Update Key
                 </button>

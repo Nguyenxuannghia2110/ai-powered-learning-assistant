@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import flashcardService from '../../services/flashcardService';
-import { Trash2, Clock } from 'lucide-react';
+import { Trash2, Clock, Layers, Play } from 'lucide-react';
 import EmptyState from '../../components/common/EmptyState';
 
 export default function FlashcardListPage({ onSelectSet, onCreateNew }) {
@@ -60,14 +60,14 @@ export default function FlashcardListPage({ onSelectSet, onCreateNew }) {
           <h2 className="text-3xl font-bold text-slate-100">
             Flashcard Sets
           </h2>
-          <p className="text-sm text-emerald-300/100 mt-1 font-medium">
+          <p className="text-sm text-primary/100 mt-1 font-medium">
             Reviewing {sets.length} decks
           </p>
         </div>
 
         <button
           onClick={onCreateNew}
-          className="px-5 py-2.5 bg-emerald-500 text-white rounded-xl font-semibold hover:bg-emerald-600 transition"
+          className="px-5 py-2.5 bg-primary text-ink rounded-xl font-semibold hover:bg-emerald-600 transition"
         >
           + Create New Set
         </button>
@@ -96,53 +96,61 @@ export default function FlashcardListPage({ onSelectSet, onCreateNew }) {
           return (
             <div
               key={set._id}
-              className="relative aspect-[8/5] flex flex-col rounded-2xl p-5 bg-gradient-to-br from-[#06281f] via-[#063328] to-[#041c15] text-white border border-emerald-800/40 shadow-lg hover:border-emerald-400 hover:-translate-y-1 hover:shadow-xl transition-all cursor-pointer group"
               onClick={() => onSelectSet(set)}
+              className="bg-canvas-card rounded-md p-6 hover:bg-canvas-mid shadow-[0_8px_8px_rgba(0,0,0,0.3)] transition-all cursor-pointer group flex flex-col h-full relative overflow-hidden"
             >
-              {/* DELETE */}
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setSetToDelete(set);
-                  }}
-                className="absolute top-4 right-4 text-red-300 opacity-0 group-hover:opacity-100 transition-opacity hover:text-red-400 z-10"
-                >
-                  <Trash2 size={16} />
-                </button>
-
-              <div className="flex flex-col h-full w-full text-left justify-between">
-                {/* TOP CONTENT */}
-                <div className="space-y-3">
-                  <h3 className="text-lg font-semibold truncate pr-6" title={set.title}>{set.title || "Untitled Set"}</h3>
-
-                  <div className="text-xs text-emerald-300/70 uppercase tracking-widest flex items-center gap-1.5">
-                    <Clock size={12} />
-                    <span>Created {lastStudy}</span>
+              <div className="relative z-10 flex flex-col h-full">
+                {/* HEADER */}
+                <div className="flex justify-between items-start mb-4">
+                  <div className="p-3 bg-primary/10 rounded-full text-primary">
+                    <Layers className="w-6 h-6" />
                   </div>
-
-                  <div className="inline-block w-fit px-3 py-1 bg-emerald-900/40 text-emerald-200 rounded-xl text-sm font-semibold">
-                    {set.count || set.cards?.length || 0} cards
+                  <div className="px-3 py-1 bg-canvas-mid rounded-pill text-[12px] font-bold text-body uppercase tracking-[1.4px]">
+                    {set.count || set.cards?.length || 0} CARDS
                   </div>
                 </div>
 
-                {/* BOTTOM CONTENT */}
-                <div className="space-y-4">
-                  <div>
-                    <div className="flex justify-between text-xs text-emerald-200 space-y-1 mt-3">
-                      <span>MASTERY PROGRESS</span>
-                      <span>{Math.round(progress)}%</span>
-                    </div>
+                {/* TITLE */}
+                <h3 className="text-[18px] font-bold text-ink mb-2 group-hover:text-primary transition-colors line-clamp-2" title={set.title || "Untitled Set"}>
+                  {set.title || "Untitled Set"}
+                </h3>
 
-                    <div className="w-full h-2 bg-emerald-950 rounded-full overflow-hidden">
-                      <div
-                        className="h-full bg-emerald-400 transition-all"
-                        style={{ width: `${progress}%` }}
-                      />
-                    </div>
+                {/* DETAILS (Progress) */}
+                <div className="text-body text-sm mb-6 flex flex-col gap-2">
+                  <div className="flex justify-between text-[12px]">
+                    <span>Mastery Progress</span>
+                    <span className="text-ink font-bold">{Math.round(progress)}%</span>
                   </div>
+                  <div className="w-full h-1.5 bg-[#252525] rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-ink rounded-full"
+                      style={{ width: `${progress}%` }}
+                    />
+                  </div>
+                </div>
 
-                  <div className="w-full py-2 bg-emerald-600/20 group-hover:bg-emerald-500 rounded-xl text-center text-sm font-medium transition text-emerald-400 group-hover:text-white">
-                    Study Now
+                {/* FOOTER */}
+                <div className="mt-auto space-y-4">
+                  <div className="flex items-center justify-between pt-4 border-t border-hairline">
+                    <div className="flex items-center gap-2 text-[12px] text-mute">
+                      <Clock className="w-4 h-4" />
+                      Created {lastStudy}
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSetToDelete(set);
+                        }}
+                        className="w-8 h-8 rounded-full bg-canvas-mid flex items-center justify-center hover:bg-red-500 hover:text-white transition-colors text-mute"
+                        title="Delete"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                      <div className="w-8 h-8 rounded-full bg-canvas-mid flex items-center justify-center group-hover:bg-primary group-hover:text-canvas transition-colors">
+                        <Play className="w-4 h-4 ml-0.5" />
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -154,20 +162,20 @@ export default function FlashcardListPage({ onSelectSet, onCreateNew }) {
       {/* DELETE MODAL */}
       {setToDelete && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[100]">
-          <div className="bg-[#111] border border-slate-800 rounded-2xl p-6 w-full max-w-sm space-y-4">
-            <h3 className="font-bold text-lg text-white">Delete "{setToDelete.title || "this set"}"?</h3>
+          <div className="bg-[#111] border border-slate-800 rounded-md p-6 w-full max-w-sm space-y-4">
+            <h3 className="font-bold text-lg text-ink">Delete "{setToDelete.title || "this set"}"?</h3>
             <p className="text-slate-400 text-sm">This action cannot be undone.</p>
             <div className="flex justify-end gap-3 mt-4">
               <button
                 onClick={() => setSetToDelete(null)}
-                className="px-4 py-2 rounded-xl bg-slate-800 text-white hover:bg-slate-700 transition"
+                className="px-4 py-2 rounded-xl bg-slate-800 text-ink hover:bg-slate-700 transition"
               >
                 Cancel
               </button>
               <button
                 onClick={handleDeleteFlashcardSet}
                 disabled={deleting}
-                className="px-4 py-2 rounded-xl bg-red-600 text-white hover:bg-red-700 transition"
+                className="px-4 py-2 rounded-xl bg-red-600 text-ink hover:bg-red-700 transition"
               >
                 {deleting ? "Deleting..." : "Delete"}
               </button>

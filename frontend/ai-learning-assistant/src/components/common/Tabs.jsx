@@ -16,7 +16,7 @@ const iconMap = {
 
 const Tabs = ({ tabs, activeTab, onChange }) => {
   return (
-    <div className="border-b border-white/10">
+    <div className="border-b border-hairline">
       <nav className="flex items-center gap-8">
 
         {tabs.map((tab) => {
@@ -38,8 +38,8 @@ const Tabs = ({ tabs, activeTab, onChange }) => {
 
                 ${
                   isActive
-                    ? "text-emerald-400"
-                    : "text-gray-400 hover:text-white"
+                    ? "text-primary"
+                    : "text-body hover:text-ink"
                 }
 
                 ${tab.disabled ? "opacity-50 cursor-not-allowed" : ""}
@@ -61,7 +61,7 @@ const Tabs = ({ tabs, activeTab, onChange }) => {
                 className={`
                   absolute bottom-0 left-0
                   h-[2px]
-                  bg-emerald-400
+                  bg-primary
                   rounded-full
                   transition-all duration-300
                   ${

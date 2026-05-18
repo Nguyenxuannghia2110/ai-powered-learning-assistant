@@ -1,22 +1,23 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400&family=Geist+Mono:wght@400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
 @import "tailwindcss";
 
 @theme {
   --font-display: "Inter", system-ui, sans-serif;
-  --font-mono: "Geist Mono", monospace;
   --breakpoint-3xl: 1920px;
   
-  --color-primary: #ffffff;
-  --color-canvas: #0a0a0a;
-  --color-canvas-soft: #1a1c20;
-  --color-canvas-card: #191919;
-  --color-canvas-mid: #363a3f;
-  --color-hairline: #212327;
+  /* Spotify Core Palette */
+  --color-primary: #1ed760;
+  --color-canvas: #121212;
+  --color-canvas-card: #181818;
+  --color-canvas-mid: #1f1f1f;
+  --color-hairline: #4d4d4d;
   --color-ink: #ffffff;
-  --color-body: #dadbdf;
-  --color-mute: #7d8187;
+  --color-body: #b3b3b3;
+  --color-mute: #7c7c7c;
   
-  --radius-sm: 8px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
   --radius-pill: 9999px;
 }
 
@@ -29,213 +30,81 @@
     scroll-behavior: smooth;
   }
 
-  /* Typography Enforcements */
+  /* Typography Hierarchy */
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display) !important;
-    font-weight: 400 !important;
     color: var(--color-ink) !important;
   }
-  h1 { letter-spacing: -2.4px !important; }
-  h2 { letter-spacing: -1.8px !important; }
-  h3 { letter-spacing: -1.2px !important; }
-  h4 { letter-spacing: -0.6px !important; }
+  h1 { font-weight: 700 !important; }
+  h2 { font-weight: 700 !important; }
+  h3 { font-weight: 700 !important; }
+  h4 { font-weight: 600 !important; }
 
-  /* Eyebrows & labels */
-  .uppercase, .tracking-widest, .text-xs.font-semibold {
-    font-family: var(--font-mono) !important;
+  /* Systematic uppercase labels (Spotify Buttons) */
+  .uppercase, .tracking-\[1\.4px\], .tracking-widest {
+    font-family: var(--font-display) !important;
     letter-spacing: 1.4px !important;
     text-transform: uppercase !important;
-    font-weight: 400 !important;
-    color: var(--color-body) !important;
   }
 
-  /* Button Enforcements - White Pill Outlines */
-  button, a.button-like {
-    border-radius: var(--radius-pill) !important;
-    background: transparent !important;
-    border: 1px solid rgba(255, 255, 255, 0.25) !important;
-    color: var(--color-ink) !important;
-    box-shadow: none !important;
-    font-family: var(--font-display) !important;
-    font-weight: 400 !important;
-    text-transform: none !important;
-    letter-spacing: 0 !important;
-  }
-  button:hover {
-    background: rgba(255, 255, 255, 0.05) !important;
-    border-color: rgba(255, 255, 255, 0.5) !important;
+  button {
+    font-family: var(--font-display);
   }
   
-  /* Inputs */
   input, textarea, select {
-    background: var(--color-canvas-soft) !important;
-    border: 1px solid var(--color-hairline) !important;
-    border-radius: var(--radius-sm) !important;
-    color: var(--color-ink) !important;
-    font-family: var(--font-display) !important;
-    font-weight: 400 !important;
-  }
-  input:focus, textarea:focus, select:focus {
-    outline: none !important;
-    border-color: rgba(255, 255, 255, 0.5) !important;
-    box-shadow: none !important;
-  }
-
-  /* Card Enforcements */
-  /* Target elements that act like cards via typical tailwind classes */
-  div.rounded-2xl, div.rounded-3xl, div.rounded-xl {
-    border-radius: var(--radius-sm) !important;
-    box-shadow: none !important;
-  }
-  
-  /* Surface Color Overrides */
-  [class*="bg-[#0b0f0e]"], 
-  [class*="bg-[#0a0f0d]"], 
-  [class*="bg-[#050807]"],
-  [class*="bg-emerald-900"],
-  [class*="bg-white/5"] {
-     background-color: var(--color-canvas-card) !important;
-     border-color: var(--color-hairline) !important;
-  }
-  
-  .bg-black {
-     background-color: var(--color-canvas) !important;
-  }
-
-  [class*="bg-gradient-to"] {
-     background: var(--color-canvas-card) !important;
-     border-color: var(--color-hairline) !important;
-  }
-
-  /* Erase emerald accents */
-  .text-emerald-400, .text-emerald-500, .text-emerald-300 {
-    color: var(--color-ink) !important;
-  }
-  .bg-emerald-500, .bg-emerald-400 {
-    background-color: transparent !important;
-  }
-  .border-emerald-500, .border-emerald-400, .border-emerald-800 {
-    border-color: rgba(255, 255, 255, 0.25) !important;
-  }
-
-  /* Sidebar/Header specific if any */
-  aside, header {
-    background-color: var(--color-canvas) !important;
-    border-color: var(--color-hairline) !important;
+    font-family: var(--font-display);
   }
 }
 
-.perspective-1000 {
-  perspective: 1000px;
-}
-
-.preserve-3d {
-  transform-style: preserve-3d;
-}
-
-.rotate-y-180 {
-  transform: rotateY(180deg);
-}
-
-.backface-hidden {
-  backface-visibility: hidden;
-}
-
-.animate-spin-slow {
-  animation: spin 4s linear infinite;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
+/* ================= FLIPCARD UTILITIES ================= */
+@layer utilities {
+  .preserve-3d { transform-style: preserve-3d; }
+  .backface-hidden { backface-visibility: hidden; }
+  .rotate-y-180 { transform: rotateY(180deg); }
 }
 
 /* AI DASHBOARD SCROLLBAR */
-
 .custom-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: #212327 #0a0a0a;
+  scrollbar-color: #4d4d4d transparent;
 }
-
-/* Chrome / Edge / Safari */
-
-.custom-scrollbar::-webkit-scrollbar {
-  width: 4px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: #0a0a0a;
-}
-
+.custom-scrollbar::-webkit-scrollbar { width: 6px; }
+.custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #212327;
+  background: #4d4d4d;
   border-radius: 9999px;
 }
-
-.custom-scrollbar:hover::-webkit-scrollbar-thumb {
-  background: #363a3f;
-}
+.custom-scrollbar:hover::-webkit-scrollbar-thumb { background: #7c7c7c; }
 
 /* ================= MARKDOWN STYLING FOR LESSONS ================= */
 .markdown-lesson {
   font-family: var(--font-display);
   color: var(--color-body);
   font-size: 1rem;
-  font-weight: 400;
 }
-.markdown-lesson h1, 
-.markdown-lesson h2, 
-.markdown-lesson h3, 
-.markdown-lesson h4 {
+.markdown-lesson h1, .markdown-lesson h2, .markdown-lesson h3, .markdown-lesson h4 {
   color: var(--color-ink);
-  font-weight: 400;
+  font-weight: 700;
   margin-top: 1.5em;
   margin-bottom: 0.5em;
-  line-height: 1.3;
 }
-.markdown-lesson h1 { font-size: 2.25rem; letter-spacing: -1.2px; }
-.markdown-lesson h2 { font-size: 1.875rem; border-bottom: 1px solid var(--color-hairline); padding-bottom: 0.5rem; letter-spacing: -0.6px; }
-.markdown-lesson h3 { font-size: 1.5rem; }
-.markdown-lesson p {
-  line-height: 1.8;
-  margin-bottom: 1.25em;
-  color: var(--color-body);
-}
-.markdown-lesson strong {
-  color: var(--color-ink);
-  font-weight: 400;
-}
-.markdown-lesson ul {
-  list-style-type: disc;
-  padding-left: 1.5em;
-  margin-bottom: 1.25em;
-}
-.markdown-lesson ol {
-  list-style-type: decimal;
-  padding-left: 1.5em;
-  margin-bottom: 1.25em;
-}
-.markdown-lesson li {
-  margin-bottom: 0.5em;
-  color: var(--color-body);
-  line-height: 1.6;
-}
-.markdown-lesson li::marker {
-  color: var(--color-mute);
-}
-.markdown-lesson a {
-  color: var(--color-ink);
-  text-decoration: underline;
-  text-underline-offset: 4px;
-}
+.markdown-lesson h1 { font-size: 24px; }
+.markdown-lesson h2 { font-size: 18px; border-bottom: 1px solid var(--color-hairline); padding-bottom: 0.5rem; }
+.markdown-lesson h3 { font-size: 16px; }
+.markdown-lesson p { line-height: 1.5; margin-bottom: 1em; color: var(--color-body); }
+.markdown-lesson strong { color: var(--color-ink); font-weight: 700; }
+.markdown-lesson ul { list-style-type: disc; padding-left: 1.5em; margin-bottom: 1em; }
+.markdown-lesson ol { list-style-type: decimal; padding-left: 1.5em; margin-bottom: 1em; }
+.markdown-lesson li { margin-bottom: 0.5em; color: var(--color-body); line-height: 1.5; }
+.markdown-lesson li::marker { color: var(--color-body); }
+.markdown-lesson a { color: var(--color-ink); text-decoration: underline; text-underline-offset: 4px; font-weight: 700; }
 .markdown-lesson blockquote {
   border-left: 4px solid var(--color-hairline);
-  color: var(--color-mute);
+  color: var(--color-body);
   margin: 1.5em 0;
-  background: var(--color-canvas-soft);
+  background: var(--color-canvas-card);
   padding: 1em 1.5em;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-md);
 }
 .markdown-lesson code {
   background-color: var(--color-canvas-mid);
@@ -243,16 +112,15 @@
   padding: 0.2em 0.4em;
   border-radius: 4px;
   font-size: 0.9em;
-  font-family: var(--font-mono);
 }
 .markdown-lesson pre {
-  background-color: var(--color-canvas-soft);
+  background-color: var(--color-canvas-card);
   border: 1px solid var(--color-hairline);
   padding: 1.25em;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-md);
   overflow-x: auto;
   margin-bottom: 1.5em;
-  box-shadow: none;
+  box-shadow: 0 8px 8px rgba(0,0,0,0.3);
 }
 .markdown-lesson pre code {
   background-color: transparent;

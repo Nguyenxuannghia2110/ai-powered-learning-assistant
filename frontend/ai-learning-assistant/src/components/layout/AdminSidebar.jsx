@@ -73,7 +73,7 @@ export default function AdminSidebar() {
 
         <button
           onClick={logout}
-          className="w-full flex items-center justify-between px-4 py-2.5 text-sm text-mute hover:text-white hover:bg-canvas-soft rounded-md transition-colors"
+          className="w-full flex items-center justify-between px-4 py-2.5 text-sm text-mute hover:text-ink hover:bg-canvas-soft rounded-md transition-colors"
         >
           <span className="flex items-center gap-2">
             <LogOut className="w-4 h-4 opacity-70" /> Logout

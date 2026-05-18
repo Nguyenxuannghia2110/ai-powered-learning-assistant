@@ -74,7 +74,7 @@ export default function DictationMode({
 
         <button
           onClick={speakOriginal}
-          className="mb-8 w-20 h-20 bg-transparent border border-white/25 text-white rounded-full flex items-center justify-center hover:bg-white/5 transition-all"
+          className="mb-8 w-20 h-20 bg-transparent border border-white/25 text-ink rounded-full flex items-center justify-center hover:bg-canvas-card transition-all"
           title="Listen to the word"
         >
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-8 h-8">
@@ -91,10 +91,10 @@ export default function DictationMode({
           onChange={(e) => setUserInput(e.target.value)}
           onKeyDown={handleKeyDown}
           disabled={isChecked && feedback?.isCorrect}
-          className={`w-full bg-[#1a1c20] border rounded-lg px-6 py-4 text-xl text-white outline-none focus:border-white/50 transition-colors ${
+          className={`w-full bg-[#1a1c20] border rounded-lg px-6 py-4 text-xl text-ink outline-none focus:border-white/50 transition-colors ${
             isChecked 
               ? feedback?.isCorrect 
-                ? "border-emerald-500/50 text-emerald-400" 
+                ? "border-primary/50 text-primary" 
                 : "border-rose-500/50 text-rose-400"
               : "border-[#212327]"
           }`}
@@ -103,13 +103,13 @@ export default function DictationMode({
 
         {isChecked && (
           <div className="mt-6 w-full text-center">
-            <p className={`text-lg font-medium mb-4 ${feedback.isCorrect ? "text-emerald-400" : "text-rose-400"}`}>
+            <p className={`text-lg font-medium mb-4 ${feedback.isCorrect ? "text-primary" : "text-rose-400"}`}>
               {feedback.message}
             </p>
             {!feedback.isCorrect && (
               <div className="bg-[#191919] border border-[#212327] rounded-sm p-4 mb-4">
                 <p className="text-[11px] font-mono uppercase tracking-widest text-[#7d8187] mb-1">Correct Answer:</p>
-                <p className="text-xl text-white font-medium tracking-tight">{card.answer}</p>
+                <p className="text-xl text-ink font-medium tracking-tight">{card.answer}</p>
                 <p className="text-sm text-[#dadbdf] mt-2">Word: {card.question}</p>
               </div>
             )}
@@ -126,7 +126,7 @@ export default function DictationMode({
                   if (inputRef.current) inputRef.current.focus();
                 }
               }}
-              className="px-8 py-3 bg-transparent hover:bg-white/5 border border-white/25 text-white font-normal rounded-full transition-colors mt-2"
+              className="px-8 py-3 bg-transparent hover:bg-canvas-card border border-white/25 text-ink font-normal rounded-full transition-colors mt-2"
             >
               {feedback.isCorrect ? "Next Card" : "Try Again"}
             </button>
@@ -137,7 +137,7 @@ export default function DictationMode({
           <button
             onClick={handleCheck}
             disabled={!userInput.trim()}
-            className="mt-6 px-8 py-3 bg-transparent border border-white/25 hover:bg-white/5 disabled:opacity-50 disabled:cursor-not-allowed text-white font-normal rounded-full transition-colors"
+            className="mt-6 px-8 py-3 bg-transparent border border-white/25 hover:bg-canvas-card disabled:opacity-50 disabled:cursor-not-allowed text-ink font-normal rounded-full transition-colors"
           >
             Check Answer
           </button>

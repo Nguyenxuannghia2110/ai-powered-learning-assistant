@@ -30,7 +30,7 @@ const AppLayout = () => {
   const location = useLocation();
 
   return (
-    <div className="h-screen w-screen flex bg-black overflow-hidden">
+    <div className="h-screen w-screen flex bg-canvas overflow-hidden text-ink font-sans">
       {/* Sidebar */}
       <Sidebar
         mobileOpen={mobileSidebarOpen}
@@ -38,15 +38,10 @@ const AppLayout = () => {
       />
 
       {/* Main Content wrapper */}
-      <div className="flex-1 md:ml-64 flex flex-col h-full bg-black relative">
-        <Header
-          onToggleMobileSidebar={() =>
-            setMobileSidebarOpen(!mobileSidebarOpen)
-          }
-        />
-
+      <div className="flex-1 md:ml-[260px] flex flex-col h-full bg-canvas relative overflow-hidden">
+        
         {/* Scrollable Page Content */}
-        <main className="flex-1 overflow-y-auto custom-scrollbar pt-24 px-6 md:px-8 pb-8">
+        <main className="flex-1 overflow-y-auto custom-scrollbar">
           <AnimatePresence mode="wait" initial={false}>
             <motion.div
               key={location.pathname}
