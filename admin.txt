@@ -1,0 +1,607 @@
+You are a senior full-stack developer and senior UI/UX designer.
+
+Your task is to design and develop a complete modern Admin Dashboard for an AI-Powered Learning Assistant platform.
+
+The system must be production-level, scalable, responsive, modern, optimized, and visually premium.
+
+====================================================
+TECH STACK
+====================================================
+
+Frontend:
+- ReactJS
+- Vite
+- TailwindCSS
+- Framer Motion
+- React Router DOM
+- Axios
+- React Query / TanStack Query
+- Recharts
+- Lucide React Icons
+- Shadcn UI
+
+Backend:
+- NodeJS
+- ExpressJS
+- MongoDB
+- Mongoose
+- JWT Authentication
+- Redis Cache
+
+Architecture:
+- Clean architecture
+- Reusable components
+- Modular folder structure
+- Responsive design
+- API service layer
+- Role-based permissions
+
+====================================================
+DESIGN STYLE
+====================================================
+
+Create a premium modern admin dashboard UI with:
+- Clean spacing
+- Soft shadows
+- Glassmorphism light effects
+- Rounded corners
+- Minimal but professional layout
+- Smooth hover animations
+- Smooth transitions
+- Modern typography
+- Fully responsive
+
+Use:
+- Indigo / Blue as primary color
+- Green for success
+- Orange for warnings
+- Red for errors
+
+Support:
+- Dark mode
+- Light mode
+
+====================================================
+MAIN ADMIN LAYOUT
+====================================================
+
+Layout structure:
+- Left sidebar
+- Top navigation bar
+- Main content area
+- Right quick activity panel (optional)
+
+Responsive behavior:
+- Desktop full sidebar
+- Tablet collapsible sidebar
+- Mobile drawer sidebar
+
+====================================================
+SIDEBAR MENU
+====================================================
+
+Create a professional sidebar with icons and animations.
+
+Menu items:
+1. Dashboard
+2. User Management
+3. AI Monitoring
+4. Quiz Management
+5. Flashcard Management
+6. Documents Management
+7. Learning Topics
+8. Analytics
+9. Payments & Subscription
+10. Notifications
+11. Feedback Reports
+12. Settings
+13. Activity Logs
+14. Security Center
+15. Admin Profile
+16. Logout
+
+Sidebar features:
+- Active state highlight
+- Hover animation
+- Expand/collapse
+- Tooltip support
+- Search menu feature
+
+====================================================
+TOPBAR / HEADER
+====================================================
+
+Topbar must include:
+- Global search input
+- Notification dropdown
+- Admin profile dropdown
+- Dark/light toggle
+- Breadcrumb navigation
+- Quick action button
+- Real-time server status
+
+Notification types:
+- New users
+- AI failures
+- Payment success
+- System alerts
+- Reports
+
+====================================================
+DASHBOARD OVERVIEW PAGE
+====================================================
+
+Create a modern dashboard homepage with analytics cards.
+
+Cards:
+1. Total Users
+2. AI Requests
+3. Uploaded Documents
+4. Revenue
+5. Quiz Statistics
+6. Flashcard Statistics
+7. Server Health
+8. Active Subscriptions
+
+Each card must include:
+- Icon
+- Main statistic
+- Percentage increase/decrease
+- Mini chart
+- Hover animation
+
+====================================================
+ANALYTICS & CHARTS
+====================================================
+
+Create beautiful responsive charts using Recharts.
+
+Charts required:
+- User growth chart
+- AI usage chart
+- Revenue chart
+- Learning progress chart
+- Quiz completion chart
+- Topic popularity chart
+- AI response time chart
+
+Dashboard analytics should support:
+- Daily
+- Weekly
+- Monthly
+- Yearly filters
+
+====================================================
+USER MANAGEMENT PAGE
+====================================================
+
+Create a complete user management system.
+
+Features:
+- User table
+- Search users
+- Filter users
+- Sort users
+- Pagination
+- Bulk actions
+
+User fields:
+- Avatar
+- Username
+- Email
+- Role
+- Status
+- Subscription
+- Join date
+- Last login
+
+Actions:
+- Create user
+- Edit user
+- Delete user
+- Ban user
+- Disable account
+- Reset password
+
+Create:
+- User detail modal/page
+- User activity history
+- Learning progress overview
+- Payment history
+- Uploaded documents
+- AI usage logs
+
+====================================================
+AI MONITORING PAGE
+====================================================
+
+Create an AI monitoring dashboard.
+
+Features:
+- API health monitoring
+- AI token usage
+- Failed requests
+- Average response time
+- AI cost analytics
+- AI request logs
+- Cache hit analytics
+
+Support multiple AI providers:
+- OpenAI
+- Gemini
+- Claude
+- DeepSeek
+
+Create:
+- AI configuration panel
+- Prompt management system
+- AI model selector
+- Retry failed requests feature
+
+====================================================
+QUIZ MANAGEMENT PAGE
+====================================================
+
+Create a complete quiz management system.
+
+Features:
+- Quiz table
+- Quiz analytics
+- Quiz editor
+- AI quiz generation
+
+Quiz types:
+- Multiple choice
+- True/False
+- Fill in blank
+- Essay
+
+Quiz features:
+- Create quiz
+- Edit quiz
+- Delete quiz
+- Duplicate quiz
+- Difficulty selector
+- Category selector
+- AI explanation generation
+
+Analytics:
+- Accuracy rate
+- Hardest question
+- Most skipped question
+- Completion rate
+
+====================================================
+FLASHCARD MANAGEMENT PAGE
+====================================================
+
+Features:
+- Flashcard table
+- Create flashcards
+- Edit flashcards
+- Delete flashcards
+- AI generate flashcards
+- Import/export flashcards
+
+Analytics:
+- Retention rate
+- Review count
+- Most difficult cards
+
+====================================================
+DOCUMENT MANAGEMENT PAGE
+====================================================
+
+Create a modern document management system.
+
+Supported file types:
+- PDF
+- DOCX
+- PPTX
+- TXT
+- Images
+
+Features:
+- Drag & drop upload
+- Upload progress
+- Document preview
+- AI processing status
+- Delete documents
+- Download documents
+- Reprocess AI
+- OCR support
+
+AI extraction:
+- Summary
+- Keywords
+- Auto flashcards
+- Auto quizzes
+- Learning roadmap
+
+====================================================
+LEARNING TOPICS PAGE
+====================================================
+
+Features:
+- Create topic
+- Edit roadmap
+- Delete topic
+- Publish/unpublish topic
+- Topic categories
+
+AI roadmap generation:
+- Beginner roadmap
+- Intermediate roadmap
+- Advanced roadmap
+
+Categories:
+- Programming
+- Mathematics
+- AI
+- Business
+- Languages
+
+====================================================
+PAYMENTS & SUBSCRIPTIONS
+====================================================
+
+Create a premium subscription management page.
+
+Plans:
+- Free
+- Basic
+- Pro
+- Enterprise
+
+Features:
+- Payment history
+- Revenue dashboard
+- Refund management
+- Subscription analytics
+- Active subscriptions
+- Churn analytics
+
+Payment integrations:
+- Stripe
+- PayPal
+- VNPay
+- Momo
+
+====================================================
+NOTIFICATION CENTER
+====================================================
+
+Features:
+- Send notifications
+- Email notifications
+- Push notifications
+- In-app notifications
+- Schedule notifications
+- Notification templates
+
+Send options:
+- All users
+- By role
+- By subscription
+- Custom users
+
+====================================================
+FEEDBACK & REPORTS PAGE
+====================================================
+
+Features:
+- User reports
+- Bug reports
+- Suggestions
+- Rating system
+
+Admin actions:
+- Mark resolved
+- Reply feedback
+- Priority status
+- Delete reports
+
+====================================================
+SETTINGS PAGE
+====================================================
+
+General settings:
+- Site name
+- Logo
+- Theme
+- Language
+
+Security settings:
+- JWT expiration
+- Password policy
+- Session timeout
+- 2FA
+
+System settings:
+- Cache config
+- Upload limit
+- API limits
+- SMTP email config
+
+====================================================
+ACTIVITY LOGS PAGE
+====================================================
+
+Create a modern logs viewer.
+
+Log types:
+- Login logs
+- Admin actions
+- Payment logs
+- AI request logs
+- Error logs
+
+Features:
+- Search logs
+- Filter logs
+- Export logs
+- View details
+- Pagination
+
+====================================================
+SECURITY CENTER
+====================================================
+
+Features:
+- Role permissions
+- Access control
+- Admin roles
+- Route protection
+- Security logs
+- Suspicious activity alerts
+
+Roles:
+- Super Admin
+- Admin
+- Moderator
+- Support
+
+====================================================
+BACKEND REQUIREMENTS
+====================================================
+
+Create backend APIs for all modules.
+
+Requirements:
+- REST API architecture
+- JWT authentication
+- Refresh token support
+- Middleware validation
+- Error handling
+- Logging system
+- Rate limiting
+- File uploads
+- AI service integration
+- Redis caching
+
+====================================================
+DATABASE COLLECTIONS
+====================================================
+
+Collections:
+- users
+- quizzes
+- flashcards
+- documents
+- ai_response_cache
+- subscriptions
+- payments
+- notifications
+- feedbacks
+- logs
+
+====================================================
+PERFORMANCE OPTIMIZATION
+====================================================
+
+Implement:
+- Lazy loading
+- Pagination
+- Debounced search
+- Virtualized tables
+- Redis cache
+- Image optimization
+- Skeleton loading
+- Code splitting
+
+====================================================
+UI COMPONENTS
+====================================================
+
+Create reusable components:
+- Sidebar
+- Topbar
+- Stat cards
+- Analytics cards
+- Data tables
+- Charts
+- Modals
+- Drawers
+- Confirm dialogs
+- Loading skeletons
+- Notification dropdown
+- Search command modal
+
+====================================================
+ANIMATIONS
+====================================================
+
+Use Framer Motion for:
+- Page transitions
+- Sidebar animations
+- Hover effects
+- Modal animations
+- Loading effects
+- Chart transitions
+
+====================================================
+RESPONSIVE REQUIREMENTS
+====================================================
+
+Must support:
+- Desktop
+- Tablet
+- Mobile
+
+Responsive behavior:
+- Adaptive layouts
+- Mobile drawer sidebar
+- Responsive tables
+- Collapsible charts
+
+====================================================
+FOLDER STRUCTURE
+====================================================
+
+Generate clean scalable structure:
+
+src/
+ ├── components/
+ ├── pages/
+ ├── layouts/
+ ├── hooks/
+ ├── services/
+ ├── context/
+ ├── routes/
+ ├── utils/
+ ├── constants/
+ ├── store/
+ ├── animations/
+ ├── assets/
+
+====================================================
+FINAL REQUIREMENTS
+====================================================
+
+Generate:
+- Complete UI pages
+- Responsive layouts
+- Reusable components
+- Backend APIs
+- MongoDB schemas
+- Clean architecture
+- Production-level code
+- Optimized React code
+- Modern animations
+- Professional admin experience
+
+The final result should look like a premium SaaS admin dashboard similar to:
+- Vercel Dashboard
+- Linear
+- Notion
+- Stripe Dashboard
+- Clerk Admin
+- Modern AI SaaS platforms
+
+Focus heavily on:
+- Clean UX
+- High performance
+- Professional layout
+- Scalable architecture
+- Modern admin experience
+- Production-ready code quality

@@ -4,7 +4,6 @@ import toast from "react-hot-toast";
 import { Search, Grid, List, Upload, X, Trash2 } from "lucide-react";
 import DocumentCard from "../../components/documents/DocumentCard";
 import API_PATHS from "../../utils/apiPaths";
-import { useNavigate } from "react-router-dom";
 import { createPortal } from "react-dom";
 
 /* ================= DocumentListPage ================= */
@@ -19,7 +18,6 @@ const DocumentListPage = () => {
   const [uploadOpen, setUploadOpen] = useState(false);
   const [uploadFile, setUploadFile] = useState(null);
   const [docToDelete, setDocToDelete] = useState(null);
-  const navigate = useNavigate();
 
   /* ================= FETCH DOCUMENTS ================= */
   useEffect(() => {

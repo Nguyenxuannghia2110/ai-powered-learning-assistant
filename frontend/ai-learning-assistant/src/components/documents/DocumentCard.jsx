@@ -1,5 +1,6 @@
 import { FileText, Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import BaseCard from "../BaseCard";
 
 const DocumentCard = ({ doc, onDeleteRequest }) => {
   const navigate = useNavigate();
@@ -9,10 +10,7 @@ const DocumentCard = ({ doc, onDeleteRequest }) => {
   };
 
   return (
-    <div
-      onClick={handleNavigate}
-      className="bg-canvas-card rounded-md p-6 hover:bg-canvas-mid shadow-[0_8px_8px_rgba(0,0,0,0.3)] transition-all cursor-pointer group flex flex-col h-full relative overflow-hidden"
-    >
+    <BaseCard className="h-full" onClick={handleNavigate}>
       <div className="relative z-10 flex flex-col h-full">
         {/* HEADER */}
         <div className="flex justify-between items-start mb-4">
@@ -55,7 +53,7 @@ const DocumentCard = ({ doc, onDeleteRequest }) => {
           </div>
         </div>
       </div>
-    </div>
+    </BaseCard>
   );
 };
 

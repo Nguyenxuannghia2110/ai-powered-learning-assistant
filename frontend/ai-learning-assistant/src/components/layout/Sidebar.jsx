@@ -58,7 +58,7 @@ export default function Sidebar({ mobileOpen, onCloseMobile }) {
           </div>
 
           <h1 className="font-bold text-ink text-xl tracking-tight">
-            SpotifyLearn
+            AiLearn
           </h1>
         </div>
 

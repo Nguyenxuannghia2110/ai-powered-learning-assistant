@@ -165,6 +165,29 @@ export const getDashboard = async (req, res) => {
         score: quiz.score,
         createdAt: quiz.completedAt,
       })),
+
+      ...flashcardSets
+        .filter((set) => set.cards?.some((c) => c.lastReviewed))
+        .map((set) => {
+          const lastReviewed = set.cards.reduce((latest, card) => {
+            if (!card.lastReviewed) return latest;
+            const date = new Date(card.lastReviewed);
+            return !latest || date > latest ? date : latest;
+          }, null);
+          return {
+            id: set._id,
+            type: "flashcard",
+            title: `Reviewed ${set.title || "Flashcard Set"}`,
+            createdAt: lastReviewed || set.updatedAt,
+          };
+        }),
+
+      ...chats.map((chat) => ({
+        id: chat._id,
+        type: "chat",
+        title: `Chat Session`,
+        createdAt: chat.updatedAt,
+      })),
     ]
       .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
       .slice(0, 8);

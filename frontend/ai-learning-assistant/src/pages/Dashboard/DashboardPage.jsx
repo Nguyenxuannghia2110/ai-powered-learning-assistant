@@ -1,13 +1,69 @@
 import { useEffect, useState, useRef } from "react";
 import { getDashboardData } from "../../services/progressService";
 import SkeletonDashboard from "../../components/dashboard/SkeletonDashboard";
-import { Search, Bell, Plus, ChevronDown, ChevronLeft, ChevronRight, LogOut, User } from "lucide-react";
+import {
+  Search,
+  Bell,
+  Plus,
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  LogOut,
+  User,
+} from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import MagicContainer from "../../components/MagicContainer";
+const formatDashboardDate = (date) =>
+  new Intl.DateTimeFormat("en-US", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+  }).format(date);
+
+const formatDashboardTime = (date) =>
+  new Intl.DateTimeFormat("en-US", {
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+  }).format(date);
+
+const formatCalendarMonth = (date) =>
+  new Intl.DateTimeFormat("en-US", {
+    month: "long",
+    year: "numeric",
+  }).format(date);
+
+const isSameDay = (a, b) =>
+  a.getFullYear() === b.getFullYear() &&
+  a.getMonth() === b.getMonth() &&
+  a.getDate() === b.getDate();
+
+const getWeekStart = (date) => {
+  const start = new Date(date);
+  const dayOffset = (start.getDay() + 6) % 7;
+  start.setHours(0, 0, 0, 0);
+  start.setDate(start.getDate() - dayOffset);
+  return start;
+};
+
+const getCalendarWeekDays = (weekStart) =>
+  Array.from({ length: 7 }, (_, index) => {
+    const date = new Date(weekStart);
+    date.setDate(weekStart.getDate() + index);
+    return date;
+  });
+
+const getDateKey = (date) =>
+  `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
 
 export default function DashboardPage() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [currentTime, setCurrentTime] = useState(() => new Date());
+  const [calendarWeekStart, setCalendarWeekStart] = useState(() =>
+    getWeekStart(new Date()),
+  );
   const { user, logout } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
   const dropdownRef = useRef();
@@ -30,6 +86,14 @@ export default function DashboardPage() {
   }, []);
 
   useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
     const handleClickOutside = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
         setMenuOpen(false);
@@ -42,10 +106,24 @@ export default function DashboardPage() {
   if (loading) return <SkeletonDashboard />;
 
   const username = data?.userName || user?.username || "User";
+  const calendarDays = getCalendarWeekDays(calendarWeekStart);
+  const weekdayLabels = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
+  const activityDateKeys = new Set(
+    data?.activities
+      ?.filter((activity) => activity.createdAt)
+      .map((activity) => getDateKey(new Date(activity.createdAt))) || [],
+  );
+
+  const handleCalendarWeekChange = (offset) => {
+    setCalendarWeekStart((prev) => {
+      const next = new Date(prev);
+      next.setDate(prev.getDate() + offset * 7);
+      return next;
+    });
+  };
 
   return (
     <div className="min-h-full h-full bg-transparent text-ink p-8 font-sans flex gap-8">
-      
       {/* MAIN CONTENT (LEFT) */}
       <div className="flex-1 overflow-y-auto custom-scrollbar pr-4">
         {/* HEADER */}
@@ -59,117 +137,224 @@ export default function DashboardPage() {
             />
           </div>
           <div className="bg-canvas-mid px-4 py-2 rounded-pill text-xs text-mute flex items-center">
-            Today, 26 July 2023
+            Today, {formatDashboardDate(currentTime)} ·{" "}
+            {formatDashboardTime(currentTime)}
           </div>
         </div>
 
         {/* WELCOME */}
         <div className="mb-10">
-          <h1 className="text-4xl font-bold mb-1 tracking-tight text-ink">Welcome back,</h1>
-          <h1 className="text-4xl font-bold tracking-tight text-primary">{username}! 👋</h1>
+          <h1 className="text-4xl font-bold mb-1 tracking-tight text-ink">
+            Welcome back,
+          </h1>
+          <h1 className="text-4xl font-bold tracking-tight text-primary">
+            {username}! 👋
+          </h1>
         </div>
 
         {/* 3 CARDS */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
           {/* CARD 1 */}
-          <div className="bg-canvas-soft rounded-lg p-6 shadow-[0_8px_8px_rgba(0,0,0,0.3)] hover:bg-canvas-mid transition cursor-pointer" onClick={() => navigate('/documents')}>
-            <div className="flex justify-between items-start mb-6">
-              <div className="w-12 h-12 rounded-md bg-primary-container p-2 shadow-lg shadow-primary-container/20">
-                <div className="w-full h-full bg-canvas/30 rounded-sm" />
+          <MagicContainer className="h-full">
+            <div
+              onClick={() => navigate("/documents")}
+              className="group h-full rounded-[28px] bg-[#050505] border border-white/5 p-6 cursor-pointer transition-all duration-300"
+            >
+              {/* top */}
+              <div className="flex justify-between items-start mb-8">
+                <div className="w-14 h-14 rounded-2xl bg-indigo-500/10 border border-indigo-400/20 flex items-center justify-center shadow-[0_0_30px_rgba(99,102,241,0.25)]">
+                  <span className="text-indigo-400 font-bold text-lg">DOC</span>
+                </div>
+
+                <span className="bg-indigo-500/10 text-indigo-300 border border-indigo-400/10 text-[10px] font-semibold px-3 py-1 rounded-full uppercase tracking-[0.18em]">
+                  DOCUMENT
+                </span>
               </div>
-              <span className="bg-primary-container/20 text-primary text-[10px] font-bold px-3 py-1 rounded-pill uppercase tracking-wider">
-                DOCUMENT
-              </span>
-            </div>
-            <h3 className="text-xl font-bold mb-6 text-ink">Learning Doc</h3>
-            <div className="flex justify-between items-end mb-6">
-              <div>
-                <p className="text-[10px] text-mute font-bold mb-2">PARTICIPANT</p>
-                <div className="flex -space-x-2">
-                  <div className="w-6 h-6 rounded-full bg-blue-300 border-2 border-canvas-soft" />
-                  <div className="w-6 h-6 rounded-full bg-emerald-300 border-2 border-canvas-soft" />
+
+              {/* title */}
+              <div className="mb-8">
+                <h3 className="text-2xl font-semibold text-white mb-2 tracking-tight">
+                  Learning Doc
+                </h3>
+
+                <p className="text-sm text-white/40 leading-relaxed">
+                  Organize and learn from AI generated documents and lessons.
+                </p>
+              </div>
+
+              {/* stats */}
+              <div className="flex justify-between items-end mb-8">
+                <div>
+                  <p className="text-[10px] uppercase tracking-[0.2em] text-white/30 mb-3">
+                    Participant
+                  </p>
+
+                  <div className="flex -space-x-2">
+                    <div className="w-7 h-7 rounded-full bg-blue-400 border-2 border-[#050505]" />
+                    <div className="w-7 h-7 rounded-full bg-emerald-400 border-2 border-[#050505]" />
+                  </div>
+                </div>
+
+                <div>
+                  <p className="text-[10px] uppercase tracking-[0.2em] text-white/30 mb-3">
+                    Progress
+                  </p>
+
+                  <div className="flex items-center gap-2">
+                    <div className="w-5 h-5 rounded-full border-[3px] border-indigo-400 border-t-transparent animate-spin" />
+
+                    <span className="text-sm font-semibold text-white">
+                      80%
+                    </span>
+                  </div>
                 </div>
               </div>
-              <div>
-                <p className="text-[10px] text-mute font-bold mb-2">PROGRESS</p>
-                <div className="flex items-center gap-2">
-                  <div className="w-5 h-5 rounded-full border-[3px] border-primary border-t-hairline" />
-                  <span className="font-bold text-sm text-ink">80%</span>
-                </div>
+
+              {/* footer */}
+              <div className="flex items-center justify-between text-xs text-white/40 border-t border-white/5 pt-5">
+                <span className="flex items-center gap-1">👤 You</span>
+
+                <span className="flex items-center gap-1">
+                  📄 {data?.totalDocuments || 0} Lessons
+                </span>
               </div>
             </div>
-            <div className="flex items-center gap-4 text-xs text-body font-medium">
-              <span className="flex items-center gap-1">👤 You</span>
-              <span className="flex items-center gap-1">📄 {data?.totalDocuments || 0} Lessons</span>
-            </div>
-          </div>
+          </MagicContainer>
 
           {/* CARD 2 */}
-          <div className="bg-canvas-soft rounded-lg p-6 shadow-[0_8px_8px_rgba(0,0,0,0.3)] hover:bg-canvas-mid transition cursor-pointer" onClick={() => navigate('/flashcards')}>
-            <div className="flex justify-between items-start mb-6">
-              <div className="w-12 h-12 rounded-md bg-blue-500/20 text-blue-400 p-2 shadow-lg shadow-blue-500/20 flex items-center justify-center font-bold">
-                UX
+          <MagicContainer className="h-full">
+            <div
+              onClick={() => navigate("/flashcards")}
+              className="group h-full rounded-[28px] bg-[#050505] border border-white/5 p-6 cursor-pointer transition-all duration-300"
+            >
+              {/* top */}
+              <div className="flex justify-between items-start mb-8">
+                <div className="w-14 h-14 rounded-2xl bg-pink-500/10 border border-pink-400/20 flex items-center justify-center shadow-[0_0_30px_rgba(236,72,153,0.25)]">
+                  <span className="text-pink-400 font-bold text-lg">UX</span>
+                </div>
+
+                <span className="bg-pink-500/10 text-pink-300 border border-pink-400/10 text-[10px] font-semibold px-3 py-1 rounded-full uppercase tracking-[0.18em]">
+                  FLASHCARD
+                </span>
               </div>
-              <span className="bg-pink-500/20 text-pink-400 text-[10px] font-bold px-3 py-1 rounded-pill uppercase tracking-wider">
-                UI/UX
-              </span>
-            </div>
-            <h3 className="text-xl font-bold mb-6 text-ink">Learning Manual</h3>
-            <div className="flex justify-between items-end mb-6">
-              <div>
-                <p className="text-[10px] text-mute font-bold mb-2">PARTICIPANT</p>
-                <div className="flex -space-x-2">
-                  <div className="w-6 h-6 rounded-full bg-pink-300 border-2 border-canvas-soft" />
-                  <div className="w-6 h-6 rounded-full bg-orange-300 border-2 border-canvas-soft" />
-                  <div className="w-6 h-6 rounded-full bg-yellow-300 border-2 border-canvas-soft" />
+
+              {/* title */}
+              <div className="mb-8">
+                <h3 className="text-2xl font-semibold text-white mb-2 tracking-tight">
+                  Flashcards
+                </h3>
+
+                <p className="text-sm text-white/40 leading-relaxed">
+                  Memorize concepts faster using AI generated flashcards.
+                </p>
+              </div>
+
+              {/* stats */}
+              <div className="flex justify-between items-end mb-8">
+                <div>
+                  <p className="text-[10px] uppercase tracking-[0.2em] text-white/30 mb-3">
+                    Participant
+                  </p>
+
+                  <div className="flex -space-x-2">
+                    <div className="w-7 h-7 rounded-full bg-pink-400 border-2 border-[#050505]" />
+                    <div className="w-7 h-7 rounded-full bg-orange-400 border-2 border-[#050505]" />
+                    <div className="w-7 h-7 rounded-full bg-yellow-400 border-2 border-[#050505]" />
+                  </div>
+                </div>
+
+                <div>
+                  <p className="text-[10px] uppercase tracking-[0.2em] text-white/30 mb-3">
+                    Progress
+                  </p>
+
+                  <div className="flex items-center gap-2">
+                    <div className="w-5 h-5 rounded-full border-[3px] border-pink-400 border-l-transparent" />
+
+                    <span className="text-sm font-semibold text-white">
+                      45%
+                    </span>
+                  </div>
                 </div>
               </div>
-              <div>
-                <p className="text-[10px] text-mute font-bold mb-2">PROGRESS</p>
-                <div className="flex items-center gap-2">
-                  <div className="w-5 h-5 rounded-full border-[3px] border-blue-400 border-l-hairline border-b-hairline" />
-                  <span className="font-bold text-sm text-ink">45%</span>
-                </div>
+
+              {/* footer */}
+              <div className="flex items-center justify-between text-xs text-white/40 border-t border-white/5 pt-5">
+                <span className="flex items-center gap-1">👤 You</span>
+
+                <span className="flex items-center gap-1">
+                  📄 {data?.totalFlashcards || 0} Lessons
+                </span>
               </div>
             </div>
-            <div className="flex items-center gap-4 text-xs text-body font-medium">
-              <span className="flex items-center gap-1">👤 You</span>
-              <span className="flex items-center gap-1">📄 {data?.totalFlashcards || 0} Lessons</span>
-            </div>
-          </div>
+          </MagicContainer>
 
           {/* CARD 3 */}
-          <div className="bg-canvas-soft rounded-lg p-6 shadow-[0_8px_8px_rgba(0,0,0,0.3)] hover:bg-canvas-mid transition cursor-pointer" onClick={() => navigate('/quizzes')}>
-            <div className="flex justify-between items-start mb-6">
-              <div className="w-12 h-12 rounded-md bg-primary/20 text-primary flex items-center justify-center font-bold text-lg shadow-lg shadow-[0_8px_8px_rgba(0,0,0,0.3)]">
-                LT
+          <MagicContainer className="h-full">
+            <div
+              onClick={() => navigate("/workspaces")}
+              className="group h-full rounded-[28px] bg-[#050505] border border-white/5 p-6 cursor-pointer transition-all duration-300"
+            >
+              {/* top */}
+              <div className="flex justify-between items-start mb-8">
+                <div className="w-14 h-14 rounded-2xl bg-emerald-500/10 border border-emerald-400/20 flex items-center justify-center shadow-[0_0_30px_rgba(16,185,129,0.25)]">
+                  <span className="text-emerald-400 font-bold text-lg">AI</span>
+                </div>
+
+                <span className="bg-emerald-500/10 text-emerald-300 border border-emerald-400/10 text-[10px] font-semibold px-3 py-1 rounded-full uppercase tracking-[0.18em]">
+                  QUIZ
+                </span>
               </div>
-              <span className="bg-primary/20 text-primary text-[10px] font-bold px-3 py-1 rounded-pill uppercase tracking-wider">
-                THEORY
-              </span>
-            </div>
-            <h3 className="text-xl font-bold mb-6 text-ink">Learning Topic</h3>
-            <div className="flex justify-between items-end mb-6">
-              <div>
-                <p className="text-[10px] text-mute font-bold mb-2">PARTICIPANT</p>
-                <div className="flex -space-x-2">
-                  <div className="w-6 h-6 rounded-full bg-purple-300 border-2 border-canvas-soft" />
-                  <div className="w-6 h-6 rounded-full bg-emerald-300 border-2 border-canvas-soft" />
+
+              {/* title */}
+              <div className="mb-8">
+                <h3 className="text-2xl font-semibold text-white mb-2 tracking-tight">
+                  Learn Topic 
+                </h3>
+
+                <p className="text-sm text-white/40 leading-relaxed">
+                  Test your knowledge with intelligent AI generated quizzes.
+                </p>
+              </div>
+
+              {/* stats */}
+              <div className="flex justify-between items-end mb-8">
+                <div>
+                  <p className="text-[10px] uppercase tracking-[0.2em] text-white/30 mb-3">
+                    Participant
+                  </p>
+
+                  <div className="flex -space-x-2">
+                    <div className="w-7 h-7 rounded-full bg-emerald-400 border-2 border-[#050505]" />
+                    <div className="w-7 h-7 rounded-full bg-cyan-400 border-2 border-[#050505]" />
+                  </div>
+                </div>
+
+                <div>
+                  <p className="text-[10px] uppercase tracking-[0.2em] text-white/30 mb-3">
+                    Progress
+                  </p>
+
+                  <div className="flex items-center gap-2">
+                    <div className="w-5 h-5 rounded-full border-[3px] border-emerald-400 border-b-transparent" />
+
+                    <span className="text-sm font-semibold text-white">
+                      20%
+                    </span>
+                  </div>
                 </div>
               </div>
-              <div>
-                <p className="text-[10px] text-mute font-bold mb-2">PROGRESS</p>
-                <div className="flex items-center gap-2">
-                  <div className="w-5 h-5 rounded-full border-[3px] border-hairline border-t-emerald-400" />
-                  <span className="font-bold text-sm text-ink">20%</span>
-                </div>
+
+              {/* footer */}
+              <div className="flex items-center justify-between text-xs text-white/40 border-t border-white/5 pt-5">
+                <span className="flex items-center gap-1">👤 You</span>
+
+                <span className="flex items-center gap-1">
+                  📄 {data?.totalQuizzes || 0} Lessons
+                </span>
               </div>
             </div>
-            <div className="flex items-center gap-4 text-xs text-body font-medium">
-              <span className="flex items-center gap-1">👤 You</span>
-              <span className="flex items-center gap-1">📄 {data?.totalQuizzes || 0} Lessons</span>
-            </div>
-          </div>
+          </MagicContainer>
         </div>
 
         {/* COURSE YOU'RE TAKING */}
@@ -183,7 +368,10 @@ export default function DashboardPage() {
               <button className="p-2 text-mute hover:text-ink transition">
                 <Search className="w-4 h-4" />
               </button>
-              <button className="w-8 h-8 rounded-full bg-primary text-black flex items-center justify-center font-bold hover:scale-105 transition-transform" onClick={() => navigate('/workspaces')}>
+              <button
+                className="w-8 h-8 rounded-full bg-primary text-black flex items-center justify-center font-bold hover:scale-105 transition-transform"
+                onClick={() => navigate("/workspaces")}
+              >
                 <Plus className="w-4 h-4" />
               </button>
             </div>
@@ -197,9 +385,13 @@ export default function DashboardPage() {
                   AI
                 </div>
                 <div>
-                  <h4 className="font-bold text-base text-ink">Basic Isometric Illustration</h4>
+                  <h4 className="font-bold text-base text-ink">
+                    Basic Isometric Illustration
+                  </h4>
                   <p className="text-xs text-mute flex items-center gap-2 mt-1">
-                    Mentor <span className="w-1 h-1 bg-mute rounded-full" /> 🟡 Furkom <span className="w-1 h-1 bg-mute rounded-full" /> 24h 12m
+                    Mentor <span className="w-1 h-1 bg-mute rounded-full" /> 🟡
+                    Furkom <span className="w-1 h-1 bg-mute rounded-full" /> 24h
+                    12m
                   </p>
                 </div>
               </div>
@@ -223,9 +415,13 @@ export default function DashboardPage() {
                   UI
                 </div>
                 <div>
-                  <h4 className="font-bold text-base text-ink">UI Design Landing Page</h4>
+                  <h4 className="font-bold text-base text-ink">
+                    UI Design Landing Page
+                  </h4>
                   <p className="text-xs text-mute flex items-center gap-2 mt-1">
-                    Mentor <span className="w-1 h-1 bg-mute rounded-full" /> 🟠 Mail <span className="w-1 h-1 bg-mute rounded-full" /> 32h 33m
+                    Mentor <span className="w-1 h-1 bg-mute rounded-full" /> 🟠
+                    Mail <span className="w-1 h-1 bg-mute rounded-full" /> 32h
+                    33m
                   </p>
                 </div>
               </div>
@@ -252,21 +448,27 @@ export default function DashboardPage() {
             <Bell className="w-5 h-5 text-mute hover:text-ink transition" />
             <span className="absolute top-0 right-0 w-1.5 h-1.5 bg-red-400 rounded-full" />
           </div>
-          
+
           {/* USER DROPDOWN */}
           <div className="relative" ref={dropdownRef}>
-            <img 
-              src={user?.profileImage || "https://i.pravatar.cc/100"} 
-              className="w-10 h-10 rounded-full border border-canvas-mid cursor-pointer hover:border-primary transition" 
-              alt="profile" 
+            <img
+              src={user?.profileImage || "https://i.pravatar.cc/100"}
+              className="w-10 h-10 rounded-full border border-canvas-mid cursor-pointer hover:border-primary transition"
+              alt="profile"
               onClick={() => setMenuOpen(!menuOpen)}
             />
             {menuOpen && (
               <div className="absolute right-0 mt-2 w-48 bg-canvas-mid rounded-md shadow-[0_8px_24px_rgba(0,0,0,0.5)] overflow-hidden z-50">
-                <button onClick={() => navigate('/profile')} className="w-full text-left px-4 py-3 text-sm text-body hover:bg-canvas-soft hover:text-ink flex items-center gap-2">
+                <button
+                  onClick={() => navigate("/profile")}
+                  className="w-full text-left px-4 py-3 text-sm text-body hover:bg-canvas-soft hover:text-ink flex items-center gap-2"
+                >
                   <User className="w-4 h-4" /> Profile
                 </button>
-                <button onClick={logout} className="w-full text-left px-4 py-3 text-sm text-red-400 hover:bg-red-400/10 flex items-center gap-2">
+                <button
+                  onClick={logout}
+                  className="w-full text-left px-4 py-3 text-sm text-red-400 hover:bg-red-400/10 flex items-center gap-2"
+                >
                   <LogOut className="w-4 h-4" /> Logout
                 </button>
               </div>
@@ -276,10 +478,15 @@ export default function DashboardPage() {
 
         {/* MOCKUP IMAGE BLOCK */}
         <div className="bg-primary-container rounded-lg p-4 mb-10 overflow-hidden relative shadow-lg shadow-primary-container/20">
-          <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80&w=400&h=300" className="w-full h-32 object-cover rounded-sm mb-4 opacity-80 mix-blend-overlay" />
+          <img
+            src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80&w=400&h=300"
+            className="w-full h-32 object-cover rounded-sm mb-4 opacity-80 mix-blend-overlay"
+          />
           <div className="absolute inset-0 bg-gradient-to-t from-primary-container to-transparent" />
           <div className="relative z-10 text-ink">
-            <p className="font-bold text-sm bg-canvas/50 w-max px-2 py-0.5 rounded-pill mb-1 backdrop-blur-md">UI Design Landing Page</p>
+            <p className="font-bold text-sm bg-canvas/50 w-max px-2 py-0.5 rounded-pill mb-1 backdrop-blur-md">
+              UI Design Landing Page
+            </p>
             <p className="text-xs font-semibold text-ink/80">80% Progress</p>
           </div>
         </div>
@@ -287,64 +494,159 @@ export default function DashboardPage() {
         {/* CALENDAR */}
         <div className="mb-10">
           <div className="flex justify-between items-center mb-6">
-            <ChevronLeft className="w-4 h-4 text-mute cursor-pointer hover:text-ink transition" />
-            <h3 className="font-bold text-sm text-ink">July 2023</h3>
-            <ChevronRight className="w-4 h-4 text-mute cursor-pointer hover:text-ink transition" />
+            <button
+              type="button"
+              onClick={() => handleCalendarWeekChange(-1)}
+              className="text-mute cursor-pointer hover:text-ink transition"
+              aria-label="Previous week"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+            <h3 className="font-bold text-sm text-ink">
+              {formatCalendarMonth(calendarWeekStart)}
+            </h3>
+            <button
+              type="button"
+              onClick={() => handleCalendarWeekChange(1)}
+              className="text-mute cursor-pointer hover:text-ink transition"
+              aria-label="Next week"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
           </div>
           <div className="grid grid-cols-7 gap-1 text-center text-xs">
-            <div className="text-mute mb-2 font-mono tracking-widest text-[10px]">MON</div>
-            <div className="text-mute mb-2 font-mono tracking-widest text-[10px]">TUE</div>
-            <div className="text-mute mb-2 font-mono tracking-widest text-[10px]">WED</div>
-            <div className="text-mute mb-2 font-mono tracking-widest text-[10px]">THU</div>
-            <div className="text-mute mb-2 font-mono tracking-widest text-[10px]">FRI</div>
-            <div className="text-mute mb-2 font-mono tracking-widest text-[10px]">SAT</div>
-            <div className="text-mute mb-2 font-mono tracking-widest text-[10px]">SUN</div>
+            {weekdayLabels.map((day) => (
+              <div
+                key={day}
+                className="text-mute mb-2 font-mono tracking-widest text-[10px]"
+              >
+                {day}
+              </div>
+            ))}
 
-            <div className="text-body py-1">24</div>
-            <div className="text-body py-1">25</div>
-            <div className="bg-primary text-on-primary rounded-full w-7 h-7 flex items-center justify-center mx-auto font-bold shadow-lg shadow-primary/30">26</div>
-            <div className="text-body py-1">27</div>
-            <div className="text-body py-1">28</div>
-            <div className="text-body py-1">29</div>
-            <div className="text-body py-1">30</div>
+            {calendarDays.map((date) => {
+              const today = isSameDay(date, currentTime);
+              const key = date.toISOString();
+              const hasActivity = activityDateKeys.has(getDateKey(date));
+
+              return (
+                <div
+                  key={key}
+                  className={`relative py-1 ${
+                    today
+                      ? "bg-primary text-on-primary rounded-full w-7 h-7 flex items-center justify-center mx-auto font-bold shadow-lg shadow-primary/30"
+                      : "text-body"
+                  }`}
+                  title={formatDashboardDate(date)}
+                >
+                  {date.getDate()}
+                  {hasActivity && !today && (
+                    <span className="absolute left-1/2 -bottom-0.5 h-1 w-1 -translate-x-1/2 rounded-full bg-primary" />
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
 
-        {/* UPCOMING SUBMISSION */}
+        {/* RECENT ACTIVITY */}
         <div>
-          <h3 className="font-bold mb-6 text-ink">Upcoming Submission</h3>
+          <h3 className="font-bold mb-6 text-ink">Recent Activity</h3>
           <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-orange-500/20 text-orange-400 flex items-center justify-center font-bold text-sm">
-                  UX
-                </div>
-                <div>
-                  <h4 className="font-bold text-sm text-ink">Wireframe UI/U...</h4>
-                  <p className="text-[10px] text-mute">UI/UX Design • <span className="text-pink-400">27 Jul</span></p>
-                </div>
-              </div>
-              <button className="text-xs font-bold uppercase tracking-[1.4px] px-4 py-1.5 rounded-pill border border-hairline text-ink hover:border-ink transition-transform hover:scale-105">
-                Submit
-              </button>
-            </div>
-            
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-primary-container/20 text-primary flex items-center justify-center font-bold text-sm">
-                  AI
-                </div>
-                <div>
-                  <h4 className="font-bold text-sm text-ink">Basic Isometric...</h4>
-                  <p className="text-[10px] text-mute">Illustration • <span className="text-pink-400">29 Jul</span></p>
-                </div>
-              </div>
-              <button className="text-xs font-bold uppercase tracking-[1.4px] px-4 py-1.5 rounded-pill border border-hairline text-ink hover:border-ink transition-transform hover:scale-105">
-                Submit
-              </button>
-            </div>
+            {data?.activities?.length > 0 ? (
+              data.activities.slice(0, 5).map((activity) => {
+                const getIconProps = (type) => {
+                  switch (type) {
+                    case "upload":
+                      return {
+                        bg: "bg-primary-container/20 text-primary",
+                        label: "DOC",
+                      };
+                    case "quiz":
+                      return {
+                        bg: "bg-orange-500/20 text-orange-400",
+                        label: "QZ",
+                      };
+                    case "flashcard":
+                      return {
+                        bg: "bg-blue-500/20 text-blue-400",
+                        label: "FC",
+                      };
+                    case "chat":
+                      return {
+                        bg: "bg-pink-500/20 text-pink-400",
+                        label: "AI",
+                      };
+                    default:
+                      return { bg: "bg-canvas-mid text-mute", label: "ACT" };
+                  }
+                };
+
+                const getNavigatePath = (type) => {
+                  switch (type) {
+                    case "upload":
+                      return "/documents";
+                    case "quiz":
+                      return "/quizzes";
+                    case "flashcard":
+                      return "/flashcards";
+                    case "chat":
+                      return "/documents";
+                    default:
+                      return "/";
+                  }
+                };
+
+                const icon = getIconProps(activity.type);
+
+                return (
+                  <div
+                    key={activity.id}
+                    className="flex items-center justify-between"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div
+                        className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm ${icon.bg}`}
+                      >
+                        {icon.label}
+                      </div>
+                      <div>
+                        <h4
+                          className="font-bold text-sm text-ink line-clamp-1 max-w-[150px]"
+                          title={activity.title}
+                        >
+                          {activity.title}
+                        </h4>
+                        <p className="text-[10px] text-mute">
+                          {activity.type === "quiz" &&
+                          activity.score !== undefined
+                            ? `Score: ${activity.score}% • `
+                            : ""}
+                          <span className="text-pink-400">
+                            {new Date(activity.createdAt).toLocaleDateString(
+                              "en-GB",
+                              { day: "2-digit", month: "short" },
+                            )}
+                          </span>
+                        </p>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => navigate(getNavigatePath(activity.type))}
+                      className="text-xs font-bold uppercase tracking-[1.4px] px-4 py-1.5 rounded-pill border border-hairline text-ink hover:border-ink transition-transform hover:scale-105"
+                    >
+                      View
+                    </button>
+                  </div>
+                );
+              })
+            ) : (
+              <p className="text-xs text-mute text-center">
+                No recent activities
+              </p>
+            )}
           </div>
-          
+
           <button className="w-full text-center text-xs text-mute mt-6 flex justify-center items-center gap-1 hover:text-ink transition">
             Show All <ChevronDown className="w-3 h-3" />
           </button>
