@@ -7,10 +7,10 @@ const Section = ({ title, count, color, children }) => {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="border border-hairline rounded-xl overflow-hidden">
+    <div className="glass-card border border-white/50 rounded-2xl overflow-hidden shadow-sm">
       <div
         onClick={() => setOpen(!open)}
-        className="flex justify-between items-center px-5 py-4 cursor-pointer hover:bg-canvas-card transition"
+        className="flex justify-between items-center px-5 py-4 cursor-pointer hover:bg-white/60 bg-white/40 transition"
       >
         <div className="flex items-center gap-3">
           <div className={`w-3 h-3 rounded-full ${color}`} />
@@ -146,9 +146,9 @@ const QuizResultPage = ({ quiz, onBack, onRemake }) => {
         : "00:00";
         
   return (
-    <div className="max-w-5xl mx-auto px-6 py-10 text-ink space-y-8">
+    <div className="max-w-5xl mx-auto px-6 py-10 text-ink space-y-8 font-sans">
       {/* HEADER */}
-      <div className="bg-gradient-to-br from-[#06281f] via-[#063328] to-[#041c15] border border-emerald-800/40 rounded-md p-10 text-center space-y-6">
+      <div className="glass-card border border-white/50 rounded-2xl p-10 text-center space-y-6 shadow-md">
         {/* SCORE */}
         <div className="relative w-44 h-44 mx-auto">
           <svg className="w-full h-full -rotate-90">
@@ -164,7 +164,7 @@ const QuizResultPage = ({ quiz, onBack, onRemake }) => {
               cx="88"
               cy="88"
               r="70"
-              stroke="#34d399"
+              stroke="#a855f7"
               strokeWidth="12"
               fill="none"
               strokeLinecap="round"
@@ -176,7 +176,7 @@ const QuizResultPage = ({ quiz, onBack, onRemake }) => {
 
           <div className="absolute inset-0 flex flex-col items-center justify-center">
             <span className="text-5xl font-extrabold">{animatedScore}%</span>
-            <span className="text-sm text-primary">FINAL SCORE</span>
+            <span className="text-sm text-purple-600 font-bold tracking-widest mt-1">FINAL SCORE</span>
           </div>
         </div>
 
@@ -190,7 +190,7 @@ const QuizResultPage = ({ quiz, onBack, onRemake }) => {
                 : "Keep Trying!"}
           </h2>
 
-          <p className="text-base text-emerald-200 mt-2">
+          <p className="text-base text-body mt-2">
             {scorePercent >= 80
               ? "You've mastered most of the concepts."
               : "Keep practicing to improve."}
@@ -198,9 +198,9 @@ const QuizResultPage = ({ quiz, onBack, onRemake }) => {
         </div>
 
         {/* TIME */}
-        <div className="max-w-sm mx-auto bg-canvas-card border border-hairline rounded-xl p-5 flex justify-between items-center">
+        <div className="max-w-sm mx-auto bg-white/60 border border-white/50 shadow-sm rounded-xl p-5 flex justify-between items-center">
           <div>
-            <div className="text-sm text-primary">Time Spent</div>
+            <div className="text-sm text-purple-600 font-bold">Time Spent</div>
             <div className="text-2xl font-semibold">{timeSpentDisplay}</div>
           </div>
           <div className="text-xs text-body">Avg ~30s/question</div>
@@ -209,7 +209,7 @@ const QuizResultPage = ({ quiz, onBack, onRemake }) => {
 
       {/* BREAKDOWN */}
       <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-primary">
+        <h3 className="text-lg font-bold text-purple-700">
           Performance Breakdown
         </h3>
 
@@ -217,12 +217,12 @@ const QuizResultPage = ({ quiz, onBack, onRemake }) => {
         <Section
           title="Correct Answers"
           count={correctCount}
-          color="bg-primary"
+          color="bg-purple-500"
         >
           {results
             .filter((q) => q.isCorrect)
             .map((q, idx) => (
-              <div key={idx} className="space-y-3 border-b border-white/5 pb-4">
+              <div key={idx} className="space-y-3 border-b border-white/40 pb-4">
                 <p className="font-medium">
                   Question{q.questionIndex + 1}. {q.question}
                 </p>
@@ -232,14 +232,14 @@ const QuizResultPage = ({ quiz, onBack, onRemake }) => {
                     const isCorrect = i === q.correctAnswerIndex;
                     const isUser = i === q.selectedAnswerIndex;
 
-                    let style = "border-hairline";
+                    let style = "border-white/60 bg-white/50";
                     let label = "";
 
                     if (isCorrect && isUser) {
-                      style = "border-primary bg-primary/10";
+                      style = "border-purple-400 bg-purple-100 shadow-sm text-purple-900 font-medium";
                       label = "✓ Your answer";
                     } else if (isCorrect) {
-                      style = "border-primary";
+                      style = "border-purple-400 text-purple-700";
                       label = "✓ Correct";
                     }
 
@@ -266,12 +266,12 @@ const QuizResultPage = ({ quiz, onBack, onRemake }) => {
         <Section
           title="Incorrect Answers"
           count={incorrectCount}
-          color="bg-red-500"
+          color="bg-orange-500"
         >
           {results
             .filter((q) => !q.isCorrect && q.selectedAnswerIndex != null)
             .map((q, idx) => (
-              <div key={idx} className="space-y-3 border-b border-white/5 pb-4">
+              <div key={idx} className="space-y-3 border-b border-white/40 pb-4">
                 <p className="font-medium">
                   Question{idx + 1}. {q.question}
                 </p>
@@ -281,14 +281,14 @@ const QuizResultPage = ({ quiz, onBack, onRemake }) => {
                     const isCorrect = i === q.correctAnswerIndex;
                     const isUser = i === q.selectedAnswerIndex;
 
-                    let style = "border-hairline";
+                    let style = "border-white/60 bg-white/50";
                     let label = "";
 
                     if (isCorrect) {
-                      style = "border-primary bg-primary/10";
+                      style = "border-purple-400 bg-purple-100 text-purple-900 shadow-sm";
                       label = "✓ Correct answer";
                     } else if (isUser) {
-                      style = "border-red-500 bg-red-500/10";
+                      style = "border-orange-400 bg-orange-100 text-orange-900 shadow-sm";
                       label = "✕ Your answer";
                     }
 
@@ -312,11 +312,11 @@ const QuizResultPage = ({ quiz, onBack, onRemake }) => {
         </Section>
 
         {/* UNANSWERED */}
-        <Section title="Unanswered" count={unansweredCount} color="bg-gray-500">
+        <Section title="Unanswered" count={unansweredCount} color="bg-gray-400">
           {results
             .filter((q) => q.selectedAnswerIndex == null)
             .map((q, idx) => (
-              <div key={idx} className="space-y-3 border-b border-white/5 pb-4">
+              <div key={idx} className="space-y-3 border-b border-white/40 pb-4">
                 <p className="font-medium">
                   Question{idx + 1}. {q.question}
                 </p>
@@ -330,8 +330,8 @@ const QuizResultPage = ({ quiz, onBack, onRemake }) => {
                         key={i}
                         className={`px-3 py-2 rounded-lg border text-sm flex justify-between ${
                           isCorrect
-                            ? "border-primary bg-primary/10"
-                            : "border-hairline"
+                            ? "border-purple-400 bg-purple-100 text-purple-900 shadow-sm"
+                            : "border-white/60 bg-white/50"
                         }`}
                       >
                         <span>{opt}</span>
@@ -358,7 +358,7 @@ const QuizResultPage = ({ quiz, onBack, onRemake }) => {
           onClick={handleRemake}
           disabled={loadingRemake}
           className="flex-1 flex items-center justify-center gap-2 px-5 py-3 rounded-xl 
-          bg-primary text-black font-semibold hover:bg-emerald-400 transition"
+          bg-gradient-to-r from-purple-400 to-indigo-400 hover:from-purple-500 hover:to-indigo-500 text-white font-bold shadow-md shadow-purple-500/20 transition"
         >
           {loadingRemake ? "Remaking..." : "🔄 Remake Quiz"}
         </button>
@@ -367,7 +367,7 @@ const QuizResultPage = ({ quiz, onBack, onRemake }) => {
         <button
           onClick={onBack}
           className="flex-1 px-5 py-3 rounded-xl 
-          bg-white/10 border border-hairline text-ink hover:bg-white/20 transition"
+          bg-white/60 border border-white/50 text-body font-semibold hover:text-ink hover:bg-white/80 shadow-sm transition"
         >
           ← Back to Library
         </button>

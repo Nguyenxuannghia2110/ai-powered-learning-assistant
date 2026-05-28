@@ -133,10 +133,10 @@ export default function DashboardPage() {
             <input
               type="text"
               placeholder="Search courses"
-              className="w-full bg-canvas-mid rounded-pill py-2.5 pl-10 pr-4 text-sm text-ink placeholder-mute focus:outline-none focus:shadow-[inset_0_0_0_1px_#7c7c7c,0_1px_0_#121212] transition-colors"
+              className="w-full bg-white/60 backdrop-blur-md border border-white/50 rounded-pill py-2.5 pl-10 pr-4 text-sm text-ink placeholder-mute focus:outline-none focus:ring-2 focus:ring-primary/50 transition-colors"
             />
           </div>
-          <div className="bg-canvas-mid px-4 py-2 rounded-pill text-xs text-mute flex items-center">
+          <div className="glass-card px-4 py-2 rounded-pill text-xs text-mute flex items-center shadow-none border-white/60">
             Today, {formatDashboardDate(currentTime)} ·{" "}
             {formatDashboardTime(currentTime)}
           </div>
@@ -158,52 +158,52 @@ export default function DashboardPage() {
           <MagicContainer className="h-full">
             <div
               onClick={() => navigate("/documents")}
-              className="group h-full rounded-[28px] bg-[#050505] border border-white/5 p-6 cursor-pointer transition-all duration-300"
+              className="group h-full rounded-[28px] bg-purple-100/60 backdrop-blur-md border border-purple-200 p-6 cursor-pointer transition-all duration-300 shadow-sm shadow-purple-900/5 hover:shadow-md"
             >
               {/* top */}
               <div className="flex justify-between items-start mb-8">
-                <div className="w-14 h-14 rounded-2xl bg-indigo-500/10 border border-indigo-400/20 flex items-center justify-center shadow-[0_0_30px_rgba(99,102,241,0.25)]">
-                  <span className="text-indigo-400 font-bold text-lg">DOC</span>
+                <div className="w-14 h-14 rounded-2xl bg-white/60 border border-white/40 flex items-center justify-center shadow-sm">
+                  <span className="text-indigo-600 font-bold text-lg">DOC</span>
                 </div>
 
-                <span className="bg-indigo-500/10 text-indigo-300 border border-indigo-400/10 text-[10px] font-semibold px-3 py-1 rounded-full uppercase tracking-[0.18em]">
+                <span className="bg-white/60 text-indigo-700 border border-white/40 text-[10px] font-semibold px-3 py-1 rounded-full uppercase tracking-[0.18em]">
                   DOCUMENT
                 </span>
               </div>
 
               {/* title */}
               <div className="mb-8">
-                <h3 className="text-2xl font-semibold text-white mb-2 tracking-tight">
+                <h3 className="text-2xl font-semibold text-purple-950 mb-2 tracking-tight">
                   Learning Doc
                 </h3>
 
-                <p className="text-sm text-white/40 leading-relaxed">
-                  Organize and learn from AI generated documents and lessons.
+                <p className="text-sm text-purple-900/60 leading-relaxed">
+                  Organize and learn from AI generated documents.
                 </p>
               </div>
 
               {/* stats */}
               <div className="flex justify-between items-end mb-8">
                 <div>
-                  <p className="text-[10px] uppercase tracking-[0.2em] text-white/30 mb-3">
+                  <p className="text-[10px] uppercase tracking-[0.2em] text-purple-900/50 mb-3">
                     Participant
                   </p>
 
                   <div className="flex -space-x-2">
-                    <div className="w-7 h-7 rounded-full bg-blue-400 border-2 border-[#050505]" />
-                    <div className="w-7 h-7 rounded-full bg-emerald-400 border-2 border-[#050505]" />
+                    <div className="w-7 h-7 rounded-full bg-blue-400 border-2 border-white" />
+                    <div className="w-7 h-7 rounded-full bg-emerald-400 border-2 border-white" />
                   </div>
                 </div>
 
                 <div>
-                  <p className="text-[10px] uppercase tracking-[0.2em] text-white/30 mb-3">
+                  <p className="text-[10px] uppercase tracking-[0.2em] text-purple-900/50 mb-3">
                     Progress
                   </p>
 
                   <div className="flex items-center gap-2">
-                    <div className="w-5 h-5 rounded-full border-[3px] border-indigo-400 border-t-transparent animate-spin" />
+                    <div className="w-5 h-5 rounded-full border-[3px] border-indigo-500 border-t-transparent animate-spin" />
 
-                    <span className="text-sm font-semibold text-white">
+                    <span className="text-sm font-semibold text-purple-950">
                       80%
                     </span>
                   </div>
@@ -211,7 +211,7 @@ export default function DashboardPage() {
               </div>
 
               {/* footer */}
-              <div className="flex items-center justify-between text-xs text-white/40 border-t border-white/5 pt-5">
+              <div className="flex items-center justify-between text-xs text-purple-900/60 border-t border-purple-200/50 pt-5">
                 <span className="flex items-center gap-1">👤 You</span>
 
                 <span className="flex items-center gap-1">
@@ -225,26 +225,26 @@ export default function DashboardPage() {
           <MagicContainer className="h-full">
             <div
               onClick={() => navigate("/flashcards")}
-              className="group h-full rounded-[28px] bg-[#050505] border border-white/5 p-6 cursor-pointer transition-all duration-300"
+              className="group h-full rounded-[28px] bg-teal-100/60 backdrop-blur-md border border-teal-200 p-6 cursor-pointer transition-all duration-300 shadow-sm shadow-teal-900/5 hover:shadow-md"
             >
               {/* top */}
               <div className="flex justify-between items-start mb-8">
-                <div className="w-14 h-14 rounded-2xl bg-pink-500/10 border border-pink-400/20 flex items-center justify-center shadow-[0_0_30px_rgba(236,72,153,0.25)]">
-                  <span className="text-pink-400 font-bold text-lg">UX</span>
+                <div className="w-14 h-14 rounded-2xl bg-white/60 border border-white/40 flex items-center justify-center shadow-sm">
+                  <span className="text-pink-600 font-bold text-lg">UX</span>
                 </div>
 
-                <span className="bg-pink-500/10 text-pink-300 border border-pink-400/10 text-[10px] font-semibold px-3 py-1 rounded-full uppercase tracking-[0.18em]">
+                <span className="bg-white/60 text-pink-700 border border-white/40 text-[10px] font-semibold px-3 py-1 rounded-full uppercase tracking-[0.18em]">
                   FLASHCARD
                 </span>
               </div>
 
               {/* title */}
               <div className="mb-8">
-                <h3 className="text-2xl font-semibold text-white mb-2 tracking-tight">
+                <h3 className="text-2xl font-semibold text-teal-950 mb-2 tracking-tight">
                   Flashcards
                 </h3>
 
-                <p className="text-sm text-white/40 leading-relaxed">
+                <p className="text-sm text-teal-900/60 leading-relaxed">
                   Memorize concepts faster using AI generated flashcards.
                 </p>
               </div>
@@ -252,26 +252,26 @@ export default function DashboardPage() {
               {/* stats */}
               <div className="flex justify-between items-end mb-8">
                 <div>
-                  <p className="text-[10px] uppercase tracking-[0.2em] text-white/30 mb-3">
+                  <p className="text-[10px] uppercase tracking-[0.2em] text-teal-900/50 mb-3">
                     Participant
                   </p>
 
                   <div className="flex -space-x-2">
-                    <div className="w-7 h-7 rounded-full bg-pink-400 border-2 border-[#050505]" />
-                    <div className="w-7 h-7 rounded-full bg-orange-400 border-2 border-[#050505]" />
-                    <div className="w-7 h-7 rounded-full bg-yellow-400 border-2 border-[#050505]" />
+                    <div className="w-7 h-7 rounded-full bg-pink-400 border-2 border-white" />
+                    <div className="w-7 h-7 rounded-full bg-orange-400 border-2 border-white" />
+                    <div className="w-7 h-7 rounded-full bg-yellow-400 border-2 border-white" />
                   </div>
                 </div>
 
                 <div>
-                  <p className="text-[10px] uppercase tracking-[0.2em] text-white/30 mb-3">
+                  <p className="text-[10px] uppercase tracking-[0.2em] text-teal-900/50 mb-3">
                     Progress
                   </p>
 
                   <div className="flex items-center gap-2">
-                    <div className="w-5 h-5 rounded-full border-[3px] border-pink-400 border-l-transparent" />
+                    <div className="w-5 h-5 rounded-full border-[3px] border-pink-500 border-l-transparent" />
 
-                    <span className="text-sm font-semibold text-white">
+                    <span className="text-sm font-semibold text-teal-950">
                       45%
                     </span>
                   </div>
@@ -279,7 +279,7 @@ export default function DashboardPage() {
               </div>
 
               {/* footer */}
-              <div className="flex items-center justify-between text-xs text-white/40 border-t border-white/5 pt-5">
+              <div className="flex items-center justify-between text-xs text-teal-900/60 border-t border-teal-200/50 pt-5">
                 <span className="flex items-center gap-1">👤 You</span>
 
                 <span className="flex items-center gap-1">
@@ -293,26 +293,26 @@ export default function DashboardPage() {
           <MagicContainer className="h-full">
             <div
               onClick={() => navigate("/workspaces")}
-              className="group h-full rounded-[28px] bg-[#050505] border border-white/5 p-6 cursor-pointer transition-all duration-300"
+              className="group h-full rounded-[28px] bg-lime-100/60 backdrop-blur-md border border-lime-200 p-6 cursor-pointer transition-all duration-300 shadow-sm shadow-lime-900/5 hover:shadow-md"
             >
               {/* top */}
               <div className="flex justify-between items-start mb-8">
-                <div className="w-14 h-14 rounded-2xl bg-emerald-500/10 border border-emerald-400/20 flex items-center justify-center shadow-[0_0_30px_rgba(16,185,129,0.25)]">
-                  <span className="text-emerald-400 font-bold text-lg">AI</span>
+                <div className="w-14 h-14 rounded-2xl bg-white/60 border border-white/40 flex items-center justify-center shadow-sm">
+                  <span className="text-emerald-600 font-bold text-lg">AI</span>
                 </div>
 
-                <span className="bg-emerald-500/10 text-emerald-300 border border-emerald-400/10 text-[10px] font-semibold px-3 py-1 rounded-full uppercase tracking-[0.18em]">
+                <span className="bg-white/60 text-emerald-700 border border-white/40 text-[10px] font-semibold px-3 py-1 rounded-full uppercase tracking-[0.18em]">
                   QUIZ
                 </span>
               </div>
 
               {/* title */}
               <div className="mb-8">
-                <h3 className="text-2xl font-semibold text-white mb-2 tracking-tight">
+                <h3 className="text-2xl font-semibold text-lime-950 mb-2 tracking-tight">
                   Learn Topic 
                 </h3>
 
-                <p className="text-sm text-white/40 leading-relaxed">
+                <p className="text-sm text-lime-900/60 leading-relaxed">
                   Test your knowledge with intelligent AI generated quizzes.
                 </p>
               </div>
@@ -320,25 +320,25 @@ export default function DashboardPage() {
               {/* stats */}
               <div className="flex justify-between items-end mb-8">
                 <div>
-                  <p className="text-[10px] uppercase tracking-[0.2em] text-white/30 mb-3">
+                  <p className="text-[10px] uppercase tracking-[0.2em] text-lime-900/50 mb-3">
                     Participant
                   </p>
 
                   <div className="flex -space-x-2">
-                    <div className="w-7 h-7 rounded-full bg-emerald-400 border-2 border-[#050505]" />
-                    <div className="w-7 h-7 rounded-full bg-cyan-400 border-2 border-[#050505]" />
+                    <div className="w-7 h-7 rounded-full bg-emerald-400 border-2 border-white" />
+                    <div className="w-7 h-7 rounded-full bg-cyan-400 border-2 border-white" />
                   </div>
                 </div>
 
                 <div>
-                  <p className="text-[10px] uppercase tracking-[0.2em] text-white/30 mb-3">
+                  <p className="text-[10px] uppercase tracking-[0.2em] text-lime-900/50 mb-3">
                     Progress
                   </p>
 
                   <div className="flex items-center gap-2">
-                    <div className="w-5 h-5 rounded-full border-[3px] border-emerald-400 border-b-transparent" />
+                    <div className="w-5 h-5 rounded-full border-[3px] border-emerald-500 border-b-transparent" />
 
-                    <span className="text-sm font-semibold text-white">
+                    <span className="text-sm font-semibold text-lime-950">
                       20%
                     </span>
                   </div>
@@ -346,7 +346,7 @@ export default function DashboardPage() {
               </div>
 
               {/* footer */}
-              <div className="flex items-center justify-between text-xs text-white/40 border-t border-white/5 pt-5">
+              <div className="flex items-center justify-between text-xs text-lime-900/60 border-t border-lime-200/50 pt-5">
                 <span className="flex items-center gap-1">👤 You</span>
 
                 <span className="flex items-center gap-1">
@@ -362,14 +362,14 @@ export default function DashboardPage() {
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-xl font-bold text-ink">Course You're Taking</h2>
             <div className="flex items-center gap-3">
-              <button className="bg-canvas-mid text-sm px-4 py-1.5 rounded-pill flex items-center gap-2 text-ink hover:bg-canvas-card transition shadow-[0_4px_4px_rgba(0,0,0,0.2)]">
+              <button className="glass-card text-sm px-4 py-1.5 rounded-pill flex items-center gap-2 text-ink hover:bg-white/60 transition shadow-none border-white/60">
                 Active <ChevronDown className="w-4 h-4" />
               </button>
               <button className="p-2 text-mute hover:text-ink transition">
                 <Search className="w-4 h-4" />
               </button>
               <button
-                className="w-8 h-8 rounded-full bg-primary text-black flex items-center justify-center font-bold hover:scale-105 transition-transform"
+                className="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold hover:scale-105 transition-transform"
                 onClick={() => navigate("/workspaces")}
               >
                 <Plus className="w-4 h-4" />
@@ -379,7 +379,7 @@ export default function DashboardPage() {
 
           <div className="space-y-4">
             {/* ROW 1 */}
-            <div className="bg-canvas-soft rounded-lg p-4 flex items-center justify-between shadow-[0_4px_4px_rgba(0,0,0,0.2)] hover:bg-canvas-mid transition cursor-pointer">
+            <div className="glass-card p-4 flex items-center justify-between hover:bg-white/60 transition cursor-pointer">
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 rounded-md bg-primary-container text-ink flex items-center justify-center font-bold text-lg shadow-lg shadow-primary-container/20">
                   AI
@@ -409,7 +409,7 @@ export default function DashboardPage() {
             </div>
 
             {/* ROW 2 */}
-            <div className="bg-canvas-soft rounded-lg p-4 flex items-center justify-between shadow-[0_4px_4px_rgba(0,0,0,0.2)] hover:bg-canvas-mid transition cursor-pointer">
+            <div className="glass-card p-4 flex items-center justify-between hover:bg-white/60 transition cursor-pointer">
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 rounded-md bg-pink-500/20 text-pink-400 flex items-center justify-center font-bold text-lg shadow-lg shadow-pink-500/20">
                   UI
@@ -442,7 +442,7 @@ export default function DashboardPage() {
       </div>
 
       {/* RIGHT SIDEBAR (PROFILE + CALENDAR + SUBMISSIONS) */}
-      <div className="w-80 flex flex-col pl-8 border-l border-canvas-mid pt-2 overflow-y-auto custom-scrollbar">
+      <div className="w-80 flex flex-col pl-8 border-l border-white/40 pt-2 overflow-y-auto custom-scrollbar">
         <div className="flex justify-end items-center gap-4 mb-8">
           <div className="relative cursor-pointer">
             <Bell className="w-5 h-5 text-mute hover:text-ink transition" />
@@ -453,21 +453,21 @@ export default function DashboardPage() {
           <div className="relative" ref={dropdownRef}>
             <img
               src={user?.profileImage || "https://i.pravatar.cc/100"}
-              className="w-10 h-10 rounded-full border border-canvas-mid cursor-pointer hover:border-primary transition"
+              className="w-10 h-10 rounded-full border border-white/50 cursor-pointer hover:border-primary transition"
               alt="profile"
               onClick={() => setMenuOpen(!menuOpen)}
             />
             {menuOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-canvas-mid rounded-md shadow-[0_8px_24px_rgba(0,0,0,0.5)] overflow-hidden z-50">
+              <div className="absolute right-0 mt-2 w-48 glass-card rounded-md shadow-xl shadow-black/5 overflow-hidden z-50">
                 <button
                   onClick={() => navigate("/profile")}
-                  className="w-full text-left px-4 py-3 text-sm text-body hover:bg-canvas-soft hover:text-ink flex items-center gap-2"
+                  className="w-full text-left px-4 py-3 text-sm text-body hover:bg-white/50 hover:text-ink flex items-center gap-2"
                 >
                   <User className="w-4 h-4" /> Profile
                 </button>
                 <button
                   onClick={logout}
-                  className="w-full text-left px-4 py-3 text-sm text-red-400 hover:bg-red-400/10 flex items-center gap-2"
+                  className="w-full text-left px-4 py-3 text-sm text-red-400 hover:bg-red-50 flex items-center gap-2"
                 >
                   <LogOut className="w-4 h-4" /> Logout
                 </button>
@@ -484,7 +484,7 @@ export default function DashboardPage() {
           />
           <div className="absolute inset-0 bg-gradient-to-t from-primary-container to-transparent" />
           <div className="relative z-10 text-ink">
-            <p className="font-bold text-sm bg-canvas/50 w-max px-2 py-0.5 rounded-pill mb-1 backdrop-blur-md">
+            <p className="font-bold text-sm bg-white/60 w-max px-2 py-0.5 rounded-pill mb-1 backdrop-blur-md">
               UI Design Landing Page
             </p>
             <p className="text-xs font-semibold text-ink/80">80% Progress</p>
@@ -559,26 +559,26 @@ export default function DashboardPage() {
                   switch (type) {
                     case "upload":
                       return {
-                        bg: "bg-primary-container/20 text-primary",
+                        bg: "bg-primary-container/40 text-primary",
                         label: "DOC",
                       };
                     case "quiz":
                       return {
-                        bg: "bg-orange-500/20 text-orange-400",
+                        bg: "bg-orange-100 text-orange-600",
                         label: "QZ",
                       };
                     case "flashcard":
                       return {
-                        bg: "bg-blue-500/20 text-blue-400",
+                        bg: "bg-blue-100 text-blue-600",
                         label: "FC",
                       };
                     case "chat":
                       return {
-                        bg: "bg-pink-500/20 text-pink-400",
+                        bg: "bg-pink-100 text-pink-600",
                         label: "AI",
                       };
                     default:
-                      return { bg: "bg-canvas-mid text-mute", label: "ACT" };
+                      return { bg: "bg-white/50 text-mute", label: "ACT" };
                   }
                 };
 

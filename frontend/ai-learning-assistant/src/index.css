@@ -1,19 +1,20 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --font-display: "Inter", system-ui, sans-serif;
+  --font-display: "Plus Jakarta Sans", system-ui, sans-serif;
   --breakpoint-3xl: 1920px;
   
-  /* Spotify Core Palette */
-  --color-primary: #1ed760;
-  --color-canvas: #121212;
-  --color-canvas-card: #181818;
-  --color-canvas-mid: #1f1f1f;
-  --color-hairline: #4d4d4d;
-  --color-ink: #ffffff;
-  --color-body: #b3b3b3;
-  --color-mute: #7c7c7c;
+  /* Soft Glassmorphism Palette */
+  --color-primary: #8b5cf6;
+  --color-primary-container: #ddd6fe;
+  --color-canvas: transparent;
+  --color-canvas-card: rgba(255, 255, 255, 0.4);
+  --color-canvas-mid: rgba(255, 255, 255, 0.6);
+  --color-hairline: rgba(255, 255, 255, 0.5);
+  --color-ink: #1f2937;
+  --color-body: #4b5563;
+  --color-mute: #9ca3af;
   
   --radius-sm: 4px;
   --radius-md: 6px;
@@ -61,20 +62,29 @@
   .preserve-3d { transform-style: preserve-3d; }
   .backface-hidden { backface-visibility: hidden; }
   .rotate-y-180 { transform: rotateY(180deg); }
+
+  .glass-card {
+    background-color: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(40px);
+    -webkit-backdrop-filter: blur(40px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 20px 40px -10px rgba(31,38,135,0.15);
+    border-radius: 24px;
+  }
 }
 
 /* AI DASHBOARD SCROLLBAR */
 .custom-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: #4d4d4d transparent;
+  scrollbar-color: var(--color-hairline) transparent;
 }
 .custom-scrollbar::-webkit-scrollbar { width: 6px; }
 .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #4d4d4d;
+  background: var(--color-hairline);
   border-radius: 9999px;
 }
-.custom-scrollbar:hover::-webkit-scrollbar-thumb { background: #7c7c7c; }
+.custom-scrollbar:hover::-webkit-scrollbar-thumb { background: var(--color-mute); }
 
 /* ================= MARKDOWN STYLING FOR LESSONS ================= */
 .markdown-lesson {

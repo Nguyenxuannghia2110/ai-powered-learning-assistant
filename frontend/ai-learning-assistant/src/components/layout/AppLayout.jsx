@@ -30,7 +30,7 @@ const AppLayout = () => {
   const location = useLocation();
 
   return (
-    <div className="h-screen w-screen flex bg-canvas overflow-hidden text-ink font-sans">
+    <div className="h-screen w-screen flex bg-gradient-to-br from-purple-200 via-pink-200 to-cyan-200 overflow-hidden text-ink font-sans">
       {/* Sidebar */}
       <Sidebar
         mobileOpen={mobileSidebarOpen}
@@ -38,7 +38,7 @@ const AppLayout = () => {
       />
 
       {/* Main Content wrapper */}
-      <div className="flex-1 md:ml-[260px] flex flex-col h-full bg-canvas relative overflow-hidden">
+      <div className="flex-1 md:ml-[260px] flex flex-col h-full bg-transparent relative overflow-hidden">
         
         {/* Scrollable Page Content */}
         <main className="flex-1 overflow-y-auto custom-scrollbar">

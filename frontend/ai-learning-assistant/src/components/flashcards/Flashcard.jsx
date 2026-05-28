@@ -57,12 +57,12 @@ export default function Flashcard({
           {/* ================= FRONT ================= */}
 
           <div
-            className="absolute inset-0 backface-hidden rounded-lg border border-hairline bg-canvas shadow-none overflow-hidden"
+            className="absolute inset-0 backface-hidden rounded-2xl glass-card overflow-hidden shadow-lg"
           >
             {/* Header */}
             <div className="absolute top-6 left-6 right-6 flex items-center justify-between">
               <span
-                className={`text-[10px] font-mono px-3 py-1 rounded-sm uppercase tracking-widest ${difficultyColors[card.difficulty]}`}
+                className={`text-[10px] font-bold px-3 py-1 rounded-sm uppercase tracking-widest bg-white/60 text-purple-700 border border-purple-200`}
               >
                 {card.difficulty || "Standard"}
               </span>
@@ -74,8 +74,8 @@ export default function Flashcard({
                 }}
                 className={`transition ${
                   card.isStarred
-                    ? "text-ink opacity-100"
-                    : "text-mute hover:text-ink"
+                    ? "text-yellow-500 opacity-100"
+                    : "text-body hover:text-yellow-500"
                 }`}
               >
                 <svg
@@ -97,7 +97,7 @@ export default function Flashcard({
 
             {/* Content */}
             <div className="h-full flex flex-col items-center justify-center px-10 md:px-20 text-center">
-              <p className="text-[11px] font-mono uppercase tracking-widest mb-6 text-mute">
+              <p className="text-[11px] font-bold uppercase tracking-widest mb-6 text-purple-500">
                 Question
               </p>
 
@@ -107,7 +107,7 @@ export default function Flashcard({
             </div>
 
             {/* Footer */}
-            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-mute text-xs font-mono uppercase tracking-widest flex items-center gap-2 opacity-50">
+            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-body text-xs font-bold uppercase tracking-widest flex items-center gap-2 opacity-60">
               <span>Press SPACE to reveal</span>
             </div>
           </div>
@@ -115,18 +115,18 @@ export default function Flashcard({
           {/* ================= BACK ================= */}
 
           <div
-            className="absolute inset-0 backface-hidden rotate-y-180 rounded-lg border border-hairline bg-canvas-card shadow-none overflow-hidden"
+            className="absolute inset-0 backface-hidden rotate-y-180 rounded-2xl glass-card overflow-hidden shadow-lg border-purple-200/50"
           >
             {/* Header */}
             <div className="absolute top-6 left-6">
-              <span className="text-[10px] font-mono px-3 py-1 rounded-sm uppercase tracking-widest bg-canvas-mid text-ink border border-hairline">
+              <span className="text-[10px] font-bold px-3 py-1 rounded-sm uppercase tracking-widest bg-purple-100 text-purple-700 border border-purple-200">
                 Answer
               </span>
             </div>
 
             {/* Content */}
             <div className="h-full flex flex-col items-center justify-center px-12 md:px-24 text-center">
-              <p className="text-[11px] font-mono uppercase tracking-widest mb-6 text-mute">
+              <p className="text-[11px] font-bold uppercase tracking-widest mb-6 text-purple-500">
                 Explanation
               </p>
 
@@ -136,7 +136,7 @@ export default function Flashcard({
             </div>
 
             {/* Footer */}
-            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-mute text-xs font-mono uppercase tracking-widest flex items-center gap-4 opacity-50">
+            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-body text-xs font-bold uppercase tracking-widest flex items-center gap-4 opacity-60">
               <span>SPACE Flip</span>
             </div>
           </div>

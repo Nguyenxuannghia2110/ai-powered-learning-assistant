@@ -41,7 +41,7 @@ export default function QuizzesPage() {
   };
 
   return (
-    <div className="w-full h-full min-h-screen bg-[#080f0c] text-ink font-sans">
+    <div className="w-full h-full min-h-screen text-ink font-sans">
       {stage === 'list' && (
         <QuizListPage 
           onSelectQuiz={goToTake} 

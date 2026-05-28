@@ -27,34 +27,34 @@ export default function ValidationModal({ isOpen, onClose, previewData, onConfir
   };
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center bg-[#080f0c]/90 backdrop-blur-sm px-4 py-8">
-      <div className="relative w-full max-w-5xl h-full max-h-[90vh] bg-[#0b110e] border border-[#1e2924] rounded-md shadow-2xl flex flex-col pt-8 pb-0">
+    <div className="fixed inset-0 z-[60] flex items-center justify-center bg-indigo-900/20 backdrop-blur-sm px-4 py-8">
+      <div className="relative w-full max-w-5xl h-full max-h-[90vh] glass-card border border-white/50 rounded-xl shadow-2xl flex flex-col pt-0 pb-0 text-ink">
         
         {/* Header */}
-        <div className="px-10 pb-6 shrink-0 relative border-b border-[#1e2924] bg-[#0b110e] z-10">
+        <div className="px-10 py-6 shrink-0 relative border-b border-white/40 bg-white/40 z-10 rounded-t-xl">
           <button 
             onClick={onClose}
-            className="absolute top-0 right-10 text-slate-500 hover:text-ink transition"
+            className="absolute top-6 right-10 text-body hover:text-ink transition"
           >
             <X size={24} />
           </button>
           
           <h2 className="text-4xl font-black text-ink tracking-tight mb-2">Neural Architectures</h2>
-          <p className="text-slate-400 text-sm max-w-2xl">
+          <p className="text-body text-sm max-w-2xl">
             Review your AI-generated quiz questions. Adjust accuracy markers or edit strings before finalizing the deployment.
           </p>
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-y-auto px-10 py-8 scrollbar-thin scrollbar-thumb-emerald-900 scrollbar-track-transparent">
-          <div className="space-y-8">
+        <div className="flex-1 overflow-y-auto px-10 py-8 scrollbar-thin scrollbar-thumb-purple-200 scrollbar-track-transparent bg-white/10">
+          <div className="space-y-8 pb-28">
             {previewData.preview.map((q, idx) => {
               const qNum = (idx + 1).toString().padStart(3, '0');
               const isValid = q.valid;
 
               return (
-                <div key={idx} className="bg-[#131715] border border-[#1e2924] rounded-md p-6 relative group">
-                  <div className="absolute top-6 right-6 text-[10px] font-bold text-slate-500 tracking-wider">
+                <div key={idx} className="bg-white/60 border border-white/50 rounded-xl p-6 relative group shadow-sm">
+                  <div className="absolute top-6 right-6 text-[10px] font-bold text-purple-700 tracking-wider">
                     Q-{qNum}
                   </div>
                   
@@ -72,22 +72,22 @@ export default function ValidationModal({ isOpen, onClose, previewData, onConfir
                            key={oIdx}
                            className={`relative rounded-xl p-4 flex items-start gap-4 border transition-colors ${
                               isCorrect 
-                                ? 'bg-[#0f1d16] border-primary/50' 
-                                : 'bg-[#181c1a] border-[#222a27]'
+                                ? 'bg-purple-100 border-purple-400 shadow-sm' 
+                                : 'bg-white/50 border-white/60'
                            }`}
                          >
                             <div className={`w-6 h-6 rounded-full flex-shrink-0 flex items-center justify-center text-xs font-black ${
-                              isCorrect ? 'bg-emerald-400 text-emerald-950' : 'bg-[#2a332f] text-slate-400'
+                              isCorrect ? 'bg-purple-500 text-white shadow-[0_0_10px_rgba(168,85,247,0.5)]' : 'bg-gray-200 text-gray-500'
                             }`}>
                               {letter}
                             </div>
                             <div className="flex-1 pt-0.5">
-                              <p className={`text-sm leading-relaxed ${isCorrect ? 'text-ink' : 'text-slate-300'}`}>
+                              <p className={`text-sm leading-relaxed ${isCorrect ? 'text-purple-900 font-medium' : 'text-ink'}`}>
                                 {opt}
                               </p>
                             </div>
                             {isCorrect && (
-                              <div className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 bg-primary rounded-full flex items-center justify-center text-emerald-950">
+                              <div className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 bg-purple-500 rounded-full flex items-center justify-center text-white shadow-sm">
                                 <Check size={12} strokeWidth={4} />
                               </div>
                             )}
@@ -97,7 +97,7 @@ export default function ValidationModal({ isOpen, onClose, previewData, onConfir
                   </div>
 
                   {!isValid && (
-                    <div className="mt-4 text-rose-400 text-sm flex items-center gap-2">
+                    <div className="mt-4 text-orange-500 font-bold text-sm flex items-center gap-2">
                        <X size={16} /> Data Error: Missing required fields or invalid format for this question. This will be excluded.
                     </div>
                   )}
@@ -108,20 +108,20 @@ export default function ValidationModal({ isOpen, onClose, previewData, onConfir
         </div>
 
         {/* Footer */}
-        <div className="p-6 px-10 bg-[#0f1311]/95 backdrop-blur-md border-t border-[#1e2924] shrink-0 flex items-center justify-between rounded-b-3xl shrink-0 absolute bottom-0 w-full z-10">
+        <div className="p-6 px-10 bg-white/60 backdrop-blur-md border-t border-white/40 shrink-0 flex items-center justify-between rounded-b-xl shrink-0 absolute bottom-0 w-full z-10 shadow-[0_-4px_20px_rgba(0,0,0,0.05)]">
            <div className="flex items-center">
              {/* Decorative avatars representing reviewers/collaborators as per mockup */}
              <div className="flex -space-x-2">
-               <div className="w-8 h-8 rounded-full border border-black bg-slate-800" />
-               <div className="w-8 h-8 rounded-full border border-black bg-slate-700" />
-               <div className="w-8 h-8 rounded-full border border-black bg-slate-600" />
+               <div className="w-8 h-8 rounded-full border-2 border-white shadow-sm bg-gradient-to-br from-blue-400 to-indigo-400" />
+               <div className="w-8 h-8 rounded-full border-2 border-white shadow-sm bg-gradient-to-br from-purple-400 to-pink-400" />
+               <div className="w-8 h-8 rounded-full border-2 border-white shadow-sm bg-gradient-to-br from-emerald-400 to-teal-400" />
              </div>
            </div>
 
            <div className="flex items-center gap-4">
               <button 
                 onClick={onClose}
-                className="w-12 h-12 rounded-full border border-[#2a3630] hover:bg-[#1f2824] transition flex items-center justify-center text-slate-400 hover:text-ink"
+                className="w-12 h-12 rounded-full border border-white/50 bg-white/40 hover:bg-white/80 transition flex items-center justify-center text-body hover:text-ink shadow-sm"
               >
                 <X size={20} />
               </button>
@@ -129,14 +129,12 @@ export default function ValidationModal({ isOpen, onClose, previewData, onConfir
               <button 
                 onClick={handleConfirm}
                 disabled={isConfirming || validQuestions.length === 0}
-                className="px-8 py-3.5 rounded-full bg-emerald-400 hover:bg-emerald-300 disabled:opacity-50 text-emerald-950 font-black tracking-wide transition text-sm shadow-[0_0_20px_rgba(52,211,153,0.25)] whitespace-nowrap"
+                className="px-8 py-3.5 rounded-full bg-gradient-to-r from-purple-400 to-indigo-400 hover:from-purple-500 hover:to-indigo-500 disabled:opacity-50 text-white font-black tracking-wide transition text-sm shadow-md shadow-purple-500/20 whitespace-nowrap"
               >
                 {isConfirming ? "SAVING..." : "Confirm & Save"}
               </button>
            </div>
         </div>
-        {/* Spacer for footer */}
-        <div className="h-28 bg-[#0b110e] shrink-0 w-full rounded-b-3xl"></div>
       </div>
     </div>
   );

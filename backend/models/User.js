@@ -54,6 +54,15 @@ const userSchema = new mongoose.Schema(
       enum: ["active", "banned"],
       default: "active",
     },
+    subscription: {
+      type: String,
+      enum: ["Free", "Basic", "Pro", "Enterprise"],
+      default: "Free",
+    },
+    lastLogin: {
+      type: Date,
+      default: null,
+    },
   },
   {
     timestamps: true,

@@ -14,16 +14,16 @@ const DocumentCard = ({ doc, onDeleteRequest }) => {
       <div className="relative z-10 flex flex-col h-full">
         {/* HEADER */}
         <div className="flex justify-between items-start mb-4">
-          <div className="p-3 bg-primary/10 rounded-full text-primary">
+          <div className="p-3 bg-purple-100 rounded-full text-purple-600 shadow-sm">
             <FileText className="w-6 h-6" />
           </div>
-          <div className="px-3 py-1 bg-canvas-mid rounded-pill text-[12px] font-bold text-body uppercase tracking-[1.4px]">
+          <div className="px-3 py-1 bg-white/60 border border-white/40 rounded-pill text-[12px] font-bold text-body uppercase tracking-[1.4px]">
             {doc.status}
           </div>
         </div>
 
         {/* TITLE */}
-        <h3 className="text-[18px] font-bold text-ink mb-2 group-hover:text-primary transition-colors line-clamp-2" title={doc.title}>
+        <h3 className="text-[18px] font-bold text-ink mb-2 group-hover:text-purple-600 transition-colors line-clamp-2" title={doc.title}>
           {doc.title}
         </h3>
 
@@ -44,7 +44,7 @@ const DocumentCard = ({ doc, onDeleteRequest }) => {
                   e.stopPropagation();
                   onDeleteRequest(doc);
                 }}
-                className="w-8 h-8 rounded-full bg-canvas-mid flex items-center justify-center hover:bg-red-500 hover:text-white transition-colors text-mute"
+                className="w-8 h-8 rounded-full bg-white/60 border border-white/40 flex items-center justify-center hover:bg-red-400 hover:border-red-400 hover:shadow-md hover:text-white transition-all text-mute"
                 title="Delete"
               >
                 <Trash2 className="w-4 h-4" />

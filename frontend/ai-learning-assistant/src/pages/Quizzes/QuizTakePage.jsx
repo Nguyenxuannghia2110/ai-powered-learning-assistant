@@ -153,40 +153,42 @@ const QuizTakePage = ({ quiz, onFinish, onBack }) => {
   };
   /* ================= RENDER ================= */
   return (
-    <div className="min-h-screen bg-[#070b09] text-ink">
+    <div className="min-h-screen font-sans text-ink">
       <div className="w-full max-w-[1200px] mx-auto px-6 py-10 space-y-8">
         {/* HEADER */}
-        <div className="flex justify-between items-center">
-          <div className="text-sm text-body">
+        <div className="flex justify-between items-center glass-card px-6 py-4 rounded-xl border border-white/50 shadow-sm">
+          <div className="text-sm text-body font-bold">
             Question {currentIndex + 1} / {totalQuestions}
           </div>
 
-          <div className="text-sm text-mute">
+          <div className="text-sm text-purple-700 font-bold">
             {answers.length} / {totalQuestions} answered
           </div>
 
-          <button
-            onClick={onBack}
-            className="px-4 py-2 rounded-xl border border-hairline hover:border-hairline text-body"
-          >
-            Cancel
-          </button>
-          <div className="text-sm text-primary">
-            ⏱ {formatTime(timeSpent)}
+          <div className="flex gap-4 items-center">
+            <button
+              onClick={onBack}
+              className="px-4 py-2 rounded-xl border border-white/50 hover:bg-white/80 text-body bg-white/60 shadow-sm font-semibold transition"
+            >
+              Cancel
+            </button>
+            <div className="text-sm text-purple-600 font-bold px-3 py-1.5 bg-purple-50 rounded-lg border border-purple-100 shadow-sm">
+              ⏱ {formatTime(timeSpent)}
+            </div>
           </div>
         </div>
 
         {/* PROGRESS BAR */}
-        <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
+        <div className="w-full h-3 bg-white/40 border border-white/50 rounded-full overflow-hidden shadow-inner">
           <div
-            className="h-full bg-primary transition-all duration-500"
+            className="h-full bg-gradient-to-r from-purple-400 to-indigo-400 transition-all duration-500 shadow-md"
             style={{ width: `${progress}%` }}
           />
         </div>
 
         {/* QUESTION CARD */}
-        <div className="bg-canvas-card border border-hairline rounded-md p-8 lg:p-10 space-y-6">
-          <h2 className="text-xl md:text-2xl lg:text-3xl font-semibold leading-relaxed">
+        <div className="glass-card border border-white/50 rounded-2xl p-8 lg:p-12 space-y-8 shadow-md">
+          <h2 className="text-xl md:text-2xl lg:text-3xl font-bold leading-relaxed text-ink">
             {currentQuestion.question}
           </h2>
 
@@ -201,23 +203,23 @@ const QuizTakePage = ({ quiz, onFinish, onBack }) => {
                   className={`w-full flex items-center justify-between px-6 py-4 rounded-xl border transition-all text-left
                 ${
                   isSelected
-                    ? "border-primary bg-primary/10"
-                    : "border-hairline hover:border-hairline"
+                    ? "border-purple-400 bg-purple-50 shadow-sm"
+                    : "border-white/60 hover:bg-white/40 bg-white/50"
                 }`}
                 >
                   <div className="flex items-center gap-4">
                     <div
-                      className={`w-6 h-6 rounded-full border flex items-center justify-center
+                      className={`w-6 h-6 rounded-full border flex items-center justify-center transition-colors
                     ${
                       isSelected
-                        ? "bg-primary border-primary"
-                        : "border-hairline"
+                        ? "bg-purple-500 border-purple-500 text-white shadow-sm"
+                        : "border-gray-300 bg-white"
                     }`}
                     >
                       {isSelected && <Check size={14} />}
                     </div>
 
-                    <span className="text-gray-200">{option}</span>
+                    <span className={`font-medium ${isSelected ? 'text-purple-900' : 'text-ink'}`}>{option}</span>
                   </div>
                 </button>
               );
@@ -226,11 +228,11 @@ const QuizTakePage = ({ quiz, onFinish, onBack }) => {
         </div>
 
         {/* NAVIGATION */}
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between pt-4">
           <button
             onClick={handlePrev}
             disabled={currentIndex === 0}
-            className="flex items-center gap-2 px-6 py-3 rounded-xl border border-hairline text-body hover:bg-canvas-card disabled:opacity-30"
+            className="flex items-center gap-2 px-6 py-3 rounded-xl border border-white/50 text-body font-semibold hover:bg-white/80 bg-white/60 shadow-sm disabled:opacity-30 transition"
           >
             <ChevronLeft size={18} />
             Previous
@@ -241,7 +243,7 @@ const QuizTakePage = ({ quiz, onFinish, onBack }) => {
             {generatePageNumbers().map((item, idx) => {
               if (typeof item === "string") {
                 return (
-                  <span key={idx} className="px-2 text-mute">
+                  <span key={idx} className="px-2 text-purple-300 font-bold flex items-center">
                     ...
                   </span>
                 );
@@ -254,13 +256,13 @@ const QuizTakePage = ({ quiz, onFinish, onBack }) => {
                 <button
                   key={idx}
                   onClick={() => setCurrentIndex(item)}
-                  className={`w-10 h-10 rounded-xl text-sm font-semibold transition
+                  className={`w-10 h-10 rounded-xl text-sm font-bold transition shadow-sm
                 ${
                   isActive
-                    ? "bg-primary text-black scale-110"
+                    ? "bg-gradient-to-r from-purple-400 to-indigo-400 text-white scale-110 shadow-md"
                     : isAnswered
-                      ? "bg-primary/10 border border-primary/30 text-primary"
-                      : "bg-canvas-card text-body hover:bg-white/10"
+                      ? "bg-purple-100 border border-purple-300 text-purple-700"
+                      : "bg-white/60 text-body hover:bg-white/80 border border-white/50"
                 }`}
                 >
                   {item + 1}
@@ -273,7 +275,7 @@ const QuizTakePage = ({ quiz, onFinish, onBack }) => {
             onClick={handleNext}
             disabled={quiz?.completedAt}
             className="flex items-center gap-2 px-8 py-3 rounded-xl 
-          bg-primary text-black font-semibold hover:bg-emerald-400"
+          bg-gradient-to-r from-purple-400 to-indigo-400 hover:from-purple-500 hover:to-indigo-500 text-white font-bold shadow-md shadow-purple-500/20 transition disabled:opacity-50"
           >
             {currentIndex === totalQuestions - 1 ? "Finish" : "Next"}
             <ChevronRight size={18} />

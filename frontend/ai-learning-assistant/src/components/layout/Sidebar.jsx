@@ -38,7 +38,7 @@ export default function Sidebar({ mobileOpen, onCloseMobile }) {
       <aside
         className={`
         fixed inset-y-0 left-0 z-50 w-[260px]
-        bg-canvas
+        bg-white/40 backdrop-blur-xl border-r border-white/40
         transition-transform duration-300
         lg:translate-x-0
         ${mobileOpen ? "translate-x-0" : "-translate-x-full"}
@@ -54,7 +54,7 @@ export default function Sidebar({ mobileOpen, onCloseMobile }) {
             bg-primary
           "
           >
-            <div className="w-3 h-3 bg-canvas rounded-full"></div>
+            <div className="w-3 h-3 bg-white rounded-full"></div>
           </div>
 
           <h1 className="font-bold text-ink text-xl tracking-tight">
@@ -83,8 +83,8 @@ export default function Sidebar({ mobileOpen, onCloseMobile }) {
                 text-sm transition-colors
                 ${
                   active
-                    ? "font-bold text-ink"
-                    : "font-normal text-body hover:text-ink"
+                    ? "font-bold text-ink bg-white/60 shadow-sm border border-white/40"
+                    : "font-normal text-body hover:text-ink hover:bg-white/30"
                 }
                 `}
               >
@@ -104,12 +104,11 @@ export default function Sidebar({ mobileOpen, onCloseMobile }) {
         <div className="absolute bottom-6 left-4 right-4">
           <div
             className="
-            p-5 rounded-lg
-            bg-canvas-card
+            p-5 glass-card
             text-ink
             relative
             overflow-hidden
-            shadow-[0_8px_8px_rgba(0,0,0,0.3)]
+            shadow-lg shadow-black/5
           "
           >
             <p className="font-bold text-base mb-1 relative z-10">Premium Account</p>
@@ -120,7 +119,7 @@ export default function Sidebar({ mobileOpen, onCloseMobile }) {
             <button
               className="
               w-max px-6 py-2 rounded-pill text-sm font-bold uppercase tracking-[1.4px]
-              bg-ink text-canvas hover:bg-white hover:scale-105 transition-transform
+              bg-ink text-white hover:bg-gray-700 hover:scale-105 transition-transform
               flex items-center gap-2 relative z-10
             "
             >

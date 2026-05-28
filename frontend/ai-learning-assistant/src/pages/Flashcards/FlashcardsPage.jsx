@@ -67,29 +67,29 @@ export default function FlashcardsPage() {
       )}
 
       {stage === 'study' && activeSet && (
-        <div className="w-full max-w-5xl mx-auto flex flex-col h-full gap-6">
+        <div className="w-full max-w-5xl mx-auto flex flex-col h-full gap-6 py-8 px-4">
           <div className="flex items-center justify-between">
             <button
               onClick={goToList}
-              className="inline-flex items-center gap-2 text-sm text-[#7d8187] hover:text-ink transition-all"
+              className="inline-flex items-center gap-2 text-sm text-body hover:text-ink transition-all font-semibold"
             >
               <ArrowLeft size={16} />
               Back to Sets
             </button>
-            <h2 className="text-xl font-medium tracking-tight text-ink">{activeSet.title || "Study Session"}</h2>
+            <h2 className="text-xl font-bold tracking-tight text-ink">{activeSet.title || "Study Session"}</h2>
             <div className="w-24" /> {/* Spacer to center the title */}
           </div>
 
-          <div className="flex-1 bg-[#191919] border border-[#212327] rounded-sm p-8 flex flex-col">
+          <div className="flex-1 glass-card p-8 flex flex-col min-h-[600px]">
             {/* Mode Selector */}
             <div className="flex justify-center mb-8">
-              <div className="flex bg-[#0a0a0a] p-1 rounded-full border border-[#212327]">
+              <div className="flex bg-white/40 p-1 rounded-full border border-white/50 shadow-inner">
                 <button
                   onClick={() => setStudyMode('standard')}
-                  className={`flex items-center gap-2 px-4 py-1.5 rounded-full text-xs uppercase tracking-widest font-mono transition-all ${
+                  className={`flex items-center gap-2 px-4 py-1.5 rounded-full text-xs uppercase tracking-widest font-bold transition-all ${
                     studyMode === 'standard' 
-                      ? 'bg-white/10 text-ink' 
-                      : 'text-[#7d8187] hover:text-ink'
+                      ? 'bg-white text-purple-700 shadow-sm' 
+                      : 'text-body hover:text-ink'
                   }`}
                 >
                   <Layers size={14} />
@@ -97,10 +97,10 @@ export default function FlashcardsPage() {
                 </button>
                 <button
                   onClick={() => setStudyMode('dictation')}
-                  className={`flex items-center gap-2 px-4 py-1.5 rounded-full text-xs uppercase tracking-widest font-mono transition-all ${
+                  className={`flex items-center gap-2 px-4 py-1.5 rounded-full text-xs uppercase tracking-widest font-bold transition-all ${
                     studyMode === 'dictation' 
-                      ? 'bg-white/10 text-ink' 
-                      : 'text-[#7d8187] hover:text-ink'
+                      ? 'bg-white text-purple-700 shadow-sm' 
+                      : 'text-body hover:text-ink'
                   }`}
                 >
                   <Keyboard size={14} />
@@ -108,10 +108,10 @@ export default function FlashcardsPage() {
                 </button>
                 <button
                   onClick={() => setStudyMode('speaking')}
-                  className={`flex items-center gap-2 px-4 py-1.5 rounded-full text-xs uppercase tracking-widest font-mono transition-all ${
+                  className={`flex items-center gap-2 px-4 py-1.5 rounded-full text-xs uppercase tracking-widest font-bold transition-all ${
                     studyMode === 'speaking' 
-                      ? 'bg-white/10 text-ink' 
-                      : 'text-[#7d8187] hover:text-ink'
+                      ? 'bg-white text-purple-700 shadow-sm' 
+                      : 'text-body hover:text-ink'
                   }`}
                 >
                   <Mic size={14} />
@@ -161,23 +161,23 @@ export default function FlashcardsPage() {
             </div>
 
             {/* Pagination Controls */}
-            <div className="flex items-center justify-between mt-8 border-t border-[#212327] pt-6">
+            <div className="flex items-center justify-between mt-8 border-t border-white/40 pt-6">
               <button
                 disabled={currentIndex === 0}
                 onClick={() => setCurrentIndex((i) => i - 1)}
-                className="px-6 py-2 rounded-full border border-[#212327] bg-[#0a0a0a] text-ink text-sm hover:bg-canvas-card transition disabled:opacity-40"
+                className="px-6 py-2 rounded-full border border-white/50 bg-white/60 text-ink text-sm font-semibold hover:bg-white/80 transition disabled:opacity-40 shadow-sm"
               >
                 Previous
               </button>
 
-              <span className="text-xs font-mono uppercase tracking-widest text-[#7d8187]">
+              <span className="text-xs font-bold uppercase tracking-widest text-purple-700">
                 {currentIndex + 1} / {activeSet.cards?.length || 0}
               </span>
 
               <button
                 disabled={currentIndex === (activeSet.cards?.length || 1) - 1}
                 onClick={() => setCurrentIndex((i) => i + 1)}
-                className="px-6 py-2 rounded-full border border-[#212327] bg-[#0a0a0a] text-ink text-sm hover:bg-canvas-card transition disabled:opacity-40"
+                className="px-6 py-2 rounded-full border border-white/50 bg-white/60 text-ink text-sm font-semibold hover:bg-white/80 transition disabled:opacity-40 shadow-sm"
               >
                 Next
               </button>

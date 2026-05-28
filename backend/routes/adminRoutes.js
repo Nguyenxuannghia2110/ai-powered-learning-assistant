@@ -1,33 +1,47 @@
 import express from "express";
+import {
+  getAllUsers,
+  createUser,
+  updateUser,
+  deleteUser,
+  updateUserStatus,
+  resetUserPassword
+} from "../controllers/adminController.js";
 import protect from "../middleware/auth.js";
 import { isAdmin } from "../middleware/isAdmin.js";
-import {
-  getAdminStats,
-  getUsers,
-  getUserById,
-  updateUserStatus,
-  updateUserRole,
-  getRecentContent,
-  deleteContent
-} from "../controllers/adminController.js";
 
 const router = express.Router();
 
-// All routes require authentication and admin privileges
-router.use(protect);
-router.use(isAdmin);
+// All routes here are protected and require admin privileges
+router.use(protect, isAdmin);
 
-// Dashboard stats
-router.get("/stats", getAdminStats);
+// User Management Routes
+router.route("/users")
+  .get(getAllUsers)
+  .post(createUser);
 
-// User Management
-router.get("/users", getUsers);
-router.get("/users/:id", getUserById);
-router.put("/users/:id/status", updateUserStatus);
-router.put("/users/:id/role", updateUserRole);
+router.route("/users/:id")
+  .put(updateUser)
+  .delete(deleteUser);
 
-// Content Management
-router.get("/content", getRecentContent);
-router.delete("/content/:type/:id", deleteContent);
+router.patch("/users/:id/status", updateUserStatus);
+router.post("/users/:id/reset-password", resetUserPassword);
+
+// Content Management Routes
+import { 
+  getAllDocuments, 
+  getAllQuizzes, 
+  getAILogs,
+  getAllFlashcards,
+  getAllTopics,
+  deleteTopic
+} from "../controllers/adminController.js";
+
+router.get("/documents", getAllDocuments);
+router.get("/quizzes", getAllQuizzes);
+router.get("/flashcards", getAllFlashcards);
+router.get("/topics", getAllTopics);
+router.delete("/topics/:id", deleteTopic);
+router.get("/ai-logs", getAILogs);
 
 export default router;

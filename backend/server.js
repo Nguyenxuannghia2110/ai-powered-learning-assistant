@@ -33,8 +33,20 @@ app.use(cookieParser());
 //middleware to handle CORS
 app.use(
   cors({
-    origin: "http://localhost:5173",
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    origin: function (origin, callback) {
+      const isLocalhostDev = /^http:\/\/localhost:\d+$/.test(origin || "");
+      const allowedOrigins = (process.env.CLIENT_URLS || "")
+        .split(",")
+        .map((url) => url.trim())
+        .filter(Boolean);
+
+      if (!origin || isLocalhostDev || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
   }),
