@@ -119,14 +119,14 @@ export default function ChatInterface({ document }) {
 
   /* ================= UI ================= */
   return (
-    <div className="flex flex-col h-full bg-[#041d16]">
+    <div className="flex flex-col h-full bg-white/40 backdrop-blur-xl rounded-2xl overflow-hidden shadow-sm border border-white/50">
       {/* MESSAGE LIST */}
       <div
         ref={scrollRef}
-        className="custom-scrollbar flex-1 overflow-y-auto p-6 space-y-6 bg-gradient-to-b from-[#041d16] to-[#02130f]"
+        className="custom-scrollbar flex-1 overflow-y-auto p-6 space-y-6 bg-gradient-to-b from-white/60 to-white/30"
       >
         {messages.length === 0 && (
-          <div className="text-center text-primary/40 text-sm mt-24">
+          <div className="text-center text-purple-900/40 font-medium text-sm mt-24">
             Ask a question about this document
           </div>
         )}
@@ -142,8 +142,8 @@ export default function ChatInterface({ document }) {
               className={`max-w-[80%] rounded-md px-4 py-3 text-sm leading-relaxed
             ${
               m.role === "user"
-                ? "bg-gradient-to-r from-emerald-500 to-emerald-400 text-black shadow-lg shadow-[0_8px_8px_rgba(0,0,0,0.3)]"
-                : "bg-[#0e2a22] border border-emerald-900 text-emerald-50"
+                ? "bg-gradient-to-r from-purple-400 to-indigo-400 text-white shadow-lg shadow-purple-500/20"
+                : "bg-white/60 border border-white/50 text-ink shadow-sm"
             }`}
             >
               {m.role === "assistant" ? (
@@ -152,7 +152,7 @@ export default function ChatInterface({ document }) {
                 <span>{m.content}</span>
               )}
 
-              <div className="text-[10px] text-primary/60 mt-2 flex gap-2">
+              <div className={`text-[10px] mt-2 flex gap-2 ${m.role === "user" ? "text-purple-100/70" : "text-body/60"}`}>
                 <span>
                   {m.timestamp &&
                     new Date(m.timestamp).toLocaleTimeString([], {
@@ -171,7 +171,7 @@ export default function ChatInterface({ document }) {
 
         {loading && (
           <div className="flex justify-start">
-            <div className="bg-[#0e2a22] border border-emerald-900 rounded-xl px-4 py-2 text-xs text-primary">
+            <div className="bg-white/60 border border-white/50 rounded-xl px-4 py-2 text-xs text-purple-600 font-medium shadow-sm">
               AI is thinking…
             </div>
           </div>
@@ -179,7 +179,7 @@ export default function ChatInterface({ document }) {
       </div>
 
       {/* INPUT */}
-      <div className="border-t border-emerald-900 bg-[#041c16] p-4">
+      <div className="border-t border-white/40 bg-white/40 p-4">
         <div className="flex gap-3 items-end">
           <textarea
             rows={1}
@@ -196,15 +196,15 @@ export default function ChatInterface({ document }) {
           flex-1
           resize-none
           rounded-xl
-          bg-[#07251d]
-          border border-emerald-900
+          bg-white/60
+          border border-white/50
           px-4 py-3
           text-sm
-          text-emerald-50
-          placeholder:text-primary/40
+          text-ink
+          placeholder:text-body/50
           focus:outline-none
           focus:ring-2
-          focus:ring-emerald-500
+          focus:ring-purple-400/50
           "
           />
 
@@ -215,11 +215,9 @@ export default function ChatInterface({ document }) {
           flex items-center justify-center
           w-11 h-11
           rounded-xl
-          bg-gradient-to-r
-          from-emerald-500
-          to-emerald-400
-          text-black
-          shadow-lg shadow-[0_8px_8px_rgba(0,0,0,0.3)]
+          bg-gradient-to-r from-purple-400 to-indigo-400
+          text-white
+          shadow-lg shadow-purple-500/20
           hover:scale-105
           transition
           disabled:opacity-40

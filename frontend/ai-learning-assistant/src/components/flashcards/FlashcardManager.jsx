@@ -190,7 +190,7 @@ export default function FlashcardManager({ documentId, documentTitle }) {
         <div className="p-6">
           <div className="flex items-center justify-between mb-8">
             <div>
-              <h2 className="text-3xl font-bold text-slate-100">
+              <h2 className="text-3xl font-bold text-ink">
                 Flashcard Sets
               </h2>
               <p className="text-sm text-body mt-1 font-medium">
@@ -200,7 +200,7 @@ export default function FlashcardManager({ documentId, documentTitle }) {
 
             <button
               onClick={() => setShowGenerateModal(true)}
-              className="px-5 py-2.5 bg-primary text-ink rounded-xl font-semibold hover:bg-opacity-80"
+              className="flex items-center gap-2 bg-gradient-to-r from-purple-400 to-indigo-400 hover:from-purple-500 hover:to-indigo-500 text-white font-semibold px-5 py-2.5 rounded-xl shadow-md shadow-purple-500/20 hover:shadow-lg transition-all"
             >
               + Generate Flashcard
             </button>
@@ -238,21 +238,21 @@ export default function FlashcardManager({ documentId, documentTitle }) {
                     setActiveSet(set);
                     setCurrentIndex(0);
                   }}
-                  className="bg-canvas-card rounded-md p-6 hover:bg-canvas-mid shadow-[0_8px_8px_rgba(0,0,0,0.3)] transition-all cursor-pointer group flex flex-col h-full relative overflow-hidden"
+                  className="glass-card p-6 hover:-translate-y-1 hover:shadow-2xl hover:shadow-purple-500/20 transition-all cursor-pointer group flex flex-col h-full relative overflow-hidden"
                 >
                   <div className="relative z-10 flex flex-col h-full">
                     {/* HEADER */}
                     <div className="flex justify-between items-start mb-4">
-                      <div className="p-3 bg-primary/10 rounded-full text-primary">
+                      <div className="p-3 bg-purple-100 rounded-xl text-purple-600 shadow-sm">
                         <Layers className="w-6 h-6" />
                       </div>
-                      <div className="px-3 py-1 bg-canvas-mid rounded-pill text-[12px] font-bold text-body uppercase tracking-[1.4px]">
+                      <div className="px-3 py-1 bg-white/60 shadow-sm rounded-full text-[12px] font-bold text-purple-700 uppercase tracking-[1.4px] border border-white/40">
                         {set.count || set.cards?.length || 0} CARDS
                       </div>
                     </div>
 
                     {/* TITLE */}
-                    <h3 className="text-[18px] font-bold text-ink mb-2 group-hover:text-primary transition-colors line-clamp-2" title={set.title || documentTitle || "Flashcard Set"}>
+                    <h3 className="text-[18px] font-bold text-ink mb-2 group-hover:text-purple-600 transition-colors line-clamp-2" title={set.title || documentTitle || "Flashcard Set"}>
                       {set.title || documentTitle || "Flashcard Set"}
                     </h3>
 
@@ -260,11 +260,11 @@ export default function FlashcardManager({ documentId, documentTitle }) {
                     <div className="text-body text-sm mb-6 flex flex-col gap-2">
                       <div className="flex justify-between text-[12px]">
                         <span>Mastery Progress</span>
-                        <span className="text-ink font-bold">{Math.round(progress)}%</span>
+                        <span className="text-purple-600 font-semibold">{Math.round(progress)}%</span>
                       </div>
-                      <div className="w-full h-1.5 bg-[#252525] rounded-full overflow-hidden">
+                      <div className="w-full h-2 bg-black/5 rounded-full overflow-hidden shadow-inner">
                         <div
-                          className="h-full bg-ink rounded-full"
+                          className="h-full bg-gradient-to-r from-purple-400 to-indigo-400 rounded-full"
                           style={{ width: `${progress}%` }}
                         />
                       </div>
@@ -273,7 +273,7 @@ export default function FlashcardManager({ documentId, documentTitle }) {
                     {/* FOOTER */}
                     <div className="mt-auto space-y-4">
                       <div className="flex items-center justify-between pt-4 border-t border-hairline">
-                        <div className="flex items-center gap-2 text-[12px] text-mute">
+                        <div className="flex items-center gap-2 text-[12px] text-mute font-medium">
                           <Clock className="w-4 h-4" />
                           Created {lastStudy}
                         </div>
@@ -283,12 +283,12 @@ export default function FlashcardManager({ documentId, documentTitle }) {
                               e.stopPropagation();
                               setSetToDelete(set);
                             }}
-                            className="w-8 h-8 rounded-full bg-canvas-mid flex items-center justify-center hover:bg-red-500 hover:text-white transition-colors text-mute"
+                            className="w-8 h-8 rounded-full bg-white/60 border border-white/40 flex items-center justify-center hover:bg-red-500 hover:text-white hover:border-red-500 transition-colors text-mute"
                             title="Delete"
                           >
                             <Trash2 className="w-4 h-4" />
                           </button>
-                          <div className="w-8 h-8 rounded-full bg-canvas-mid flex items-center justify-center group-hover:bg-primary group-hover:text-canvas transition-colors">
+                          <div className="w-8 h-8 rounded-full bg-white/60 border border-white/40 shadow-sm flex items-center justify-center group-hover:bg-purple-500 group-hover:text-white transition-colors">
                             <Play className="w-4 h-4 ml-0.5" />
                           </div>
                         </div>
@@ -302,22 +302,21 @@ export default function FlashcardManager({ documentId, documentTitle }) {
 
           {/* DELETE MODAL */}
           {setToDelete && (
-            <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
-              <div className="bg-canvas-card border border-hairline rounded-md p-6 w-full max-w-sm space-y-4">
-                <h3 className="font-bold text-lg text-ink">Delete flashcard set?</h3>
-
-                <div className="flex justify-end gap-3">
+            <div className="fixed inset-0 bg-indigo-900/20 backdrop-blur-sm flex items-center justify-center z-[100]">
+              <div className="glass-card p-6 w-full max-w-sm space-y-4 text-ink">
+                <h3 className="font-bold text-lg text-ink">Delete "{setToDelete.title || "this set"}"?</h3>
+                <p className="text-body text-sm">This action cannot be undone.</p>
+                <div className="flex justify-end gap-3 mt-4">
                   <button
                     onClick={() => setSetToDelete(null)}
-                    className="px-4 py-2 rounded-xl border border-hairline hover:bg-canvas-mid text-body hover:text-ink transition"
+                    className="px-4 py-2 rounded-xl bg-white/60 border border-white/50 hover:bg-white/80 transition text-body font-semibold"
                   >
                     Cancel
                   </button>
-
                   <button
                     onClick={handleDeleteFlashcardSet}
                     disabled={deleting}
-                    className="px-4 py-2 rounded-xl bg-red-600 text-ink hover:bg-red-700 transition"
+                    className="px-4 py-2 rounded-xl bg-red-500 hover:bg-red-600 text-white flex items-center gap-2 shadow-md shadow-red-500/20 transition-all font-semibold"
                   >
                     {deleting ? "Deleting..." : "Delete"}
                   </button>

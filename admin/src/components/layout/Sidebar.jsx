@@ -67,7 +67,7 @@ export default function Sidebar({ collapsed, setCollapsed }) {
             <div className="w-8 h-8 rounded-lg bg-[var(--primary)] flex items-center justify-center text-white font-bold text-lg shrink-0">
               A
             </div>
-            <span className="font-bold text-lg tracking-tight text-[var(--text-main)]">Lumina Admin</span>
+            <span className="font-bold text-lg tracking-tight text-[var(--text-main)]">Admin</span>
           </motion.div>
         )}
         {collapsed && (

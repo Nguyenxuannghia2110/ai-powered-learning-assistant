@@ -90,7 +90,7 @@ const MagicContainer = ({
       {/* inner content */}
       <div
         className={clsx(
-          "relative z-10 h-full w-full bg-[#050505]/98 backdrop-blur-xl",
+          "relative z-10 h-full w-full bg-white/60 backdrop-blur-xl",
           rounded
         )}
       >

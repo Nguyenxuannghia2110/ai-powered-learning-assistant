@@ -127,30 +127,22 @@ export default function DashboardPage() {
       {/* MAIN CONTENT (LEFT) */}
       <div className="flex-1 overflow-y-auto custom-scrollbar pr-4">
         {/* HEADER */}
-        <div className="flex justify-between items-center mb-10">
+        <div className="flex justify-between items-center mb-10 border-b border-white/40 pb-6">
           <div className="relative w-72">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-mute" />
             <input
               type="text"
               placeholder="Search courses"
-              className="w-full bg-white/60 backdrop-blur-md border border-white/50 rounded-pill py-2.5 pl-10 pr-4 text-sm text-ink placeholder-mute focus:outline-none focus:ring-2 focus:ring-primary/50 transition-colors"
+              className="w-full bg-white/60 backdrop-blur-md border border-white/50 rounded-pill py-2.5 pl-10 pr-4 text-sm text-ink placeholder-mute focus:outline-none focus:ring-2 focus:ring-primary/50 transition-colors shadow-sm"
             />
           </div>
-          <div className="glass-card px-4 py-2 rounded-pill text-xs text-mute flex items-center shadow-none border-white/60">
+          <div className="glass-card px-4 py-2 rounded-pill text-xs text-mute flex items-center shadow-sm border-white/50">
             Today, {formatDashboardDate(currentTime)} ·{" "}
             {formatDashboardTime(currentTime)}
           </div>
         </div>
 
-        {/* WELCOME */}
-        <div className="mb-10">
-          <h1 className="text-4xl font-bold mb-1 tracking-tight text-ink">
-            Welcome back,
-          </h1>
-          <h1 className="text-4xl font-bold tracking-tight text-primary">
-            {username}! 👋
-          </h1>
-        </div>
+       
 
         {/* 3 CARDS */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
@@ -158,8 +150,9 @@ export default function DashboardPage() {
           <MagicContainer className="h-full">
             <div
               onClick={() => navigate("/documents")}
-              className="group h-full rounded-[28px] bg-purple-100/60 backdrop-blur-md border border-purple-200 p-6 cursor-pointer transition-all duration-300 shadow-sm shadow-purple-900/5 hover:shadow-md"
+              className="group relative h-full rounded-[28px] glass-card border border-white/50 p-6 cursor-pointer transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-purple-500/20 hover:border-purple-300 overflow-hidden"
             >
+              <div className="absolute inset-0 bg-gradient-to-br from-purple-400/0 to-indigo-400/0 group-hover:from-purple-400/10 group-hover:to-indigo-400/10 transition-colors duration-500 pointer-events-none" />
               {/* top */}
               <div className="flex justify-between items-start mb-8">
                 <div className="w-14 h-14 rounded-2xl bg-white/60 border border-white/40 flex items-center justify-center shadow-sm">
@@ -225,8 +218,9 @@ export default function DashboardPage() {
           <MagicContainer className="h-full">
             <div
               onClick={() => navigate("/flashcards")}
-              className="group h-full rounded-[28px] bg-teal-100/60 backdrop-blur-md border border-teal-200 p-6 cursor-pointer transition-all duration-300 shadow-sm shadow-teal-900/5 hover:shadow-md"
+              className="group relative h-full rounded-[28px] glass-card border border-white/50 p-6 cursor-pointer transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-purple-500/20 hover:border-purple-300 overflow-hidden"
             >
+              <div className="absolute inset-0 bg-gradient-to-br from-purple-400/0 to-indigo-400/0 group-hover:from-purple-400/10 group-hover:to-indigo-400/10 transition-colors duration-500 pointer-events-none" />
               {/* top */}
               <div className="flex justify-between items-start mb-8">
                 <div className="w-14 h-14 rounded-2xl bg-white/60 border border-white/40 flex items-center justify-center shadow-sm">
@@ -293,8 +287,9 @@ export default function DashboardPage() {
           <MagicContainer className="h-full">
             <div
               onClick={() => navigate("/workspaces")}
-              className="group h-full rounded-[28px] bg-lime-100/60 backdrop-blur-md border border-lime-200 p-6 cursor-pointer transition-all duration-300 shadow-sm shadow-lime-900/5 hover:shadow-md"
+              className="group relative h-full rounded-[28px] glass-card border border-white/50 p-6 cursor-pointer transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-purple-500/20 hover:border-purple-300 overflow-hidden"
             >
+              <div className="absolute inset-0 bg-gradient-to-br from-purple-400/0 to-indigo-400/0 group-hover:from-purple-400/10 group-hover:to-indigo-400/10 transition-colors duration-500 pointer-events-none" />
               {/* top */}
               <div className="flex justify-between items-start mb-8">
                 <div className="w-14 h-14 rounded-2xl bg-white/60 border border-white/40 flex items-center justify-center shadow-sm">
@@ -477,17 +472,20 @@ export default function DashboardPage() {
         </div>
 
         {/* MOCKUP IMAGE BLOCK */}
-        <div className="bg-primary-container rounded-lg p-4 mb-10 overflow-hidden relative shadow-lg shadow-primary-container/20">
-          <img
-            src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80&w=400&h=300"
-            className="w-full h-32 object-cover rounded-sm mb-4 opacity-80 mix-blend-overlay"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-primary-container to-transparent" />
-          <div className="relative z-10 text-ink">
-            <p className="font-bold text-sm bg-white/60 w-max px-2 py-0.5 rounded-pill mb-1 backdrop-blur-md">
-              UI Design Landing Page
-            </p>
-            <p className="text-xs font-semibold text-ink/80">80% Progress</p>
+        <div className="glass-card rounded-2xl p-3 mb-10 overflow-hidden relative shadow-lg border border-white/50">
+          <div className="relative rounded-xl overflow-hidden group">
+            <img
+              src="/calendar_cats.png"
+              className="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-105"
+              alt="Dashboard Highlight"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
+            <div className="absolute bottom-4 left-4 right-4 z-10 text-white pointer-events-none">
+              <p className="font-bold text-sm bg-white/20 w-max px-3 py-1 rounded-pill mb-1 backdrop-blur-md border border-white/30 text-white">
+                Feline Companions
+              </p>
+              <p className="text-xs font-semibold text-white/90 ml-1">Stay focused!</p>
+            </div>
           </div>
         </div>
 
