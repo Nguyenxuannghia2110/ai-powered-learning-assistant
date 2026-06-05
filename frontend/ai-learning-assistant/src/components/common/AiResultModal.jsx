@@ -9,8 +9,8 @@ export default function AiResultModal({
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-      <div className="bg-white w-full max-w-2xl max-h-[80vh] rounded-xl shadow-lg p-6 flex flex-col">
+    <div className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none">
+      <div className="bg-white w-full max-w-2xl max-h-[80vh] rounded-xl shadow-[0_0_40px_rgba(0,0,0,0.15)] border border-gray-200 p-6 flex flex-col pointer-events-auto">
         {/* ===== Header ===== */}
         <div className="flex justify-between items-center mb-2">
           <h2 className="font-semibold text-lg">{title}</h2>

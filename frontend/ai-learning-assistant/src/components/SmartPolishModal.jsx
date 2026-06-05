@@ -72,69 +72,69 @@ export default function SmartPolishModal({ isOpen, onClose, type = "flashcard", 
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-      <div className="bg-[#0b110e] border border-[#1e2924] rounded-md shadow-2xl w-full max-w-3xl flex flex-col overflow-hidden max-h-[90vh]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-indigo-900/20 backdrop-blur-sm">
+      <div className="glass-card w-full max-w-3xl flex flex-col overflow-hidden max-h-[90vh]">
         {/* Header */}
-        <div className="flex justify-between items-center p-6 border-b border-[#1e2924]">
+        <div className="flex justify-between items-center p-6 border-b border-hairline">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-primary/10 rounded-lg">
-              <Sparkles className="text-primary" size={20} />
+            <div className="p-2 bg-gradient-to-r from-purple-400 to-indigo-400 rounded-lg text-white shadow-sm">
+              <Sparkles size={20} />
             </div>
             <div>
               <h3 className="text-xl font-bold text-ink">Smart Polish</h3>
-              <p className="text-sm text-slate-400">AI-powered generation for your {type === "flashcard" ? "Flashcards" : "Quiz"}</p>
+              <p className="text-sm text-body">AI-powered generation for your {type === "flashcard" ? "Flashcards" : "Quiz"}</p>
             </div>
           </div>
-          <button onClick={onClose} className="text-slate-500 hover:text-ink transition">
+          <button onClick={onClose} className="text-body hover:text-ink transition">
             <X size={24} />
           </button>
         </div>
 
         {/* Content */}
-        <div className="p-6 flex-1 overflow-y-auto">
+        <div className="p-6 flex-1 overflow-y-auto custom-scrollbar">
           {!previewData ? (
             <div className="space-y-6">
               {/* Mode Selection */}
               <div className="grid grid-cols-2 gap-4">
                 <button
                   onClick={() => setMode("expand")}
-                  className={`p-4 rounded-xl border text-left transition ${mode === "expand" ? 'border-primary bg-primary/10' : 'border-[#1e2924] bg-[#111714] hover:border-slate-600'}`}
+                  className={`p-5 rounded-xl border-2 text-left transition shadow-sm ${mode === "expand" ? 'border-purple-400 bg-white/80' : 'border-white/60 bg-white/40 hover:bg-white/60'}`}
                 >
-                  <h4 className={`font-bold mb-1 ${mode === "expand" ? 'text-primary' : 'text-slate-300'}`}>Mode 1: Expand</h4>
-                  <p className="text-xs text-slate-500">Generate new items based on your current set. No overlapping concepts.</p>
+                  <h4 className={`font-bold mb-1 ${mode === "expand" ? 'text-purple-700' : 'text-ink'}`}>Mode 1: Expand</h4>
+                  <p className="text-xs text-body leading-relaxed">Generate new items based on your current set. No overlapping concepts.</p>
                 </button>
                 <button
                   onClick={() => setMode("topic")}
-                  className={`p-4 rounded-xl border text-left transition ${mode === "topic" ? 'border-primary bg-primary/10' : 'border-[#1e2924] bg-[#111714] hover:border-slate-600'}`}
+                  className={`p-5 rounded-xl border-2 text-left transition shadow-sm ${mode === "topic" ? 'border-purple-400 bg-white/80' : 'border-white/60 bg-white/40 hover:bg-white/60'}`}
                 >
-                  <h4 className={`font-bold mb-1 ${mode === "topic" ? 'text-primary' : 'text-slate-300'}`}>Mode 2: By Topic</h4>
-                  <p className="text-xs text-slate-500">Quickly create new items based on a specific topic or keyword.</p>
+                  <h4 className={`font-bold mb-1 ${mode === "topic" ? 'text-purple-700' : 'text-ink'}`}>Mode 2: By Topic</h4>
+                  <p className="text-xs text-body leading-relaxed">Quickly create new items based on a specific topic or keyword.</p>
                 </button>
               </div>
 
               {/* Inputs */}
               {mode === "topic" && (
                 <div>
-                  <label className="block text-xs font-bold text-slate-400 mb-2 uppercase tracking-wider">Topic</label>
+                  <label className="block text-xs font-semibold text-body mb-2 uppercase tracking-widest">Topic</label>
                   <input
                     type="text"
                     value={topic}
                     onChange={(e) => setTopic(e.target.value)}
                     placeholder="e.g. History of Rome, Quantum Physics..."
-                    className="w-full bg-[#111714] border border-[#1e2924] rounded-xl px-4 py-3 outline-none focus:border-primary/50 transition text-sm text-ink"
+                    className="w-full bg-white/50 border border-white/60 rounded-xl px-4 py-3 outline-none focus:border-purple-400 focus:ring-1 focus:ring-purple-400 shadow-inner transition text-sm text-ink"
                   />
                 </div>
               )}
 
               <div>
-                <label className="block text-xs font-bold text-slate-400 mb-2 uppercase tracking-wider">Count</label>
+                <label className="block text-xs font-semibold text-body mb-2 uppercase tracking-widest">Count</label>
                 <input
                   type="number"
                   min="1"
                   max="20"
                   value={count}
                   onChange={(e) => setCount(e.target.value)}
-                  className="w-full bg-[#111714] border border-[#1e2924] rounded-xl px-4 py-3 outline-none focus:border-primary/50 transition text-sm text-ink"
+                  className="w-full bg-white/50 border border-white/60 rounded-xl px-4 py-3 outline-none focus:border-purple-400 focus:ring-1 focus:ring-purple-400 shadow-inner transition text-sm text-ink"
                 />
               </div>
 
@@ -145,19 +145,19 @@ export default function SmartPolishModal({ isOpen, onClose, type = "flashcard", 
                 <h4 className="text-sm font-bold text-primary uppercase tracking-widest">Preview Generated Items</h4>
                 <button 
                   onClick={() => setPreviewData(null)}
-                  className="text-xs text-slate-400 hover:text-ink flex items-center gap-1"
+                  className="text-xs font-semibold text-body hover:text-ink flex items-center gap-1.5 transition"
                 >
-                  <RefreshCw size={12} /> Regenerate
+                  <RefreshCw size={14} /> Regenerate
                 </button>
               </div>
               
-              <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2">
+              <div className="space-y-4 pr-2">
                 {previewData.map((item, idx) => (
-                  <div key={idx} className="bg-[#111714] border border-[#1e2924] rounded-xl p-4 space-y-3">
+                  <div key={idx} className="bg-white/50 border border-white/60 rounded-xl p-5 shadow-sm space-y-4">
                     {type === "flashcard" ? (
                       <>
                         <div>
-                          <label className="text-xs text-primary font-bold mb-1 block">Question:</label>
+                          <label className="text-xs text-body uppercase tracking-widest font-semibold mb-2 block">Question</label>
                           <textarea 
                             value={item.question}
                             onChange={(e) => {
@@ -165,12 +165,12 @@ export default function SmartPolishModal({ isOpen, onClose, type = "flashcard", 
                               newData[idx].question = e.target.value;
                               setPreviewData(newData);
                             }}
-                            className="w-full bg-black/50 border border-[#1e2924] rounded-lg p-2 text-sm text-ink focus:border-primary outline-none resize-none"
+                            className="w-full bg-white/60 border border-white/50 rounded-xl p-3 text-sm text-ink focus:border-purple-400 focus:ring-1 focus:ring-purple-400 outline-none resize-none shadow-inner"
                             rows={2}
                           />
                         </div>
                         <div>
-                          <label className="text-xs text-slate-500 font-bold mb-1 block">Answer:</label>
+                          <label className="text-xs text-body uppercase tracking-widest font-semibold mb-2 block">Answer</label>
                           <textarea 
                             value={item.answer}
                             onChange={(e) => {
@@ -178,7 +178,7 @@ export default function SmartPolishModal({ isOpen, onClose, type = "flashcard", 
                               newData[idx].answer = e.target.value;
                               setPreviewData(newData);
                             }}
-                            className="w-full bg-black/50 border border-[#1e2924] rounded-lg p-2 text-sm text-ink focus:border-primary outline-none resize-none"
+                            className="w-full bg-white/60 border border-white/50 rounded-xl p-3 text-sm text-ink focus:border-purple-400 focus:ring-1 focus:ring-purple-400 outline-none resize-none shadow-inner"
                             rows={2}
                           />
                         </div>
@@ -186,7 +186,7 @@ export default function SmartPolishModal({ isOpen, onClose, type = "flashcard", 
                     ) : (
                       <>
                         <div>
-                           <label className="text-xs text-primary font-bold mb-1 block">Question:</label>
+                           <label className="text-xs text-body uppercase tracking-widest font-semibold mb-2 block">Question</label>
                            <textarea 
                             value={item.question}
                             onChange={(e) => {
@@ -194,14 +194,14 @@ export default function SmartPolishModal({ isOpen, onClose, type = "flashcard", 
                               newData[idx].question = e.target.value;
                               setPreviewData(newData);
                             }}
-                            className="w-full bg-black/50 border border-[#1e2924] rounded-lg p-2 text-sm text-ink focus:border-primary outline-none resize-none"
+                            className="w-full bg-white/60 border border-white/50 rounded-xl p-3 text-sm text-ink focus:border-purple-400 focus:ring-1 focus:ring-purple-400 outline-none resize-none shadow-inner"
                             rows={2}
                           />
                         </div>
-                        <div className="mt-2 space-y-2">
-                          <label className="text-xs text-slate-500 font-bold block">Options (Select correct):</label>
-                          {item.options.map((opt, oIdx) => (
-                            <div key={oIdx} className="flex items-center gap-2">
+                        <div className="space-y-3">
+                          <label className="text-xs text-body uppercase tracking-widest font-semibold block">Options (Select correct)</label>
+                          {(item.options || []).map((opt, oIdx) => (
+                            <div key={oIdx} className="flex items-center gap-3">
                               <input 
                                 type="radio" 
                                 name={`correct-${idx}`}
@@ -211,7 +211,7 @@ export default function SmartPolishModal({ isOpen, onClose, type = "flashcard", 
                                   newData[idx].correctAnswer = oIdx;
                                   setPreviewData(newData);
                                 }}
-                                className="accent-emerald-500"
+                                className="accent-purple-500 w-4 h-4"
                               />
                               <input 
                                 value={opt}
@@ -220,7 +220,7 @@ export default function SmartPolishModal({ isOpen, onClose, type = "flashcard", 
                                   newData[idx].options[oIdx] = e.target.value;
                                   setPreviewData(newData);
                                 }}
-                                className={`flex-1 bg-black/50 border rounded-lg p-1.5 text-sm outline-none focus:border-primary ${item.correctAnswer === oIdx ? 'border-primary/50 text-primary font-medium' : 'border-[#1e2924] text-slate-300'}`}
+                                className={`flex-1 bg-white/60 border rounded-xl p-2.5 text-sm outline-none shadow-inner focus:border-purple-400 focus:ring-1 focus:ring-purple-400 transition ${item.correctAnswer === oIdx ? 'border-purple-400 text-purple-700 font-medium bg-purple-50/50' : 'border-white/50 text-ink'}`}
                               />
                             </div>
                           ))}
@@ -235,8 +235,8 @@ export default function SmartPolishModal({ isOpen, onClose, type = "flashcard", 
         </div>
 
         {/* Footer */}
-        <div className="p-6 border-t border-[#1e2924] flex justify-end gap-4 bg-[#0d120f]">
-          <button onClick={onClose} className="px-6 py-2.5 rounded-full text-slate-300 font-semibold text-sm hover:text-ink transition">
+        <div className="p-6 border-t border-hairline flex justify-end gap-4">
+          <button onClick={onClose} className="px-6 py-2.5 rounded-xl bg-white/60 border border-white/50 hover:bg-white/80 transition font-semibold text-body shadow-sm">
             Cancel
           </button>
           
@@ -244,14 +244,14 @@ export default function SmartPolishModal({ isOpen, onClose, type = "flashcard", 
             <button 
               onClick={handleGenerate}
               disabled={isGenerating || (mode === "topic" && !topic.trim())}
-              className="px-6 py-2.5 rounded-full bg-primary hover:bg-emerald-400 disabled:opacity-50 text-emerald-950 font-bold text-sm flex items-center gap-2 transition"
+              className="px-6 py-2.5 rounded-xl font-semibold flex items-center justify-center gap-2 shadow-md transition-all bg-gradient-to-r from-purple-400 to-indigo-400 hover:from-purple-500 hover:to-indigo-500 text-white shadow-purple-500/20 hover:shadow-lg disabled:opacity-50 min-w-[160px]"
             >
               {isGenerating ? <><Loader2 className="animate-spin" size={16} /> Generating...</> : <><Sparkles size={16} /> Generate Preview</>}
             </button>
           ) : (
             <button 
               onClick={handleApply}
-              className="px-6 py-2.5 rounded-full bg-primary hover:bg-emerald-400 text-emerald-950 font-bold text-sm flex items-center gap-2 transition"
+              className="px-6 py-2.5 rounded-xl font-semibold flex items-center justify-center gap-2 shadow-md transition-all bg-gradient-to-r from-purple-400 to-indigo-400 hover:from-purple-500 hover:to-indigo-500 text-white shadow-purple-500/20 hover:shadow-lg min-w-[160px]"
             >
               <Plus size={16} /> Add to Set
             </button>

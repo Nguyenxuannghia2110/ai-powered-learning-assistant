@@ -100,10 +100,17 @@ export default function HighlightActionModal({
       if (actionType === "quiz") {
         generatedItems = generatedItems.map(q => {
           const correctText = typeof q.correctAnswer === 'string' ? q.correctAnswer.toLowerCase() : '';
-          let cIndex = q.options.findIndex(o => o.toLowerCase() === correctText);
-          if (cIndex === -1) cIndex = 0;
+          let cIndex = (q.options || []).findIndex(o => o && o.toLowerCase() === correctText);
+          if (cIndex === -1) {
+            if (correctText === "a") cIndex = 0;
+            else if (correctText === "b") cIndex = 1;
+            else if (correctText === "c") cIndex = 2;
+            else if (correctText === "d") cIndex = 3;
+            else cIndex = 0;
+          }
           return {
             ...q,
+            options: q.options || [],
             correctAnswer: cIndex
           };
         });
@@ -179,46 +186,48 @@ export default function HighlightActionModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-      <div className="bg-[#0e2a22] border border-emerald-800 rounded-xl w-full max-w-md shadow-2xl overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-indigo-900/20 backdrop-blur-sm">
+      <div className="w-full max-w-xl max-h-[90vh] overflow-y-auto glass-card p-6 space-y-4 text-ink flex flex-col">
         
         {/* HEADER */}
-        <div className="flex items-center justify-between p-4 border-b border-emerald-900 bg-[#061f18]">
-          <h2 className="text-lg font-bold text-emerald-100">
+        <div className="flex items-center justify-between">
+          <h2 className="text-xl font-bold text-ink">
             {actionType === "flashcard"
               ? "Generate Flashcards"
               : "Generate Quiz"}
           </h2>
           <button
             onClick={onClose}
-            className="p-1 text-primary hover:text-ink hover:bg-emerald-800 rounded-lg transition"
+            className="text-body hover:text-ink transition"
           >
             <X size={20} />
           </button>
         </div>
 
+        <hr className="border-hairline" />
+
         {/* FORM OR PREVIEW */}
         {!previewData ? (
-          <form onSubmit={handleGenerate} className="p-4 space-y-4">
+          <form onSubmit={handleGenerate} className="space-y-6">
             
             {error && (
-              <div className="p-3 text-sm text-red-200 bg-red-900/50 rounded-lg border border-red-800">
+              <div className="p-3 text-sm text-red-600 bg-red-50 rounded-xl border border-red-200">
                 {error}
               </div>
             )}
 
             <div className="space-y-4">
-              <label className="text-sm font-semibold text-emerald-200">
-                Save to:
+              <label className="text-xs uppercase tracking-widest text-body font-semibold">
+                Save to
               </label>
 
               {/* EXISTING SET */}
               {sets.length > 0 && (
                 <div
-                  className={`flex items-center p-3 border rounded-lg cursor-pointer transition ${
+                  className={`flex items-start p-4 border-2 rounded-xl cursor-pointer transition ${
                     !isCreatingNew
-                      ? "bg-emerald-900/40 border-primary"
-                      : "bg-[#061f18] border-emerald-900 hover:bg-emerald-900/20"
+                      ? "bg-white/80 border-purple-400 shadow-sm"
+                      : "bg-white/40 border-white/60 hover:bg-white/60"
                   }`}
                   onClick={() => setIsCreatingNew(false)}
                 >
@@ -226,17 +235,17 @@ export default function HighlightActionModal({
                     type="radio"
                     checked={!isCreatingNew}
                     onChange={() => setIsCreatingNew(false)}
-                    className="mr-3 accent-emerald-500"
+                    className="mt-1 mr-3 accent-purple-500 w-4 h-4"
                   />
                   <div className="flex-1">
-                    <p className="text-sm font-medium text-emerald-100 mb-2">
+                    <p className={`text-sm font-semibold mb-2 ${!isCreatingNew ? 'text-purple-700' : 'text-ink'}`}>
                       Existing Set
                     </p>
                     {!isCreatingNew && (
                       <select
                         value={selectedSetId}
                         onChange={(e) => setSelectedSetId(e.target.value)}
-                        className="w-full p-2 text-sm bg-black border border-emerald-800 rounded-lg text-emerald-100"
+                        className="w-full px-4 py-3 rounded-xl bg-white/50 border border-white/60 text-ink focus:outline-none focus:ring-2 focus:ring-purple-400/50 shadow-inner text-sm"
                         onClick={(e) => e.stopPropagation()}
                       >
                         {sets.map((set) => (
@@ -256,10 +265,10 @@ export default function HighlightActionModal({
 
               {/* CREATE NEW */}
               <div
-                className={`flex items-center p-3 border rounded-lg cursor-pointer transition ${
+                className={`flex items-start p-4 border-2 rounded-xl cursor-pointer transition ${
                   isCreatingNew || sets.length === 0
-                    ? "bg-emerald-900/40 border-primary"
-                    : "bg-[#061f18] border-emerald-900 hover:bg-emerald-900/20"
+                    ? "bg-white/80 border-purple-400 shadow-sm"
+                    : "bg-white/40 border-white/60 hover:bg-white/60"
                 }`}
                 onClick={() => setIsCreatingNew(true)}
               >
@@ -267,10 +276,10 @@ export default function HighlightActionModal({
                   type="radio"
                   checked={isCreatingNew || sets.length === 0}
                   onChange={() => setIsCreatingNew(true)}
-                  className="mr-3 accent-emerald-500"
+                  className="mt-1 mr-3 accent-purple-500 w-4 h-4"
                 />
                 <div className="flex-1">
-                  <p className="text-sm font-medium text-emerald-100">
+                  <p className={`text-sm font-semibold ${isCreatingNew || sets.length === 0 ? 'text-purple-700' : 'text-ink'}`}>
                     Create New Set
                   </p>
                   {(isCreatingNew || sets.length === 0) && (
@@ -283,7 +292,7 @@ export default function HighlightActionModal({
                           ? "Flashcards"
                           : "Quiz"
                       }`}
-                      className="w-full mt-2 p-2 text-sm bg-black border border-emerald-800 rounded-lg text-emerald-100"
+                      className="w-full mt-3 px-4 py-3 rounded-xl bg-white/50 border border-white/60 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-400/50 shadow-inner text-sm text-ink"
                       onClick={(e) => e.stopPropagation()}
                     />
                   )}
@@ -291,13 +300,15 @@ export default function HighlightActionModal({
               </div>
             </div>
 
+            <hr className="border-hairline" />
+
             {/* ACTION BUTTONS */}
-            <div className="flex justify-end pt-4 space-x-3">
+            <div className="flex gap-4 pt-2">
               <button
                 type="button"
                 onClick={onClose}
                 disabled={loading}
-                className="px-4 py-2 text-sm text-emerald-100 border border-emerald-800 rounded-lg"
+                className="flex-1 py-3 rounded-xl bg-white/60 border border-white/50 hover:bg-white/80 transition font-semibold text-body"
               >
                 Cancel
               </button>
@@ -305,10 +316,10 @@ export default function HighlightActionModal({
               <button
                 type="submit"
                 disabled={loading}
-                className="flex items-center justify-center px-4 py-2 text-sm font-bold text-ink bg-emerald-600 rounded-lg min-w-[100px]"
+                className="flex-1 py-3 rounded-xl font-semibold flex items-center justify-center gap-2 shadow-md transition-all bg-gradient-to-r from-purple-400 to-indigo-400 hover:from-purple-500 hover:to-indigo-500 text-white shadow-purple-500/20 hover:shadow-lg"
               >
                 {loading ? (
-                  <Loader2 size={16} className="animate-spin" />
+                  <Loader2 size={18} className="animate-spin" />
                 ) : (
                   "Generate"
                 )}
@@ -316,23 +327,23 @@ export default function HighlightActionModal({
             </div>
           </form>
         ) : (
-          <div className="p-4 space-y-4">
+          <div className="space-y-6">
             {error && (
-              <div className="p-3 text-sm text-red-200 bg-red-900/50 rounded-lg border border-red-800">
+              <div className="p-3 text-sm text-red-600 bg-red-50 rounded-xl border border-red-200">
                 {error}
               </div>
             )}
-            <div className="flex justify-between items-center mb-2">
+            <div>
               <h4 className="text-sm font-bold text-primary uppercase tracking-widest">Review Generated Items</h4>
             </div>
             
-            <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2">
+            <div className="space-y-4 max-h-[50vh] overflow-y-auto pr-2 custom-scrollbar">
               {previewData.map((item, idx) => (
-                <div key={idx} className="bg-[#0a1f18] border border-emerald-900/50 rounded-xl p-4 space-y-3">
+                <div key={idx} className="bg-white/50 border border-white/60 rounded-xl p-5 shadow-sm space-y-4">
                   {actionType === "flashcard" ? (
                     <>
                       <div>
-                        <label className="text-xs text-primary font-bold mb-1 block">Question:</label>
+                        <label className="text-xs text-body uppercase tracking-widest font-semibold mb-2 block">Question</label>
                         <textarea 
                           value={item.question}
                           onChange={(e) => {
@@ -340,12 +351,12 @@ export default function HighlightActionModal({
                             newData[idx].question = e.target.value;
                             setPreviewData(newData);
                           }}
-                          className="w-full bg-black/50 border border-emerald-900/50 rounded-lg p-2 text-sm text-ink focus:border-primary outline-none resize-none"
+                          className="w-full bg-white/60 border border-white/50 rounded-xl p-3 text-sm text-ink focus:border-purple-400 focus:ring-1 focus:ring-purple-400 outline-none resize-none shadow-inner"
                           rows={2}
                         />
                       </div>
                       <div>
-                        <label className="text-xs text-emerald-200/50 font-bold mb-1 block">Answer:</label>
+                        <label className="text-xs text-body uppercase tracking-widest font-semibold mb-2 block">Answer</label>
                         <textarea 
                           value={item.answer}
                           onChange={(e) => {
@@ -353,7 +364,7 @@ export default function HighlightActionModal({
                             newData[idx].answer = e.target.value;
                             setPreviewData(newData);
                           }}
-                          className="w-full bg-black/50 border border-emerald-900/50 rounded-lg p-2 text-sm text-ink focus:border-primary outline-none resize-none"
+                          className="w-full bg-white/60 border border-white/50 rounded-xl p-3 text-sm text-ink focus:border-purple-400 focus:ring-1 focus:ring-purple-400 outline-none resize-none shadow-inner"
                           rows={2}
                         />
                       </div>
@@ -361,7 +372,7 @@ export default function HighlightActionModal({
                   ) : (
                     <>
                       <div>
-                         <label className="text-xs text-primary font-bold mb-1 block">Question:</label>
+                         <label className="text-xs text-body uppercase tracking-widest font-semibold mb-2 block">Question</label>
                          <textarea 
                           value={item.question}
                           onChange={(e) => {
@@ -369,14 +380,14 @@ export default function HighlightActionModal({
                             newData[idx].question = e.target.value;
                             setPreviewData(newData);
                           }}
-                          className="w-full bg-black/50 border border-emerald-900/50 rounded-lg p-2 text-sm text-ink focus:border-primary outline-none resize-none"
+                          className="w-full bg-white/60 border border-white/50 rounded-xl p-3 text-sm text-ink focus:border-purple-400 focus:ring-1 focus:ring-purple-400 outline-none resize-none shadow-inner"
                           rows={2}
                         />
                       </div>
-                      <div className="mt-2 space-y-2">
-                        <label className="text-xs text-emerald-200/50 font-bold block">Options (Select correct):</label>
-                        {item.options.map((opt, oIdx) => (
-                          <div key={oIdx} className="flex items-center gap-2">
+                      <div className="space-y-3">
+                        <label className="text-xs text-body uppercase tracking-widest font-semibold block">Options (Select correct)</label>
+                        {(item.options || []).map((opt, oIdx) => (
+                          <div key={oIdx} className="flex items-center gap-3">
                             <input 
                               type="radio" 
                               name={`h-correct-${idx}`}
@@ -386,7 +397,7 @@ export default function HighlightActionModal({
                                 newData[idx].correctAnswer = oIdx;
                                 setPreviewData(newData);
                               }}
-                              className="accent-emerald-500"
+                              className="accent-purple-500 w-4 h-4"
                             />
                             <input 
                               value={opt}
@@ -395,7 +406,7 @@ export default function HighlightActionModal({
                                 newData[idx].options[oIdx] = e.target.value;
                                 setPreviewData(newData);
                               }}
-                              className={`flex-1 bg-black/50 border rounded-lg p-1.5 text-sm outline-none focus:border-primary ${item.correctAnswer === oIdx ? 'border-primary/50 text-primary font-medium' : 'border-emerald-900/50 text-emerald-100'}`}
+                              className={`flex-1 bg-white/60 border rounded-xl p-2.5 text-sm outline-none shadow-inner focus:border-purple-400 focus:ring-1 focus:ring-purple-400 transition ${item.correctAnswer === oIdx ? 'border-purple-400 text-purple-700 font-medium bg-purple-50/50' : 'border-white/50 text-ink'}`}
                             />
                           </div>
                         ))}
@@ -406,12 +417,14 @@ export default function HighlightActionModal({
               ))}
             </div>
 
-            <div className="flex justify-end pt-4 space-x-3">
+            <hr className="border-hairline" />
+
+            <div className="flex gap-4 pt-2">
               <button
                 type="button"
                 onClick={() => setPreviewData(null)}
                 disabled={isSaving}
-                className="px-4 py-2 text-sm text-emerald-100 border border-emerald-800 rounded-lg"
+                className="flex-1 py-3 rounded-xl bg-white/60 border border-white/50 hover:bg-white/80 transition font-semibold text-body"
               >
                 Back
               </button>
@@ -420,10 +433,10 @@ export default function HighlightActionModal({
                 type="button"
                 onClick={handleSave}
                 disabled={isSaving}
-                className="flex items-center justify-center px-4 py-2 text-sm font-bold text-ink bg-emerald-600 rounded-lg min-w-[100px]"
+                className="flex-1 py-3 rounded-xl font-semibold flex items-center justify-center gap-2 shadow-md transition-all bg-gradient-to-r from-purple-400 to-indigo-400 hover:from-purple-500 hover:to-indigo-500 text-white shadow-purple-500/20 hover:shadow-lg"
               >
                 {isSaving ? (
-                  <Loader2 size={16} className="animate-spin" />
+                  <Loader2 size={18} className="animate-spin" />
                 ) : (
                   "Save to Set"
                 )}

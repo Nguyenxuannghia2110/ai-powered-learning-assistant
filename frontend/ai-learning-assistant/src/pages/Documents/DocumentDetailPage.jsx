@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { useParams } from "react-router-dom";
 import axiosInstance from "../../utils/axiosInstance";
 import { API_PATHS } from "../../utils/apiPaths";
@@ -51,6 +52,17 @@ export default function DocumentDetailPage() {
   const [selectedFlashcardSetId, setSelectedFlashcardSetId] = useState(null);
   const [selectedQuizSetId, setSelectedQuizSetId] = useState(null);
 
+  const clearHighlight = () => {
+    setHighlightRect(null);
+    setHighlightedText("");
+    window.getSelection()?.removeAllRanges();
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", clearHighlight);
+    return () => window.removeEventListener("scroll", clearHighlight);
+  }, []);
+
   useEffect(() => {
     if (activeTab !== "content") {
       setShowChatPanel(false);
@@ -99,21 +111,16 @@ export default function DocumentDetailPage() {
     if (activeTab === "content" && text.length > 5) {
       const range = selection.getRangeAt(0);
       const rect = range.getBoundingClientRect();
-      const scrollY = window.scrollY;
 
       setHighlightedText(text);
       setHighlightRect({
-        top: rect.top + scrollY - 50,
-        left: rect.left + rect.width / 2,
+        top: rect.top + window.scrollY - 10,
+        left: rect.left + window.scrollX + rect.width / 2,
       });
     }
   };
 
-  const clearHighlight = () => {
-    setHighlightRect(null);
-    setHighlightedText("");
-    window.getSelection()?.removeAllRanges();
-  };
+
 
   const handleExplain = async () => {
     setHighlightRect(null);
@@ -177,11 +184,31 @@ export default function DocumentDetailPage() {
 
       const genRes = await axiosInstance.post(generatePath, payload);
 
-      const generatedItems = genRes.data.data;
+      let generatedItems = genRes.data.data;
 
       if (!generatedItems || generatedItems.length === 0) {
         toast.error(`Failed to generate ${type}`, { id: toastId });
         return;
+      }
+
+      if (type === "quiz") {
+        generatedItems = generatedItems.map(q => {
+          if (typeof q.correctAnswer === 'number') return q;
+          const correctText = typeof q.correctAnswer === 'string' ? q.correctAnswer.toLowerCase() : '';
+          let cIndex = (q.options || []).findIndex(o => o && o.toLowerCase() === correctText);
+          if (cIndex === -1) {
+            if (correctText === "a") cIndex = 0;
+            else if (correctText === "b") cIndex = 1;
+            else if (correctText === "c") cIndex = 2;
+            else if (correctText === "d") cIndex = 3;
+            else cIndex = 0;
+          }
+          return {
+            ...q,
+            options: q.options || [],
+            correctAnswer: cIndex
+          };
+        });
       }
 
       const appendPath =
@@ -304,20 +331,24 @@ export default function DocumentDetailPage() {
                     </button>
                   </div>
                   {document.extractedText && document.extractedText.trim().length > 50 && showExtractedText && (
-                      <div className="text-[15px] text-body font-sans text-justify space-y-6 bg-canvas-mid p-4 rounded-xl border border-hairline shadow-inner max-h-[600px] overflow-auto cursor-text relative" onMouseUp={handleMouseUp}>
+                      <div className="text-[15px] text-body font-sans text-justify space-y-6 bg-canvas-mid p-4 rounded-xl border border-hairline shadow-inner max-h-[600px] overflow-auto cursor-text relative" onMouseUp={handleMouseUp} onScroll={clearHighlight}>
                         <h3 className="font-semibold mb-4 text-sm text-primary uppercase tracking-wider sticky top-0 bg-canvas-mid z-10 pb-2 border-b border-hairline">
                           Document Text
                         </h3>
-                        {document.extractedText.split(document.extractedText.includes('\f') ? '\f' : '\n').filter(p => p.trim().length > 0).map((pageText, idx) => (
-                          <div key={idx} className="relative bg-canvas p-6 md:p-8 hover:bg-canvas-card transition-colors rounded-lg shadow-sm border border-hairline">
-                            <span className="absolute top-2 right-4 text-xs font-bold text-mute select-none">
-                              PAGE {idx + 1}
-                            </span>
-                            <p className="whitespace-pre-wrap leading-[1.8] mt-2">
-                              {pageText}
-                            </p>
-                          </div>
-                        ))}
+                        <div className="space-y-8">
+                          {(document.extractedText.includes('\f') ? document.extractedText.split('\f') : document.extractedText.split('\n'))
+                            .filter(p => p.trim().length > 0)
+                            .map((pageText, idx) => (
+                            <div key={idx} className="relative bg-white text-gray-800 p-8 md:p-12 max-w-4xl mx-auto rounded-md shadow-[0_2px_10px_rgba(0,0,0,0.08)] border border-gray-200">
+                              <span className="absolute top-3 right-5 text-xs font-bold text-gray-400 select-none">
+                                PAGE {idx + 1}
+                              </span>
+                              <p className="whitespace-pre-wrap leading-relaxed text-[15px] font-sans mt-4 text-justify">
+                                {pageText}
+                              </p>
+                            </div>
+                          ))}
+                        </div>
                       </div>
                   )}
                 </>
@@ -353,9 +384,9 @@ h-[80vh]
       </div>
 
       {/* FLOATING HIGHLIGHT MENU */}
-      {highlightRect && (
+      {highlightRect && window.document.body && createPortal(
         <div
-          className="absolute z-50 flex items-center bg-canvas-card text-ink shadow-xl rounded-lg overflow-hidden border border-hairline animate-in fade-in zoom-in duration-200"
+          className="absolute z-[9999] flex items-center bg-canvas-card text-ink shadow-xl rounded-lg overflow-hidden border border-hairline animate-in fade-in zoom-in duration-200"
           style={{
             top: highlightRect.top,
             left: highlightRect.left,
@@ -411,7 +442,8 @@ h-[80vh]
                </button>
             </div>
           </div>
-        </div>
+        </div>,
+        window.document.body
       )}
 
       {/* EXPLAIN MODAL */}
