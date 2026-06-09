@@ -31,13 +31,7 @@ const menuItems = [
   { name: 'Documents', icon: FileText, path: '/documents' },
   { name: 'Learning Topics', icon: BookOpen, path: '/topics' },
   { name: 'Analytics', icon: LineChart, path: '/analytics' },
-  { name: 'Payments', icon: CreditCard, path: '/payments' },
-  { name: 'Notifications', icon: Bell, path: '/notifications' },
-  { name: 'Feedback', icon: MessageSquareWarning, path: '/feedback' },
   { name: 'Settings', icon: Settings, path: '/settings' },
-  { name: 'Activity Logs', icon: Activity, path: '/activity-logs' },
-  { name: 'Security', icon: ShieldCheck, path: '/security' },
-  { name: 'Admin Profile', icon: UserCircle, path: '/profile' },
 ];
 
 export default function Sidebar({ collapsed, setCollapsed }) {

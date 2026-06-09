@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import adminService from "../../services/adminService";
-import { Trash2, FileText, BookOpen, PlaySquare } from "lucide-react";
+import { Trash2, FileText, BookOpen, PlaySquare, Layers, Eye } from "lucide-react";
 import toast from "react-hot-toast";
 import { format } from "date-fns";
 
 export default function AdminContentPage() {
-  const [content, setContent] = useState({ documents: [], quizzes: [], workspaces: [] });
+  const [content, setContent] = useState({ documents: [], quizzes: [], workspaces: [], flashcards: [] });
   const [loading, setLoading] = useState(true);
 
   const fetchContent = async () => {
@@ -35,14 +36,27 @@ export default function AdminContentPage() {
       if (res.success) {
         toast.success(`${type} deleted successfully.`);
         // Remove from UI
-        setContent((prev) => ({
-          ...prev,
-          [`${type}s`]: prev[`${type}s`].filter((item) => item._id !== id)
-        }));
+        setContent((prev) => {
+          const typeKey = type === 'workspace' ? 'workspaces' : `${type}s`;
+          return {
+            ...prev,
+            [typeKey]: prev[typeKey].filter((item) => item._id !== id)
+          };
+        });
       }
     } catch (error) {
       toast.error("Failed to delete content.");
       console.error(error);
+    }
+  };
+
+  const getViewLink = (type, id) => {
+    switch (type) {
+      case "document": return `/documents/${id}`;
+      case "quiz": return `/quizzes/${id}`;
+      case "workspace": return `/workspaces/${id}`;
+      case "flashcard": return `/flashcards`; // Flashcards don't have a direct ID route yet
+      default: return "#";
     }
   };
 
@@ -82,13 +96,22 @@ export default function AdminContentPage() {
                       {format(new Date(item.createdAt || item.uploadDate || Date.now()), "MMM dd, yyyy")}
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <button
-                        onClick={() => handleDelete(type, item._id)}
-                        className="p-1.5 text-mute hover:text-red-500 hover:bg-red-500/10 rounded-md transition-colors"
-                        title={`Delete ${type}`}
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
+                      <div className="flex items-center justify-end gap-2">
+                        <Link
+                          to={getViewLink(type, item._id)}
+                          className="p-1.5 text-mute hover:text-primary hover:bg-primary/10 rounded-md transition-colors"
+                          title={`View ${type}`}
+                        >
+                          <Eye className="w-4 h-4" />
+                        </Link>
+                        <button
+                          onClick={() => handleDelete(type, item._id)}
+                          className="p-1.5 text-mute hover:text-red-500 hover:bg-red-500/10 rounded-md transition-colors"
+                          title={`Delete ${type}`}
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))
@@ -112,12 +135,13 @@ export default function AdminContentPage() {
     <div className="space-y-6 animate-in fade-in duration-500">
       <div>
         <h1 className="text-2xl font-bold text-ink">Content Moderation</h1>
-        <p className="text-body mt-1">Review and manage platform content. You can permanently delete violating or spam content.</p>
+        <p className="text-body mt-1">Review and manage platform content. You can view or permanently delete violating content.</p>
       </div>
 
       {renderTable(content.documents, "document", <FileText className="w-5 h-5 text-orange-400" />, "Recent Documents")}
+      {renderTable(content.flashcards, "flashcard", <Layers className="w-5 h-5 text-blue-400" />, "Recent Flashcards")}
       {renderTable(content.quizzes, "quiz", <BookOpen className="w-5 h-5 text-primary" />, "Recent Quizzes")}
-      {renderTable(content.workspaces, "workspace", <PlaySquare className="w-5 h-5 text-purple-400" />, "Recent Workspaces")}
+      {renderTable(content.workspaces, "workspace", <PlaySquare className="w-5 h-5 text-purple-400" />, "Recent Learning Topics (Workspaces)")}
     </div>
   );
 }

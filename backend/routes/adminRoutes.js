@@ -34,14 +34,27 @@ import {
   getAILogs,
   getAllFlashcards,
   getAllTopics,
-  deleteTopic
+  deleteTopic,
+  deleteDocument,
+  deleteQuiz,
+  deleteFlashcard,
+  getDashboardStats
 } from "../controllers/adminController.js";
 
+router.get("/dashboard/stats", getDashboardStats);
+
 router.get("/documents", getAllDocuments);
+router.delete("/documents/:id", deleteDocument);
+
 router.get("/quizzes", getAllQuizzes);
+router.delete("/quizzes/:id", deleteQuiz);
+
 router.get("/flashcards", getAllFlashcards);
+router.delete("/flashcards/:id", deleteFlashcard);
+
 router.get("/topics", getAllTopics);
 router.delete("/topics/:id", deleteTopic);
+
 router.get("/ai-logs", getAILogs);
 
 export default router;

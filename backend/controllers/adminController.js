@@ -398,3 +398,97 @@ export const deleteTopic = async (req, res) => {
     res.status(500).json({ success: false, message: "Server error" });
   }
 };
+
+// @desc    Delete Document
+// @route   DELETE /api/admin/documents/:id
+export const deleteDocument = async (req, res) => {
+  try {
+    const doc = await Document.findById(req.params.id);
+    if (!doc) return res.status(404).json({ success: false, message: "Document not found" });
+    await doc.deleteOne();
+    res.json({ success: true, message: "Document deleted successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+// @desc    Delete Quiz
+// @route   DELETE /api/admin/quizzes/:id
+export const deleteQuiz = async (req, res) => {
+  try {
+    const quiz = await Quiz.findById(req.params.id);
+    if (!quiz) return res.status(404).json({ success: false, message: "Quiz not found" });
+    await quiz.deleteOne();
+    res.json({ success: true, message: "Quiz deleted successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+// @desc    Delete Flashcard Set
+// @route   DELETE /api/admin/flashcards/:id
+export const deleteFlashcard = async (req, res) => {
+  try {
+    const flashcard = await Flashcard.findById(req.params.id);
+    if (!flashcard) return res.status(404).json({ success: false, message: "Flashcard not found" });
+    await flashcard.deleteOne();
+    res.json({ success: true, message: "Flashcard deleted successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+// @desc    Get dashboard statistics
+// @route   GET /api/admin/dashboard/stats
+export const getDashboardStats = async (req, res) => {
+  try {
+    const totalUsers = await User.countDocuments();
+    const activeSubs = await User.countDocuments({ subscription: { $ne: "Free" } });
+    const totalDocs = await Document.countDocuments();
+    const totalQuizzes = await Quiz.countDocuments();
+    const totalFlashcards = await Flashcard.countDocuments();
+    const totalAiRequests = await AiResponseCache.countDocuments();
+
+    // Mock revenue data for now
+    const revenueData = [
+      { name: 'Jan', value: 4000 },
+      { name: 'Feb', value: 3000 },
+      { name: 'Mar', value: 5000 },
+      { name: 'Apr', value: 4500 },
+      { name: 'May', value: 6000 },
+      { name: 'Jun', value: 5500 },
+      { name: 'Jul', value: 7000 },
+    ];
+
+    // Mock AI usage data for now
+    const aiUsageData = [
+      { name: 'Mon', value: 120 },
+      { name: 'Tue', value: 180 },
+      { name: 'Wed', value: 150 },
+      { name: 'Thu', value: 200 },
+      { name: 'Fri', value: 250 },
+      { name: 'Sat', value: 210 },
+      { name: 'Sun', value: 190 },
+    ];
+
+    res.json({
+      success: true,
+      data: {
+        totalUsers,
+        activeSubs,
+        totalDocs,
+        totalQuizzes,
+        totalFlashcards,
+        totalAiRequests,
+        revenueData,
+        aiUsageData
+      }
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};

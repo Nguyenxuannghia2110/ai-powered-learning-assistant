@@ -1,4 +1,7 @@
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { adminService } from '../services/api';
+import toast from 'react-hot-toast';
 import { 
   Users, 
   Cpu, 
@@ -23,36 +26,9 @@ import {
   Bar
 } from 'recharts';
 
-const statCards = [
-  { title: 'Total Users', value: '24,592', change: '+12.5%', isUp: true, icon: Users, color: 'text-blue-500', bg: 'bg-blue-500/10' },
-  { title: 'AI Requests', value: '1.2M', change: '+24.3%', isUp: true, icon: Cpu, color: 'text-purple-500', bg: 'bg-purple-500/10' },
-  { title: 'Uploaded Docs', value: '8,421', change: '+5.2%', isUp: true, icon: FileText, color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
-  { title: 'Revenue', value: '$45,231', change: '-2.1%', isUp: false, icon: DollarSign, color: 'text-amber-500', bg: 'bg-amber-500/10' },
-  { title: 'Quiz Completions', value: '142.3K', change: '+18.2%', isUp: true, icon: HelpCircle, color: 'text-indigo-500', bg: 'bg-indigo-500/10' },
-  { title: 'Flashcard Reviews', value: '892.4K', change: '+32.1%', isUp: true, icon: Layers, color: 'text-pink-500', bg: 'bg-pink-500/10' },
-  { title: 'Server Health', value: '99.9%', change: '+0.1%', isUp: true, icon: Server, color: 'text-teal-500', bg: 'bg-teal-500/10' },
-  { title: 'Active Subs', value: '3,291', change: '+4.5%', isUp: true, icon: ShieldCheck, color: 'text-orange-500', bg: 'bg-orange-500/10' },
-];
+// We will construct this dynamically inside the component
 
-const revenueData = [
-  { name: 'Jan', value: 4000 },
-  { name: 'Feb', value: 3000 },
-  { name: 'Mar', value: 5000 },
-  { name: 'Apr', value: 4500 },
-  { name: 'May', value: 6000 },
-  { name: 'Jun', value: 5500 },
-  { name: 'Jul', value: 7000 },
-];
-
-const aiUsageData = [
-  { name: 'Mon', value: 120 },
-  { name: 'Tue', value: 180 },
-  { name: 'Wed', value: 150 },
-  { name: 'Thu', value: 200 },
-  { name: 'Fri', value: 250 },
-  { name: 'Sat', value: 210 },
-  { name: 'Sun', value: 190 },
-];
+// Removed hardcoded chart data
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -68,6 +44,44 @@ const itemVariants = {
 };
 
 export default function DashboardOverview() {
+  const [stats, setStats] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const res = await adminService.getDashboardStats();
+        if (res.data.success) {
+          setStats(res.data.data);
+        }
+      } catch (err) {
+        toast.error('Failed to load dashboard statistics');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchStats();
+  }, []);
+
+  if (loading || !stats) {
+    return (
+      <div className="flex items-center justify-center h-full p-8">
+        <div className="w-8 h-8 border-2 border-[var(--primary)] border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+
+  const statCards = [
+    { title: 'Total Users', value: stats.totalUsers.toLocaleString(), change: '+12.5%', isUp: true, icon: Users, color: 'text-blue-500', bg: 'bg-blue-500/10' },
+    { title: 'AI Requests', value: stats.totalAiRequests.toLocaleString(), change: '+24.3%', isUp: true, icon: Cpu, color: 'text-purple-500', bg: 'bg-purple-500/10' },
+    { title: 'Uploaded Docs', value: stats.totalDocs.toLocaleString(), change: '+5.2%', isUp: true, icon: FileText, color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
+    { title: 'Revenue', value: '$45,231', change: '-2.1%', isUp: false, icon: DollarSign, color: 'text-amber-500', bg: 'bg-amber-500/10' },
+    { title: 'Total Quizzes', value: stats.totalQuizzes.toLocaleString(), change: '+18.2%', isUp: true, icon: HelpCircle, color: 'text-indigo-500', bg: 'bg-indigo-500/10' },
+    { title: 'Flashcard Decks', value: stats.totalFlashcards.toLocaleString(), change: '+32.1%', isUp: true, icon: Layers, color: 'text-pink-500', bg: 'bg-pink-500/10' },
+    { title: 'Server Health', value: '99.9%', change: '+0.1%', isUp: true, icon: Server, color: 'text-teal-500', bg: 'bg-teal-500/10' },
+    { title: 'Active Subs', value: stats.activeSubs.toLocaleString(), change: '+4.5%', isUp: true, icon: ShieldCheck, color: 'text-orange-500', bg: 'bg-orange-500/10' },
+  ];
+
   return (
     <div className="p-8 max-w-7xl mx-auto">
       
@@ -134,7 +148,7 @@ export default function DashboardOverview() {
           <h3 className="text-lg font-bold text-[var(--text-main)] mb-6">Revenue Growth</h3>
           <div className="h-72 w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={revenueData} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
+              <AreaChart data={stats.revenueData} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
                 <defs>
                   <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="var(--primary)" stopOpacity={0.3}/>
@@ -164,7 +178,7 @@ export default function DashboardOverview() {
           <h3 className="text-lg font-bold text-[var(--text-main)] mb-6">AI API Requests (Daily)</h3>
           <div className="h-72 w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={aiUsageData} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
+              <BarChart data={stats.aiUsageData} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border-subtle)" />
                 <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: 'var(--text-muted)', fontSize: 12}} dy={10} />
                 <YAxis axisLine={false} tickLine={false} tick={{fill: 'var(--text-muted)', fontSize: 12}} />

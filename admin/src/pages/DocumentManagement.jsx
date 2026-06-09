@@ -3,12 +3,14 @@ import { adminService } from '../services/api';
 import { motion } from 'framer-motion';
 import { Search, FileText, Trash2, CheckCircle, Clock, ChevronLeft, ChevronRight, Eye } from 'lucide-react';
 import toast from 'react-hot-toast';
+import ViewModal from '../components/ViewModal';
 
 export default function DocumentManagement() {
   const [documents, setDocuments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [pagination, setPagination] = useState({ page: 1, limit: 10, totalPages: 1, total: 0 });
   const [search, setSearch] = useState('');
+  const [viewItem, setViewItem] = useState(null);
 
   useEffect(() => {
     fetchDocuments();
@@ -26,6 +28,23 @@ export default function DocumentManagement() {
       toast.error('Failed to load documents');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleView = (doc) => {
+    setViewItem(doc);
+  };
+
+  const handleDelete = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this document?')) return;
+    try {
+      const res = await adminService.deleteDocument(id);
+      if (res.data.success) {
+        toast.success('Document deleted successfully');
+        fetchDocuments();
+      }
+    } catch (err) {
+      toast.error('Failed to delete document');
     }
   };
 
@@ -115,10 +134,10 @@ export default function DocumentManagement() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                       <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <button className="p-2 text-[var(--text-muted)] hover:text-blue-500 hover:bg-blue-500/10 rounded-lg transition-colors" title="View">
+                        <button onClick={() => handleView(doc)} className="p-2 text-[var(--text-muted)] hover:text-blue-500 hover:bg-blue-500/10 rounded-lg transition-colors" title="View">
                           <Eye size={16} />
                         </button>
-                        <button className="p-2 text-[var(--text-muted)] hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-colors" title="Delete">
+                        <button onClick={() => handleDelete(doc._id)} className="p-2 text-[var(--text-muted)] hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-colors" title="Delete">
                           <Trash2 size={16} />
                         </button>
                       </div>
@@ -146,6 +165,62 @@ export default function DocumentManagement() {
           </div>
         )}
       </div>
+
+      <ViewModal 
+        isOpen={!!viewItem} 
+        onClose={() => setViewItem(null)} 
+        title="Document Details"
+      >
+        {viewItem && (
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <p className="text-sm text-slate-500 font-medium">Title</p>
+                <p className="text-slate-800 font-semibold">{viewItem.title || 'Untitled'}</p>
+              </div>
+              <div>
+                <p className="text-sm text-slate-500 font-medium">Owner</p>
+                <p className="text-slate-800 font-semibold">{viewItem.userId?.username || 'Unknown'}</p>
+              </div>
+              <div>
+                <p className="text-sm text-slate-500 font-medium">File Type</p>
+                <p className="text-slate-800 uppercase">{viewItem.fileType || 'Unknown'}</p>
+              </div>
+              <div>
+                <p className="text-sm text-slate-500 font-medium">File Size</p>
+                <p className="text-slate-800">
+                  {viewItem.fileSize ? `${(viewItem.fileSize / 1024 / 1024).toFixed(2)} MB` : 'Unknown'}
+                </p>
+              </div>
+              <div>
+                <p className="text-sm text-slate-500 font-medium">Uploaded At</p>
+                <p className="text-slate-800">{viewItem.createdAt ? new Date(viewItem.createdAt).toLocaleString() : '-'}</p>
+              </div>
+            </div>
+
+            {viewItem.summary && (
+              <div className="mt-6 pt-6 border-t border-slate-100">
+                <h4 className="text-md font-bold text-slate-800 mb-2">AI Summary</h4>
+                <div className="p-4 bg-slate-50 rounded-xl border border-slate-100 max-h-60 overflow-y-auto custom-scrollbar">
+                  <p className="text-sm text-slate-700 whitespace-pre-wrap leading-relaxed">{viewItem.summary}</p>
+                </div>
+              </div>
+            )}
+            
+            {viewItem.extractedText && !viewItem.summary && (
+               <div className="mt-6 pt-6 border-t border-slate-100">
+                 <h4 className="text-md font-bold text-slate-800 mb-2">Extracted Content Preview</h4>
+                 <div className="p-4 bg-slate-50 rounded-xl border border-slate-100 max-h-60 overflow-y-auto custom-scrollbar">
+                   <p className="text-sm text-slate-700 whitespace-pre-wrap leading-relaxed">
+                     {viewItem.extractedText.slice(0, 1000)}
+                     {viewItem.extractedText.length > 1000 ? '...' : ''}
+                   </p>
+                 </div>
+               </div>
+            )}
+          </div>
+        )}
+      </ViewModal>
     </div>
   );
 }

@@ -3,11 +3,13 @@ import { adminService } from '../services/api';
 import { motion } from 'framer-motion';
 import { Search, Layers, Trash2, Eye, ChevronLeft, ChevronRight } from 'lucide-react';
 import toast from 'react-hot-toast';
+import ViewModal from '../components/ViewModal';
 
 export default function FlashcardManagement() {
   const [flashcards, setFlashcards] = useState([]);
   const [loading, setLoading] = useState(true);
   const [pagination, setPagination] = useState({ page: 1, limit: 10, totalPages: 1, total: 0 });
+  const [viewItem, setViewItem] = useState(null);
 
   useEffect(() => {
     fetchFlashcards();
@@ -25,6 +27,23 @@ export default function FlashcardManagement() {
       toast.error('Failed to load flashcards');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleView = (deck) => {
+    setViewItem(deck);
+  };
+
+  const handleDelete = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this flashcard deck?')) return;
+    try {
+      const res = await adminService.deleteFlashcard(id);
+      if (res.data.success) {
+        toast.success('Flashcard deck deleted successfully');
+        fetchFlashcards();
+      }
+    } catch (err) {
+      toast.error('Failed to delete flashcards');
     }
   };
 
@@ -93,10 +112,10 @@ export default function FlashcardManagement() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                       <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <button className="p-2 text-[var(--text-muted)] hover:text-blue-500 hover:bg-blue-500/10 rounded-lg transition-colors" title="View">
+                        <button onClick={() => handleView(deck)} className="p-2 text-[var(--text-muted)] hover:text-blue-500 hover:bg-blue-500/10 rounded-lg transition-colors" title="View">
                           <Eye size={16} />
                         </button>
-                        <button className="p-2 text-[var(--text-muted)] hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-colors" title="Delete">
+                        <button onClick={() => handleDelete(deck._id)} className="p-2 text-[var(--text-muted)] hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-colors" title="Delete">
                           <Trash2 size={16} />
                         </button>
                       </div>
@@ -124,6 +143,59 @@ export default function FlashcardManagement() {
           </div>
         )}
       </div>
+
+      <ViewModal 
+        isOpen={!!viewItem} 
+        onClose={() => setViewItem(null)} 
+        title="Flashcard Deck Details"
+      >
+        {viewItem && (
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <p className="text-sm text-slate-500 font-medium">Deck Title</p>
+                <p className="text-slate-800 font-semibold">{viewItem.title || 'Untitled Deck'}</p>
+              </div>
+              <div>
+                <p className="text-sm text-slate-500 font-medium">Creator</p>
+                <p className="text-slate-800 font-semibold">{viewItem.userId?.username || 'Unknown'}</p>
+              </div>
+              <div>
+                <p className="text-sm text-slate-500 font-medium">Document Source</p>
+                <p className="text-slate-800">{viewItem.documentId?.title || 'N/A'}</p>
+              </div>
+              <div>
+                <p className="text-sm text-slate-500 font-medium">Total Cards</p>
+                <p className="text-slate-800 font-semibold text-lg">{viewItem.cards?.length || 0}</p>
+              </div>
+              <div>
+                <p className="text-sm text-slate-500 font-medium">Created At</p>
+                <p className="text-slate-800">{viewItem.createdAt ? new Date(viewItem.createdAt).toLocaleString() : '-'}</p>
+              </div>
+            </div>
+
+            {viewItem.cards && viewItem.cards.length > 0 && (
+              <div className="mt-6 pt-6 border-t border-slate-100">
+                <h4 className="text-md font-bold text-slate-800 mb-4">Cards Preview</h4>
+                <div className="space-y-4 max-h-60 overflow-y-auto custom-scrollbar pr-2">
+                  {viewItem.cards.map((c, idx) => (
+                    <div key={idx} className="p-3 bg-slate-50 rounded-xl border border-slate-100 flex flex-col gap-2">
+                      <div>
+                        <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Front</span>
+                        <p className="text-sm text-slate-800 mt-1">{c.question}</p>
+                      </div>
+                      <div className="pt-2 border-t border-slate-200">
+                        <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Back</span>
+                        <p className="text-sm text-slate-700 mt-1">{c.answer}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+      </ViewModal>
     </div>
   );
 }

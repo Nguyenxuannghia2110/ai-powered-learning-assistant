@@ -3,11 +3,13 @@ import { adminService } from '../services/api';
 import { motion } from 'framer-motion';
 import { Search, HelpCircle, Trash2, CheckCircle, ChevronLeft, ChevronRight, Eye, PlayCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
+import ViewModal from '../components/ViewModal';
 
 export default function QuizManagement() {
   const [quizzes, setQuizzes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [pagination, setPagination] = useState({ page: 1, limit: 10, totalPages: 1, total: 0 });
+  const [viewItem, setViewItem] = useState(null);
 
   useEffect(() => {
     fetchQuizzes();
@@ -25,6 +27,23 @@ export default function QuizManagement() {
       toast.error('Failed to load quizzes');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleView = (quiz) => {
+    setViewItem(quiz);
+  };
+
+  const handleDelete = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this quiz?')) return;
+    try {
+      const res = await adminService.deleteQuiz(id);
+      if (res.data.success) {
+        toast.success('Quiz deleted successfully');
+        fetchQuizzes();
+      }
+    } catch (err) {
+      toast.error('Failed to delete quiz');
     }
   };
 
@@ -98,10 +117,10 @@ export default function QuizManagement() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                       <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <button className="p-2 text-[var(--text-muted)] hover:text-blue-500 hover:bg-blue-500/10 rounded-lg transition-colors" title="View">
+                        <button onClick={() => handleView(quiz)} className="p-2 text-[var(--text-muted)] hover:text-blue-500 hover:bg-blue-500/10 rounded-lg transition-colors" title="View">
                           <Eye size={16} />
                         </button>
-                        <button className="p-2 text-[var(--text-muted)] hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-colors" title="Delete">
+                        <button onClick={() => handleDelete(quiz._id)} className="p-2 text-[var(--text-muted)] hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-colors" title="Delete">
                           <Trash2 size={16} />
                         </button>
                       </div>
@@ -129,6 +148,67 @@ export default function QuizManagement() {
           </div>
         )}
       </div>
+
+      <ViewModal 
+        isOpen={!!viewItem} 
+        onClose={() => setViewItem(null)} 
+        title="Quiz Details"
+      >
+        {viewItem && (
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <p className="text-sm text-slate-500 font-medium">Title</p>
+                <p className="text-slate-800 font-semibold">{viewItem.title || 'Untitled'}</p>
+              </div>
+              <div>
+                <p className="text-sm text-slate-500 font-medium">Creator</p>
+                <p className="text-slate-800 font-semibold">{viewItem.userId?.username || 'Unknown'}</p>
+              </div>
+              <div>
+                <p className="text-sm text-slate-500 font-medium">Document Source</p>
+                <p className="text-slate-800">{viewItem.documentId?.title || 'N/A'}</p>
+              </div>
+              <div>
+                <p className="text-sm text-slate-500 font-medium">Total Questions</p>
+                <p className="text-slate-800 font-semibold text-lg">{viewItem.questions?.length || 0}</p>
+              </div>
+              <div>
+                <p className="text-sm text-slate-500 font-medium">Score</p>
+                <p className="text-slate-800">{viewItem.score !== undefined ? `${viewItem.score}%` : 'Not Taken'}</p>
+              </div>
+              <div>
+                <p className="text-sm text-slate-500 font-medium">Completed At</p>
+                <p className="text-slate-800">{viewItem.completedAt ? new Date(viewItem.completedAt).toLocaleString() : '-'}</p>
+              </div>
+              <div>
+                <p className="text-sm text-slate-500 font-medium">Created At</p>
+                <p className="text-slate-800">{viewItem.createdAt ? new Date(viewItem.createdAt).toLocaleString() : '-'}</p>
+              </div>
+            </div>
+
+            {viewItem.questions && viewItem.questions.length > 0 && (
+              <div className="mt-6 pt-6 border-t border-slate-100">
+                <h4 className="text-md font-bold text-slate-800 mb-4">Questions Preview</h4>
+                <div className="space-y-4 max-h-60 overflow-y-auto custom-scrollbar pr-2">
+                  {viewItem.questions.map((q, idx) => (
+                    <div key={idx} className="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                      <p className="font-medium text-sm text-slate-800"><span className="text-indigo-500 mr-1">Q{idx + 1}.</span> {q.question}</p>
+                      <ul className="mt-2 space-y-1">
+                        {q.options?.map((opt, oIdx) => (
+                          <li key={oIdx} className={`text-xs p-1.5 rounded-md ${opt === q.correctAnswer ? 'bg-emerald-100 text-emerald-800 font-semibold' : 'text-slate-600'}`}>
+                            {opt} {opt === q.correctAnswer && '(Correct)'}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+      </ViewModal>
     </div>
   );
 }

@@ -38,9 +38,13 @@ export const adminService = {
   resetUserPassword: (id, newPassword) => api.post(`/admin/users/${id}/reset-password`, { newPassword }),
   
   // Content Management
+  getDashboardStats: () => api.get('/admin/dashboard/stats'),
   getDocuments: (params) => api.get('/admin/documents', { params }),
+  deleteDocument: (id) => api.delete(`/admin/documents/${id}`),
   getQuizzes: (params) => api.get('/admin/quizzes', { params }),
+  deleteQuiz: (id) => api.delete(`/admin/quizzes/${id}`),
   getFlashcards: (params) => api.get('/admin/flashcards', { params }),
+  deleteFlashcard: (id) => api.delete(`/admin/flashcards/${id}`),
   getTopics: (params) => api.get('/admin/topics', { params }),
   deleteTopic: (id) => api.delete(`/admin/topics/${id}`),
   getAILogs: (params) => api.get('/admin/ai-logs', { params }),

@@ -29,12 +29,35 @@ const adminService = {
   },
 
   getRecentContent: async (limit = 10) => {
-    const response = await axiosInstance.get(`/api/admin/content?limit=${limit}`);
-    return response.data;
+    const [docs, quizzes, workspaces, flashcards] = await Promise.all([
+      axiosInstance.get(`/api/admin/documents?limit=${limit}`),
+      axiosInstance.get(`/api/admin/quizzes?limit=${limit}`),
+      axiosInstance.get(`/api/admin/topics?limit=${limit}`),
+      axiosInstance.get(`/api/admin/flashcards?limit=${limit}`)
+    ]);
+
+    return {
+      success: true,
+      data: {
+        documents: docs.data?.data?.documents || [],
+        quizzes: quizzes.data?.data?.quizzes || [],
+        workspaces: workspaces.data?.data?.topics || [],
+        flashcards: flashcards.data?.data?.flashcards || []
+      }
+    };
   },
 
   deleteContent: async (type, id) => {
-    const response = await axiosInstance.delete(`/api/admin/content/${type}/${id}`);
+    const typeMap = {
+      document: 'documents',
+      quiz: 'quizzes',
+      flashcard: 'flashcards',
+      workspace: 'topics',
+      topic: 'topics'
+    };
+    
+    const route = typeMap[type] || type;
+    const response = await axiosInstance.delete(`/api/admin/${route}/${id}`);
     return response.data;
   }
 };

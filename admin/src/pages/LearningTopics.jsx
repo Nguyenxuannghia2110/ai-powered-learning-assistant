@@ -3,12 +3,14 @@ import { adminService } from '../services/api';
 import { motion } from 'framer-motion';
 import { Search, FolderOpen, Trash2, Eye, ChevronLeft, ChevronRight } from 'lucide-react';
 import toast from 'react-hot-toast';
+import ViewModal from '../components/ViewModal';
 
 export default function LearningTopics() {
   const [topics, setTopics] = useState([]);
   const [loading, setLoading] = useState(true);
   const [pagination, setPagination] = useState({ page: 1, limit: 10, totalPages: 1, total: 0 });
   const [search, setSearch] = useState('');
+  const [viewItem, setViewItem] = useState(null);
 
   const fetchTopics = useCallback(async () => {
     try {
@@ -45,6 +47,10 @@ export default function LearningTopics() {
     } catch (err) {
       toast.error(err.response?.data?.message || 'Failed to delete learning topic');
     }
+  };
+
+  const handleView = (topic) => {
+    setViewItem(topic);
   };
 
   return (
@@ -125,7 +131,7 @@ export default function LearningTopics() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                       <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <button className="p-2 text-[var(--text-muted)] hover:text-blue-500 hover:bg-blue-500/10 rounded-lg transition-colors" title={`Progress: ${topic.progress ?? 0}%`}>
+                        <button onClick={() => handleView(topic)} className="p-2 text-[var(--text-muted)] hover:text-blue-500 hover:bg-blue-500/10 rounded-lg transition-colors" title={`Progress: ${topic.progress ?? 0}%`}>
                           <Eye size={16} />
                         </button>
                         <button
@@ -160,6 +166,61 @@ export default function LearningTopics() {
           </div>
         )}
       </div>
+
+      <ViewModal 
+        isOpen={!!viewItem} 
+        onClose={() => setViewItem(null)} 
+        title="Learning Topic Details"
+      >
+        {viewItem && (
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <p className="text-sm text-slate-500 font-medium">Topic / Workspace Name</p>
+                <p className="text-slate-800 font-semibold">{viewItem.topic || 'Untitled'}</p>
+              </div>
+              <div>
+                <p className="text-sm text-slate-500 font-medium">Owner</p>
+                <p className="text-slate-800 font-semibold">{viewItem.userId?.username || 'Unknown'}</p>
+              </div>
+              <div>
+                <p className="text-sm text-slate-500 font-medium">Level</p>
+                <p className="text-slate-800 capitalize">{viewItem.level || 'beginner'}</p>
+              </div>
+              <div>
+                <p className="text-sm text-slate-500 font-medium">Progress</p>
+                <p className="text-slate-800 font-semibold">{viewItem.progress || 0}%</p>
+              </div>
+              <div>
+                <p className="text-sm text-slate-500 font-medium">Created At</p>
+                <p className="text-slate-800">{viewItem.createdAt ? new Date(viewItem.createdAt).toLocaleString() : '-'}</p>
+              </div>
+            </div>
+
+            {viewItem.description && (
+              <div className="mt-6 pt-6 border-t border-slate-100">
+                <h4 className="text-md font-bold text-slate-800 mb-2">Description</h4>
+                <div className="p-4 bg-slate-50 rounded-xl border border-slate-100">
+                  <p className="text-sm text-slate-700 whitespace-pre-wrap">{viewItem.description}</p>
+                </div>
+              </div>
+            )}
+            
+            {viewItem.documents && viewItem.documents.length > 0 && (
+              <div className="mt-6 pt-6 border-t border-slate-100">
+                <h4 className="text-md font-bold text-slate-800 mb-2">Documents in Workspace ({viewItem.documents.length})</h4>
+                <ul className="list-disc pl-5 space-y-1">
+                  {viewItem.documents.map((doc, idx) => (
+                    <li key={idx} className="text-sm text-slate-700">
+                      {doc.title || doc.fileName || `Document ${idx + 1}`}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        )}
+      </ViewModal>
     </div>
   );
 }
